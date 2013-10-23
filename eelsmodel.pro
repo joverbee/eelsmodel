@@ -243,3 +243,6 @@ SOURCES += src/components/dieleclinear.cpp \
            src/gui/realinput.cpp \
            src/gui/saysomething.cpp \ 
     src/gui/graphqwt.cpp
+
+OTHER_FILES += \
+    .gitignore

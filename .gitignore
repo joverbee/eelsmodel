@@ -1,6 +1,7 @@
 .DS_Store
 .obj
 *.moc
+
 Makefile*
 *.dylib
 *.so.*
