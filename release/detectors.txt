@@ -1,6 +1,0 @@
-%Detector name	pppc	correlation factor
-EMAT CM30 GIF200 1K Phosphor	0.2044	2.9146
-EMAT 3000F GIF2000 1K Phosphor	0.1439	2.5225
-TU Wien USTEM Tecnai F20 1k YAG	0.7256	2.28518
-VG1 Orsay	0.100636	3.38605
-IDEAL DETECTOR	1.0	1.0
