@@ -1,0 +1,49 @@
+Notes on compiling BLAS and LAPACK , BOOST and ATLAS under windows vista:
+
+NOTE: you can waste an increbile amount of time with this...hope these notes are somewhat helpfull
+gcc version was 3.4.5 (mingw special) and 3.4.4 under cygwin
+
+
+Install cygwin
+Install all development packages + utilities + editor (joe)
+
+
+----LAPACK and BLAS
+Download Lapack
+unpack
+edit make.inc to point to right directories
+no special compiler options
+this creates atlas.a and blas.a
+
+
+
+----ATLAS3.8.0-----
+Download ATLAS from:
+https://sourceforge.net/project/downloading.php?group_id=23725&use_mirror=heanet&filename=atlas3.8.0.tar.gz&88127153
+gunzip
+tar -vxf 
+
+IMPORTANT: turn off UAC (user acces control) in Vista under control panel, users acounts, switch Useracount control off
+
+go to atlas directory
+cd /cygdrive/c/atlas/ATLAS3.8.0
+mkdir WIN32
+cd WIN32
+
+../configure -b 32 -m 1800 -D c  -DPentiumCPS=1800 -Fa alg -fPIC --prefix=/cygdrive/c/atlas/ATLAS3.8.0/WIN32 --with-netlib-lapack=/cygdrive/c/lapack/lapack-3.1.1/lapack_WIN.a
+
+make build
+make check
+make time
+make install
+
+----BOOST--------
+Download 
+add bindings and unpack them in numerics/bindings
+put all in mingw/include/boost/
+edit numerics/bindings/cblas_inc.hpp and clapack_inc.hpp to include the cblas.h and lapack.h of your ATLAS install 
+get bjam.exe
+build boost:
+
+--compiler flags (order of libraries IS IMPORTANT)
+g++ -Wall testmatrix.cpp -o testmatrix.exe -L"C:\atlas\ATLAS3.8.0\WIN32\lib" -llapack -lcblas -lf77blas -latlas

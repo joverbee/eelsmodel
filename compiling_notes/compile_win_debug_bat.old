@@ -1,0 +1,5 @@
+qmake -project -r CONFIG+=exceptions CONFIG+=debug CONFIG+=rtti QMAKE_CXXFLAGS-=-fno-exceptions  LIBS+=-lfftw3-3 LIBS+=-Lc:\\fftw_3_1  QMAKE_CXXFLAGS+=-I"C:\\gsl\\include" LIBS+=-lgslcblas QMAKE_CXXFLAGS+=-DGSL_DLL  LIBS+=-L"C:\\gsl\\lib" LIBS+=-lgsl LIBS+=-L"C:\\atlas\\ATLAS3.8.0\\WIN32\\lib" LIBS+=-llapack LIBS+=-lcblas LIBS+=-lf77blas LIBS+=-latlas -o eelsmodel.pro 
+qmake -o Makefile eelsmodel.pro
+make debug
+rem 
+

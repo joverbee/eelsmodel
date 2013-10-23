@@ -1,0 +1,280 @@
+//changes to the code
+disable GSL in fitterchooser and eelsmodel
+change all dynamic cast in static_cast
+remove duplicate loaderr handler in eelsmodel.cpp
+in tag.h and tag.cpp rename getchar to gettagchar to avoid calling the wrong function
+in image.cpp call gettagchar instead of getchar
+sprintf undefined in cstdio include <stdio> in all sources complaining
+remove mlfitter_gsl.*
+find replace by std::find
+in spectrum.cpp try in init of contructor doesn`t work comment out
+in spectrum.cpp islower and toupper add std::
+
+//how to get the stdout in win?
+eelsmodel > out.log
+
+
+//changes in multibyte cpp and image.cpp
+get(char c) skips eol chars in borland c++ bcc32 5.5.1
+replaced by read function should have slightly improved speed
+
+in eelsmodel.cpp reading the model an error occured when filename contains
+":" like in "c:\" rewrote to take care of this
+
+
+in spectrum.cpp
+correted an error when filling in the error a sqrt of a neg value could be taken
+added a check to prevent this
+
+
+//changes on 28-7-04 V1.1
+try to use dynamic_cast again instead of static_cast
+the trick is to enable realtime info RTTI by config+=rtti in the qmake line (see top of this file)
+(for gcc this was standard enabled)
+affects:
+eelsmodel.cpp
+gettopspectrum.cpp
+getgraphptr.cpp
+graph.cpp
+
+bug when trying to create new model GPF "xxxx cannot "read" memory"
+solved by solving errors around getting the workspace pointer with dynamic cast
+
+bug in reading a GOS table with hsedge.cpp under windows
+hsedge.cpp changed
+there was a problem finding out the type (win,mac,unix) of text file
+solution open the file for binary reading (otherwise special characters are changed)
+use char 13 for CR, char 10 for LF \lf and \cr might be different depending on compiler
+
+updated the welcome screen and created some icons
+//
+
+//changes on 30-7-2004
+fixed a bug in spinsplitedge
+fixed a bug in getgraphptr causing a crash, created possibiliy for getting the workspaceptr from eelsmodel.cpp via getworkspaceptr()
+and getting the eelsmodel pointer via a global function eelsmodelptr(0) in main.cpp
+
+
+//changes on 6-9-2004
+-fixed a bug in hsedge.cpp pointed out by D. Bach
+the bug caused a crash when trying to extrapolate the tabulated GOS table with a power law
+added some extra sanity checks on the output, now it returns 0.0 when unreasonable values are used as input
+
+-created eelsmodel_debug.pro which can be used to debug with the td32.exe turbo debugger from Borland
+
+//changes on 25-11-2004
+-some bugs that Giovanni Bertonni discovered
+1)crash when no spectrum selected and trying to create a multiscatter component
+changed mscatter.cpp, getgraphptr.cpp
+SOLVED: gives a clean message now
+2)writing of report file is awkward line based, changed to rows with tabs between
+data, can directly be imported in EXCEL just make sure to read decimal point as a dot and
+no a comma:
+changed: eelmodel.cpp
+
+//changes on 2-1-2005
+make the loading of a project file less dependent on absolute path
+created a class fileopener (see description there)
+used in spectrum.cpp (when loading an MSA file)
+used in HSedge.cpp (when loading a gos file)
+changed eelsmodel.cpp,fileopener,spectrum,hsedge
+
+//changes on 22-4-2005
+changes in spectrum.cpp only allow counts and error bars to be >=0 otherwise clip of at 0 -> this solves a crash
+
+//changes on 20-5-2005
+-undid previuous change because now there are problems with eg components that can go negative
+this is rather unphysical for instance when an edge has a negative strength
+but is needed by the fitter if the strength is close to zero
+taking the abs of the strength in this case leads to problems with the derivatives because it is discontinuous
+so we keep it general: a spectrum can have negative counts
+TO DO: still find the bug that causes a crash in case of negative counts
+
+//changes on 26-5-2005
+changes on powerlaww.cpp to make outcome 0 in case E<=0 and when r<=0: prevents crashes
+changes in eelsmodel.cpp fixed a bug in loading the monitors during a project load
+checked eshift but found no real problems
+checked behaviour of negative counts in spectra: seems OK
+changed eelsmodel.cpp fitter_dialog.cpp and componentmaintenance.cpp to store and restore window positions in a project file
+
+
+//changes on 7-6-05
+changes in componentmaintenance.cpp and .h
+tried to make the drawing of the model list better so it is not expanded everytime something changes
+PROBLEM: we have a crash when removing a component HS edge that was previously altered by a DOS? COuld it be a problem when the DOS disappears?
+
+//changes on 15-6-05
+remember the current working directory in a static variable: adds a lot of convenience when working
+changes in getfilename.cpp and .h to make dirname a static variable
+changes in eelsmodel.cpp and hsedge.cpp to no longer set the working directory via getfilename::setdirname
+PROBLEM: now the file opener is a real QFileDialog and not a windows file dialog. This makes going to the desktop 
+more difficult, but OK for now, the native qfiledialog::getopenfilename does not allow to retrieve the 
+chosen working directory unless if we would do nasty string functions to strip the CWD from the filename.
+
+now you can open a project by supplying the filename (absolute filename) 
+changed eelsmodel.cpp. main.cpp, eelsmodel.h the second argument is passed automatically to open_project_from_filename
+this allows opening a *.mod file by clicking on it in explorer and choosing "open with" and then point to eelsmodel
+
+fixed a bug when a spectrum was not found, the user could point it, but the new file name was not stored into the paramters of the component
+changed mscatter.cpp, hsedge.cpp, edgefile.cpp, spectrum.cpp, fileopener.cpp
+
+
+//changes on 16-6-2005
+changes in parameter.cpp initialised the boundaries to minimum and maximum double value. Before this was uninitialised and sometimes this lead 
+to a crash when boundaries were NaN
+
+changes menu.cpp to disable menu items that are not implemented like cut, copy, past, print, save as...
+
+//changes on 6-9-2005
+-a redraw of DOS components is only done when model::display is called, this is much more efficient since redraws during calculation are not done anymore
+changed component.h cpp, dos.h cpp, model .h cpp added a setvisible and isvisible and show member to component a componet that wants to show something
+needs to set itself as visible (eg in the constructor of a dos component)
+changing to visible causes a redraw of the contents of the component. This should drastically improve computation speed
+-added analytical gradients to speed up DOS calculations (need to check whether these are correct)
+-scale of graph is wrong when small numbers are used
+
+//changes on 27-9-2005
+-corrected scale of graph when small numbers are used affected file: graph.cpp
+-corrected bug in DOS.cpp affected files model.h/model.cpp: now each time a dos is calculated the pointer of the cross section that we are multiplying
+with is used to update the componentnr parameter. This way it should have the correct value even after removing components etc.
+
+//changes on 4-10-2005
+-updated parameter.cpp to avoid a confusing situation in interactivalue, if the user clicks this parameter can not be changed we still put the value edited by the user 
+because this apparently worked confusing during the practicals at the QEM2005 summer school in St. Aigulf (France)
+-updated monitor.cpp to avoid division by zero crash in ratio monitor and in the sigma for the ratio monitor
+-corrected a bug in zoom mode of graph. affected file graph.cpp. Eelsmodel crashed when zooming with a single click rather then the 
+expected dragging of a region
+
+//changes 17-10, 18-10
+-Upgrade to QT4+MingW BIG changes in virtually all files: bugs are likely!, but should also compile easier under MacOSX now
+-updated name of "Density of States" to "Fine Structure (DOS)" ensured backward compatibility of mod files on demand of G. Botton: affected files dos.cpp
+-changed color of excluded points to green to become better visible: affected graph.cpp
+-changed the parameter_interactivevalue to better behave with changeable and not-changeable: affected file parameter.cpp
+-KNOWN issues: fitter window is not shown expanded, this seems to be a bug in QT?, selection window behaves strangely on graph (bug in QT?), 
+-fixed bug when mscatter uses a multispectrum mscatter.cpp, multispectrum.cpp
+
+//changes 20-10-05
+-made graph.cpp and graph.h fully QT4, cleaned up unnessecarry dependencies with other modules
+-qrubberband seems to have strange behaviour it's always on top/ seems to be a bug in QT? because the parent is really 
+-fixed default size of fitterdialog and componentmaintenance
+-TODO: update fitter_dialog so no use is made of QT3 classes: this we we don't need the qt3 support dll's (saves space)
+
+//changes 2-2-2006
+-try to correct analytical gradient in DOS.cpp
+-found bug in analytical gradients: they need to be convoluted with LL to be correct because also the model gets convoluted
+-solve this by changing the getgradient procedure, and let the fitter ask the model::getgradient so convolution can be applied
+-OK affects all components, component, fitter, model
+-added batch files for debug and release compilation under windows
+-TO DO make a faster mscatter using FFTW (avoid using precompiled fftw because this will not work for Mac OS X)
+
+
+//changes 4-2-2006
+-try to implement mscatterfft, a new convolution based on fft's , should be much faster
+//changes 5-2-2006
+-changed mscatterfft used padding with n-1 zeros to obtain linear convolution as opposed
+to the confusing circular convolution: speed improvement over matrix convolution is roughly factor of 4!
+
+//changes on 27-9-2006
+-corrected an error in Lorentz.cpp in the analytical derivative wrt. to the fwhm
+
+//changes on 11-10-2006
+-implemented a factor in the likelihood of the MLfitter to simulate the reduction in variance due to correlated 
+noise. This requires two values for the detector: the gain (counts per electron) and the correlation factor 
+(factor with which the total noise power changes due to variance). I created a new detectorchooser widget that allows to 
+choose between different detector. The detector settings are stored in file detectors.txt which should be in the executable directory
+and can be updated by the user. The detector settings are now stored in the model.
+Also updated to Qt4.2 which required a few changes here and there (notably in the Qfiledialogs which require a parent=0 input now)
+Also setup a Bloodshed C++dev project. Now I can finally work again in a decent IDE under windows after having to miss Kdevelop when leaving linux.
+
+//changes on 9-11
+Created a possibility to make residuals i.e. output a map of model-experiment for each spectrum in a multifit
+Created a possibility to save multispectra and normal spectra as dat files in double format (read as real*8 in DM)
+this affects a lot of files in the menu,eelsmodel, model, imagedisplay, multispectrum, spectrum.....
+result only tested for multispectra...
+
+//changes on 14-11
+Corrected a bug in the eshift component. In model.cpp now every new component gets the same eshift as the model.
+
+//changes on 6-12-06
+corrected bug in graph.cpp wrong scaling for negative numbers
+
+//changes on 25-1-07
+corrected a bug that caused a crash when trying to couple a parameter to itself
+
+//changes on 10-05-2007
+added a graphical way to select the component for a fine structure DOS
+added an equalizer function for the fine structure to help initialising a descent starting value
+added a trick to lock/unlock all parameters in a component by holding the shift key while locking/unlocking
+added a fine structure component which makes use of lifetime broadening to limit the amount of parameters (experimental)
+there seems to be a pointer error somewhere in the code, maybe in graph!!!!!
+
+//changes on 11-05-2007
+solved warning about virtual functions but no virtual destructor....no warnings anymore
+included debug_new in the debug compilation to track down memory leaks
+
+//18-5-07
+implementation of a cubic spline DOS with optional choice of equidistnat energy bins or lifetime optimised
+(todo analytical derivatives)
+
+//26-07-2007
+Changes in image.cpp to be able to load 3D SI's from DM. For now they get converted into a 2D si with a warning. Future development could include a 2D image with a point to select spectra
+Corrected a bug so that always image1 is selected from the DM image stack, before it could happen for small images that the image display (image0) was selected instead of the real data
+
+
+//25-09-07
+visit of Mike Walls and Francisco de la Pena (Orsay)
+changes in fitters. Included GSL least squares fitter again, should improve convergence but takes a bit longer and is not optimised for poisson noise.
+corrected a bug in the fitter that allowed to write values outside the boundaries of the parameters
+added aw warning when writing outside boundary
+updated names of includes so that it also compiles under linux again (thanks to Fransisco)
+reordered everything which has to do with parameters to the model.cpp rather than having pieces in the fitter implementations
+
+//26-09-07
+GSL fitter works
+updated functionality in model.cpp to keep track of all parameters during a multifit 
+this also helps to use eg first the GSL fitter (more robust) and then the ML fitter
+the parameters can be changed afterwards to a binary file which can be opened in DM
+turned warning of for writing outside boundary (too annoying...need to check it later, esp for the ML fitter)
+
+//28-09-07
+finished new release 2.0.0
+
+//1-10-2007
+changes to doslifetimespline, used the spline interpolation of GSL to solve a few issues
+
+//26-10-2007
+updated doslifetimespline, to show the points of the spline on the graph. Affects graph,doslifetimespline
+implemented different ways of lifetime broadening
+
+//29-10
+corrected bug when erasing a component that then the componentnr in doslifetime was wrong. This lead to unexpected behaviour when reloading the project.
+corrected bug in the default boundaries, it could never go negative
+corrected bug in overflow in doslifetime
+corrected some bugs in graph in combination with doslifetime
+corrected bug that component maintenance window was not correctly painted at startup
+
+//13-11
+visit of Thierry Sikora
+corrected bug in image.cpp when reading a DM3 file of a single spectrum (one dimension)
+corrected a memory leak in multispectrum (the multispectrum owns its spectra, so we should also clean them up)
+
+//14-11
+corrected bug in parameter.cpp. The bound state of a parameter was not correctly loaded because the setbound function called boundaryOK in a wrong way.
+This lead to paramters being unbound even though the model file described them as bound. This could make a fit that is different after loading than when the first time you saved it.
+
+//22-1-08
+made writing of parameters much faster by writing only the stored results and not recalculating it. changed model.cpp
+also changed writing model files much faster changed eelsmodel.cpp, fitter.cpp
+
+//24-1-08
+update the printing of the index in the model. This is important when loading a parameter dat file in DM. Updated componentmaintenance.cpp, model.cpp
+fixed a bug in updating the graph, in model.cpp
+
+//8-2-2008
+several improvements and updates V2.1
+-Levenberg Marquardt Poisson fitter, including trick to write linear parameters as function of the nonlinear, this should become the only fitter
+-2D SI's can now be loaded and are not transformed to 1D SI
+-added a hydrogenic spin split edge
+-added interface with ATLAS, to speed up matrix algebra, this comes in 2 verions eelsmodel.exe for everything higher than Pentium 3, and eelsmodelcore2duo.exe for core2duo or core2quad
+-changed the writing of parameters in dat file. they can now be loaded with import in DM
+

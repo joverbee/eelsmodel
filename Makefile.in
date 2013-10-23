@@ -1,0 +1,915 @@
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
+# KDE tags expanded automatically by am_edit - $Revision: 1.349.2.2 $ 
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
+# Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+@SET_MAKE@
+
+####### kdevelop will overwrite this part!!! (begin)##########
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_HEADER = $(INSTALL_DATA)
+transform = @program_transform_name@
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_alias = @build_alias@
+build_triplet = @build@
+host_alias = @host_alias@
+host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
+AMTAR = @AMTAR@
+ARTSCCONFIG = @ARTSCCONFIG@
+AS = @AS@
+AUTODIRS = @AUTODIRS@
+AWK = @AWK@
+CC = @CC@
+CONF_FILES = @CONF_FILES@
+CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+DCOPIDL = @DCOPIDL@
+DCOPIDL2CPP = @DCOPIDL2CPP@
+DCOP_DEPENDENCIES = @DCOP_DEPENDENCIES@
+DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
+DOXYGEN_PROJECT_NAME = @DOXYGEN_PROJECT_NAME@
+DOXYGEN_PROJECT_NUMBER = @DOXYGEN_PROJECT_NUMBER@
+DPMSINC = @DPMSINC@
+DPMSLIB = @DPMSLIB@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+FRAMEWORK_COREAUDIO = @FRAMEWORK_COREAUDIO@
+GCJ = @GCJ@
+GCJFLAGS = @GCJFLAGS@
+GLINC = @GLINC@
+GLLIB = @GLLIB@
+GMSGFMT = @GMSGFMT@
+IDL = @IDL@
+IDL_DEPENDENCIES = @IDL_DEPENDENCIES@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+JAR = @JAR@
+JAVAC = @JAVAC@
+JAVAH = @JAVAH@
+JVMLIBS = @JVMLIBS@
+KDECONFIG = @KDECONFIG@
+KDE_EXTRA_RPATH = @KDE_EXTRA_RPATH@
+KDE_HAS_DOXYGEN = @KDE_HAS_DOXYGEN@
+KDE_HAVE_DOT = @KDE_HAVE_DOT@
+KDE_INCLUDES = @KDE_INCLUDES@
+KDE_LDFLAGS = @KDE_LDFLAGS@
+KDE_MT_LDFLAGS = @KDE_MT_LDFLAGS@
+KDE_MT_LIBS = @KDE_MT_LIBS@
+KDE_PLUGIN = @KDE_PLUGIN@
+KDE_RPATH = @KDE_RPATH@
+KDE_USE_CLOSURE_FALSE = @KDE_USE_CLOSURE_FALSE@
+KDE_USE_CLOSURE_TRUE = @KDE_USE_CLOSURE_TRUE@
+KDE_USE_FINAL_FALSE = @KDE_USE_FINAL_FALSE@
+KDE_USE_FINAL_TRUE = @KDE_USE_FINAL_TRUE@
+KDE_XSL_STYLESHEET = @KDE_XSL_STYLESHEET@
+LEX = @LEX@
+LEXLIB = @LEXLIB@
+LIBBZ2 = @LIBBZ2@
+LIBCOMPAT = @LIBCOMPAT@
+LIBCRYPT = @LIBCRYPT@
+LIBDL = @LIBDL@
+LIBGEN = @LIBGEN@
+LIBJPEG = @LIBJPEG@
+LIBMICO = @LIBMICO@
+LIBOBJS = @LIBOBJS@
+LIBPNG = @LIBPNG@
+LIBPTHREAD = @LIBPTHREAD@
+LIBPYTHON = @LIBPYTHON@
+LIBQIMGIO = @LIBQIMGIO@
+LIBRESOLV = @LIBRESOLV@
+LIBSHADOW = @LIBSHADOW@
+LIBSM = @LIBSM@
+LIBSOCKET = @LIBSOCKET@
+LIBSSL = @LIBSSL@
+LIBTIFF = @LIBTIFF@
+LIBTOOL = @LIBTOOL@
+LIBUCB = @LIBUCB@
+LIBUTIL = @LIBUTIL@
+LIBXINERAMA = @LIBXINERAMA@
+LIBZ = @LIBZ@
+LIB_KAB = @LIB_KAB@
+LIB_KABC = @LIB_KABC@
+LIB_KDECORE = @LIB_KDECORE@
+LIB_KDEPRINT = @LIB_KDEPRINT@
+LIB_KDEUI = @LIB_KDEUI@
+LIB_KFILE = @LIB_KFILE@
+LIB_KFM = @LIB_KFM@
+LIB_KHTML = @LIB_KHTML@
+LIB_KIMGIO = @LIB_KIMGIO@
+LIB_KIO = @LIB_KIO@
+LIB_KPARTS = @LIB_KPARTS@
+LIB_KSPELL = @LIB_KSPELL@
+LIB_KSYCOCA = @LIB_KSYCOCA@
+LIB_POLL = @LIB_POLL@
+LIB_QPE = @LIB_QPE@
+LIB_QT = @LIB_QT@
+LIB_QTOPIA = @LIB_QTOPIA@
+LIB_SMB = @LIB_SMB@
+LIB_X11 = @LIB_X11@
+LIB_XEXT = @LIB_XEXT@
+LN_S = @LN_S@
+MCOPIDL = @MCOPIDL@
+MEINPROC = @MEINPROC@
+MICO_INCLUDES = @MICO_INCLUDES@
+MICO_LDFLAGS = @MICO_LDFLAGS@
+MOC = @MOC@
+MSGFMT = @MSGFMT@
+NOOPT_CFLAGS = @NOOPT_CFLAGS@
+NOOPT_CXXFLAGS = @NOOPT_CXXFLAGS@
+NOREPO = @NOREPO@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+PAMLIBS = @PAMLIBS@
+PASSWDLIBS = @PASSWDLIBS@
+PYTHONINC = @PYTHONINC@
+PYTHONLIB = @PYTHONLIB@
+PYTHONMODDIR = @PYTHONMODDIR@
+QTDOCDIR = @QTDOCDIR@
+QTE_NORTTI = @QTE_NORTTI@
+QTOPIA_INCLUDES = @QTOPIA_INCLUDES@
+QT_INCLUDES = @QT_INCLUDES@
+QT_LDFLAGS = @QT_LDFLAGS@
+RANLIB = @RANLIB@
+RC = @RC@
+REPO = @REPO@
+SETUIDFLAGS = @SETUIDFLAGS@
+SSL_INCLUDES = @SSL_INCLUDES@
+SSL_LDFLAGS = @SSL_LDFLAGS@
+STRIP = @STRIP@
+TOPSUBDIRS = @TOPSUBDIRS@
+UIC = @UIC@
+UIC_TR = @UIC_TR@
+USER_INCLUDES = @USER_INCLUDES@
+USER_LDFLAGS = @USER_LDFLAGS@
+USE_EXCEPTIONS = @USE_EXCEPTIONS@
+USE_RTTI = @USE_RTTI@
+USE_THREADS = @USE_THREADS@
+VERSION = @VERSION@
+WOVERLOADED_VIRTUAL = @WOVERLOADED_VIRTUAL@
+XGETTEXT = @XGETTEXT@
+XPMINC = @XPMINC@
+XPMLIB = @XPMLIB@
+X_EXTRA_LIBS = @X_EXTRA_LIBS@
+X_INCLUDES = @X_INCLUDES@
+X_LDFLAGS = @X_LDFLAGS@
+X_PRE_LIBS = @X_PRE_LIBS@
+all_includes = @all_includes@
+all_libraries = @all_libraries@
+am__include = @am__include@
+am__quote = @am__quote@
+idldir = @idldir@
+install_sh = @install_sh@
+jni_includes = @jni_includes@
+kde_appsdir = @kde_appsdir@
+kde_bindir = @kde_bindir@
+kde_confdir = @kde_confdir@
+kde_datadir = @kde_datadir@
+kde_htmldir = @kde_htmldir@
+kde_icondir = @kde_icondir@
+kde_includes = @kde_includes@
+kde_libraries = @kde_libraries@
+kde_libs_htmldir = @kde_libs_htmldir@
+kde_libs_prefix = @kde_libs_prefix@
+kde_locale = @kde_locale@
+kde_mimedir = @kde_mimedir@
+kde_moduledir = @kde_moduledir@
+kde_qtver = @kde_qtver@
+kde_servicesdir = @kde_servicesdir@
+kde_servicetypesdir = @kde_servicetypesdir@
+kde_sounddir = @kde_sounddir@
+kde_styledir = @kde_styledir@
+kde_templatesdir = @kde_templatesdir@
+kde_wallpaperdir = @kde_wallpaperdir@
+kde_widgetdir = @kde_widgetdir@
+micodir = @micodir@
+qt_includes = @qt_includes@
+qt_libraries = @qt_libraries@
+x_includes = @x_includes@
+x_libraries = @x_libraries@
+
+bin_PROGRAMS = eelsmodel
+
+eelsmodel_SOURCES = mlfitter_GSL.cpp eshift.cpp spinsplitedge.cpp wlsqfitter.cpp tag.cpp spectrum.cpp slice_iter.cpp saysomething.cpp realinput.cpp powerlaw.cpp plasmon.cpp parameter.cpp multispectrum.cpp multibyte.cpp mscatter.cpp monitor.cpp monitorchooser.cpp model.cpp mlfitter.cpp menu.cpp lsqfitter.cpp lorentz.cpp logpoly.cpp line.cpp ledge.cpp kedgerel.cpp kedge.cpp interactive_parameter.cpp integerinput.cpp imagedisplay.cpp image.cpp hsedge.cpp hello.cpp graph.cpp gettopspectrum.cpp getgraphptr.cpp getfilename.cpp gaussian.cpp fixedpattern.cpp fitter_dialog.cpp fitter.cpp fitterchooser.cpp expbackground.cpp edgefile.cpp curvematrix.cpp componentmaintenance.cpp component.cpp chisquare.cpp eelsmodel.cpp main.cpp 
+SOURCES = mlfitter_GSL.cpp eshift.cpp spinsplitedge.cpp wlsqfitter.cpp tag.cpp spectrum.cpp slice_iter.cpp saysomething.cpp realinput.cpp powerlaw.cpp plasmon.cpp parameter.cpp multispectrum.cpp multibyte.cpp mscatter.cpp monitor.cpp monitorchooser.cpp model.cpp mlfitter.cpp menu.cpp lsqfitter.cpp lorentz.cpp logpoly.cpp line.cpp ledge.cpp kedgerel.cpp kedge.cpp interactive_parameter.cpp integerinput.cpp imagedisplay.cpp image.cpp hsedge.cpp hello.cpp graph.cpp gettopspectrum.cpp getgraphptr.cpp getfilename.cpp gaussian.cpp fixedpattern.cpp fitter_dialog.cpp fitter.cpp fitterchooser.cpp expbackground.cpp edgefile.cpp curvematrix.cpp componentmaintenance.cpp component.cpp chisquare.cpp eelsmodel.cpp main.cpp 
+INTERFACES = 
+TRANSLATIONS = 
+KDE_OPTIONS = qtonly
+eelsmodel_LDADD = $(LIB_QPE) -lgsl -lgslcblas $(LIB_QT) $(LIBSOCKET)
+
+SUBDIRS = docs welcomescreen icons 
+
+EXTRA_DIST = main.cpp eelsmodel.cpp eelsmodel.h lo32-app-eelsmodel.png lo16-app-eelsmodel.png filenew.xpm filesave.xpm fileopen.xpm chisquare.cpp chisquare.h component.cpp component.h componentmaintenance.cpp componentmaintenance.h curvematrix.cpp curvematrix.h edgefile.cpp edgefile.h expbackground.cpp expbackground.h fitterchooser.cpp fitterchooser.h fitter.cpp fitter_dialog.cpp fitter_dialog.h fitter.h fixedpattern.cpp fixedpattern.h gaussian.cpp gaussian.h getfilename.cpp getfilename.h getgraphptr.cpp getgraphptr.h gettopspectrum.cpp gettopspectrum.h graph.cpp graph.h hello.cpp hello.h hsedge.cpp hsedge.h image.cpp imagedisplay.cpp imagedisplay.h image.h integerinput.cpp integerinput.h interactive_parameter.cpp interactive_parameter.h kedge.cpp kedge.h kedgerel.cpp kedgerel.h ledge.cpp ledge.h line.cpp line.h logpoly.cpp logpoly.h lorentz.cpp lorentz.h lsqfitter.cpp lsqfitter.h menu.cpp menu.h mlfitter.cpp mlfitter.h model.cpp model.h monitorchooser.cpp monitorchooser.h monitor.cpp monitor.h mscatter.cpp mscatter.h multibyte.cpp multibyte.h multispectrum.cpp multispectrum.h parameter.cpp parameter.h plasmon.cpp plasmon.h powerlaw.cpp powerlaw.h realinput.cpp realinput.h saysomething.cpp saysomething.h slice_iter.cpp slice_iter.h spectrum.cpp spectrum.h tag.cpp tag.h wlsqfitter.cpp wlsqfitter.h mycomponents.h licence.txt spinsplitedge.cpp spinsplitedge.h eshift.cpp eshift.h mlfitter_GSL.cpp mlfitter_GSL.h 
+
+####### kdevelop will overwrite this part!!! (end)############
+
+# set the include path for X, qt and KDE
+INCLUDES = $(all_includes)
+
+#>- eelsmodel_METASOURCES = AUTO
+
+# the library search path. 
+eelsmodel_LDFLAGS = $(all_libraries) 
+
+# them while "make clean", use CLEANFILES
+DISTCLEANFILES = $(eelsmodel_METASOURCES)
+subdir = eelsmodel
+mkinstalldirs = $(SHELL) $(top_srcdir)/admin/mkinstalldirs
+CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_CLEAN_FILES =
+bin_PROGRAMS = eelsmodel$(EXEEXT)
+PROGRAMS = $(bin_PROGRAMS)
+
+am_eelsmodel_OBJECTS = mlfitter_GSL.$(OBJEXT) eshift.$(OBJEXT) \
+	spinsplitedge.$(OBJEXT) wlsqfitter.$(OBJEXT) tag.$(OBJEXT) \
+	spectrum.$(OBJEXT) slice_iter.$(OBJEXT) saysomething.$(OBJEXT) \
+	realinput.$(OBJEXT) powerlaw.$(OBJEXT) plasmon.$(OBJEXT) \
+	parameter.$(OBJEXT) multispectrum.$(OBJEXT) multibyte.$(OBJEXT) \
+	mscatter.$(OBJEXT) monitor.$(OBJEXT) monitorchooser.$(OBJEXT) \
+	model.$(OBJEXT) mlfitter.$(OBJEXT) menu.$(OBJEXT) \
+	lsqfitter.$(OBJEXT) lorentz.$(OBJEXT) logpoly.$(OBJEXT) \
+	line.$(OBJEXT) ledge.$(OBJEXT) kedgerel.$(OBJEXT) \
+	kedge.$(OBJEXT) interactive_parameter.$(OBJEXT) \
+	integerinput.$(OBJEXT) imagedisplay.$(OBJEXT) image.$(OBJEXT) \
+	hsedge.$(OBJEXT) hello.$(OBJEXT) graph.$(OBJEXT) \
+	gettopspectrum.$(OBJEXT) getgraphptr.$(OBJEXT) \
+	getfilename.$(OBJEXT) gaussian.$(OBJEXT) fixedpattern.$(OBJEXT) \
+	fitter_dialog.$(OBJEXT) fitter.$(OBJEXT) \
+	fitterchooser.$(OBJEXT) expbackground.$(OBJEXT) \
+	edgefile.$(OBJEXT) curvematrix.$(OBJEXT) \
+	componentmaintenance.$(OBJEXT) component.$(OBJEXT) \
+	chisquare.$(OBJEXT) eelsmodel.$(OBJEXT) main.$(OBJEXT)
+#>- eelsmodel_OBJECTS = $(am_eelsmodel_OBJECTS)
+#>+ 23
+eelsmodel_final_OBJECTS = eelsmodel.all_cpp.o 
+eelsmodel_nofinal_OBJECTS = mlfitter_GSL.$(OBJEXT) eshift.$(OBJEXT) \
+	spinsplitedge.$(OBJEXT) wlsqfitter.$(OBJEXT) tag.$(OBJEXT) \
+	spectrum.$(OBJEXT) slice_iter.$(OBJEXT) saysomething.$(OBJEXT) \
+	realinput.$(OBJEXT) powerlaw.$(OBJEXT) plasmon.$(OBJEXT) \
+	parameter.$(OBJEXT) multispectrum.$(OBJEXT) multibyte.$(OBJEXT) \
+	mscatter.$(OBJEXT) monitor.$(OBJEXT) monitorchooser.$(OBJEXT) \
+	model.$(OBJEXT) mlfitter.$(OBJEXT) menu.$(OBJEXT) \
+	lsqfitter.$(OBJEXT) lorentz.$(OBJEXT) logpoly.$(OBJEXT) \
+	line.$(OBJEXT) ledge.$(OBJEXT) kedgerel.$(OBJEXT) \
+	kedge.$(OBJEXT) interactive_parameter.$(OBJEXT) \
+	integerinput.$(OBJEXT) imagedisplay.$(OBJEXT) image.$(OBJEXT) \
+	hsedge.$(OBJEXT) hello.$(OBJEXT) graph.$(OBJEXT) \
+	gettopspectrum.$(OBJEXT) getgraphptr.$(OBJEXT) \
+	getfilename.$(OBJEXT) gaussian.$(OBJEXT) fixedpattern.$(OBJEXT) \
+	fitter_dialog.$(OBJEXT) fitter.$(OBJEXT) \
+	fitterchooser.$(OBJEXT) expbackground.$(OBJEXT) \
+	edgefile.$(OBJEXT) curvematrix.$(OBJEXT) \
+	componentmaintenance.$(OBJEXT) component.$(OBJEXT) \
+	chisquare.$(OBJEXT) eelsmodel.$(OBJEXT) main.$(OBJEXT)\
+interactive_parameter.moc.o getgraphptr.moc.o componentmaintenance.moc.o getfilename.moc.o monitorchooser.moc.o saysomething.moc.o imagedisplay.moc.o eelsmodel.moc.o fitterchooser.moc.o fitter_dialog.moc.o menu.moc.o integerinput.moc.o image.moc.o hello.moc.o realinput.moc.o graph.moc.o 
+@KDE_USE_FINAL_FALSE@eelsmodel_OBJECTS = $(eelsmodel_nofinal_OBJECTS)
+@KDE_USE_FINAL_TRUE@eelsmodel_OBJECTS = $(eelsmodel_final_OBJECTS)
+eelsmodel_DEPENDENCIES =
+
+DEFS = @DEFS@
+DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
+#>- @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/chisquare.Po $(DEPDIR)/component.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/componentmaintenance.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/curvematrix.Po $(DEPDIR)/edgefile.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/eelsmodel.Po $(DEPDIR)/eshift.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/expbackground.Po $(DEPDIR)/fitter.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/fitter_dialog.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/fitterchooser.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/fixedpattern.Po $(DEPDIR)/gaussian.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/getfilename.Po $(DEPDIR)/getgraphptr.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/gettopspectrum.Po $(DEPDIR)/graph.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/hello.Po $(DEPDIR)/hsedge.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/image.Po $(DEPDIR)/imagedisplay.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/integerinput.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/interactive_parameter.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/kedge.Po $(DEPDIR)/kedgerel.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/ledge.Po $(DEPDIR)/line.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/logpoly.Po $(DEPDIR)/lorentz.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/lsqfitter.Po $(DEPDIR)/main.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/menu.Po $(DEPDIR)/mlfitter.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/mlfitter_GSL.Po $(DEPDIR)/model.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/monitor.Po $(DEPDIR)/monitorchooser.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/mscatter.Po $(DEPDIR)/multibyte.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/multispectrum.Po $(DEPDIR)/parameter.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/plasmon.Po $(DEPDIR)/powerlaw.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/realinput.Po $(DEPDIR)/saysomething.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/slice_iter.Po $(DEPDIR)/spectrum.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/spinsplitedge.Po $(DEPDIR)/tag.Po \
+#>- @AMDEP_TRUE@	$(DEPDIR)/wlsqfitter.Po
+#>+ 57
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/interactive_parameter.moc.P $(DEPDIR)/getgraphptr.moc.P $(DEPDIR)/componentmaintenance.moc.P $(DEPDIR)/getfilename.moc.P $(DEPDIR)/monitorchooser.moc.P $(DEPDIR)/saysomething.moc.P $(DEPDIR)/imagedisplay.moc.P $(DEPDIR)/eelsmodel.moc.P $(DEPDIR)/fitterchooser.moc.P $(DEPDIR)/fitter_dialog.moc.P $(DEPDIR)/menu.moc.P $(DEPDIR)/integerinput.moc.P $(DEPDIR)/image.moc.P $(DEPDIR)/hello.moc.P $(DEPDIR)/realinput.moc.P $(DEPDIR)/graph.moc.P  $(DEPDIR)/eelsmodel.all_cpp.P  $(DEPDIR)/chisquare.Po $(DEPDIR)/component.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/componentmaintenance.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/curvematrix.Po $(DEPDIR)/edgefile.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/eelsmodel.Po $(DEPDIR)/eshift.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/expbackground.Po $(DEPDIR)/fitter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/fitter_dialog.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/fitterchooser.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/fixedpattern.Po $(DEPDIR)/gaussian.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/getfilename.Po $(DEPDIR)/getgraphptr.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/gettopspectrum.Po $(DEPDIR)/graph.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/hello.Po $(DEPDIR)/hsedge.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/image.Po $(DEPDIR)/imagedisplay.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/integerinput.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/interactive_parameter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/kedge.Po $(DEPDIR)/kedgerel.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/ledge.Po $(DEPDIR)/line.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/logpoly.Po $(DEPDIR)/lorentz.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/lsqfitter.Po $(DEPDIR)/main.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/menu.Po $(DEPDIR)/mlfitter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/mlfitter_GSL.Po $(DEPDIR)/model.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/monitor.Po $(DEPDIR)/monitorchooser.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/mscatter.Po $(DEPDIR)/multibyte.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/multispectrum.Po $(DEPDIR)/parameter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/plasmon.Po $(DEPDIR)/powerlaw.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/realinput.Po $(DEPDIR)/saysomething.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/slice_iter.Po $(DEPDIR)/spectrum.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/spinsplitedge.Po $(DEPDIR)/tag.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	$(DEPDIR)/wlsqfitter.Po
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/interactive_parameter.moc.P $(DEPDIR)/getgraphptr.moc.P $(DEPDIR)/componentmaintenance.moc.P $(DEPDIR)/getfilename.moc.P $(DEPDIR)/monitorchooser.moc.P $(DEPDIR)/saysomething.moc.P $(DEPDIR)/imagedisplay.moc.P $(DEPDIR)/eelsmodel.moc.P $(DEPDIR)/fitterchooser.moc.P $(DEPDIR)/fitter_dialog.moc.P $(DEPDIR)/menu.moc.P $(DEPDIR)/integerinput.moc.P $(DEPDIR)/image.moc.P $(DEPDIR)/hello.moc.P $(DEPDIR)/realinput.moc.P $(DEPDIR)/graph.moc.P  $(DEPDIR)/chisquare.Po $(DEPDIR)/component.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/componentmaintenance.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/curvematrix.Po $(DEPDIR)/edgefile.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/eelsmodel.Po $(DEPDIR)/eshift.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/expbackground.Po $(DEPDIR)/fitter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/fitter_dialog.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/fitterchooser.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/fixedpattern.Po $(DEPDIR)/gaussian.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/getfilename.Po $(DEPDIR)/getgraphptr.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/gettopspectrum.Po $(DEPDIR)/graph.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/hello.Po $(DEPDIR)/hsedge.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/image.Po $(DEPDIR)/imagedisplay.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/integerinput.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/interactive_parameter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/kedge.Po $(DEPDIR)/kedgerel.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/ledge.Po $(DEPDIR)/line.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/logpoly.Po $(DEPDIR)/lorentz.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/lsqfitter.Po $(DEPDIR)/main.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/menu.Po $(DEPDIR)/mlfitter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/mlfitter_GSL.Po $(DEPDIR)/model.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/monitor.Po $(DEPDIR)/monitorchooser.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/mscatter.Po $(DEPDIR)/multibyte.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/multispectrum.Po $(DEPDIR)/parameter.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/plasmon.Po $(DEPDIR)/powerlaw.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/realinput.Po $(DEPDIR)/saysomething.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/slice_iter.Po $(DEPDIR)/spectrum.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/spinsplitedge.Po $(DEPDIR)/tag.Po \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	$(DEPDIR)/wlsqfitter.Po
+
+#>- CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+#>- 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+#>+ 2
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS)
+#>- LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+#>- 	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+#>- 	$(AM_CXXFLAGS) $(CXXFLAGS)
+#>+ 3
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile --tag=CXX $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS)
+CXXLD = $(CXX)
+#>- CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+#>- 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+#>+ 2
+CXXLINK = $(LIBTOOL) --mode=link --tag=CXX $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+CXXFLAGS = @CXXFLAGS@
+DIST_SOURCES = $(eelsmodel_SOURCES)
+
+RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
+	uninstall-info-recursive all-recursive install-data-recursive \
+	install-exec-recursive installdirs-recursive install-recursive \
+	uninstall-recursive check-recursive installcheck-recursive
+DIST_COMMON = Makefile.am Makefile.in
+DIST_SUBDIRS = $(SUBDIRS)
+SOURCES = mlfitter_GSL.cpp eshift.cpp spinsplitedge.cpp wlsqfitter.cpp tag.cpp spectrum.cpp slice_iter.cpp saysomething.cpp realinput.cpp powerlaw.cpp plasmon.cpp parameter.cpp multispectrum.cpp multibyte.cpp mscatter.cpp monitor.cpp monitorchooser.cpp model.cpp mlfitter.cpp menu.cpp lsqfitter.cpp lorentz.cpp logpoly.cpp line.cpp ledge.cpp kedgerel.cpp kedge.cpp interactive_parameter.cpp integerinput.cpp imagedisplay.cpp image.cpp hsedge.cpp hello.cpp graph.cpp gettopspectrum.cpp getgraphptr.cpp getfilename.cpp gaussian.cpp fixedpattern.cpp fitter_dialog.cpp fitter.cpp fitterchooser.cpp expbackground.cpp edgefile.cpp curvematrix.cpp componentmaintenance.cpp component.cpp chisquare.cpp eelsmodel.cpp main.cpp 
+
+#>- all: all-recursive
+#>+ 1
+all: docs-am  all-recursive
+
+.SUFFIXES:
+.SUFFIXES: .cpp .lo .o .obj
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+#>- 	cd $(top_srcdir) && \
+#>- 	  $(AUTOMAKE) --gnu  eelsmodel/Makefile
+#>+ 3
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  eelsmodel/Makefile
+	cd $(top_srcdir) && perl admin/am_edit eelsmodel-1.0/eelsmodel/Makefile.in
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo $$p1|sed '$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
+	  rm -f $(DESTDIR)$(bindir)/$$f; \
+	done
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+eelsmodel$(EXEEXT): $(eelsmodel_OBJECTS) $(eelsmodel_DEPENDENCIES) 
+	@rm -f eelsmodel$(EXEEXT)
+	$(CXXLINK) $(eelsmodel_LDFLAGS) $(eelsmodel_OBJECTS) $(eelsmodel_LDADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT) core *.core
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chisquare.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/component.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/componentmaintenance.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/curvematrix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/edgefile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/eelsmodel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/eshift.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/expbackground.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fitter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fitter_dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fitterchooser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fixedpattern.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gaussian.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getfilename.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getgraphptr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gettopspectrum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/graph.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hello.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hsedge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/image.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/imagedisplay.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/integerinput.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/interactive_parameter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/kedge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/kedgerel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ledge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/line.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/logpoly.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lorentz.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lsqfitter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/menu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mlfitter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mlfitter_GSL.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/model.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/monitor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/monitorchooser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mscatter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/multibyte.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/multispectrum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/parameter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/plasmon.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/powerlaw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/realinput.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/saysomething.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/slice_iter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/spectrum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/spinsplitedge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tag.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/wlsqfitter.Po@am__quote@
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+.cpp.o:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.cpp.obj:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+
+.cpp.lo:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+CXXDEPMODE = @CXXDEPMODE@
+uninstall-info-am:
+
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+$(RECURSIVE_TARGETS):
+	@set fnord $(MAKEFLAGS); amf=$$2; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+mostlyclean-recursive clean-recursive distclean-recursive \
+maintainer-clean-recursive:
+	@set fnord $(MAKEFLAGS); amf=$$2; \
+	dot_seen=no; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	rev=''; for subdir in $$list; do \
+	  if test "$$subdir" = "."; then :; else \
+	    rev="$$subdir $$rev"; \
+	  fi; \
+	done; \
+	rev="$$rev ."; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique $(LISP)
+
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+
+GTAGS:
+	here=`CDPATH=: && cd $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) $$here
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
+
+#>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+#>+ 4
+KDE_DIST=spinsplitedgegap.cpp eelsmodel.pro tags test spinsplitedgegap.h Makefile.macosx test.mod 
+
+DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
+
+
+top_distdir = ..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+	for subdir in $(SUBDIRS); do \
+	  if test "$$subdir" = .; then :; else \
+	    test -d $(distdir)/$$subdir \
+	    || mkdir $(distdir)/$$subdir \
+	    || exit 1; \
+	    (cd $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$(top_distdir)" \
+	        distdir=../$(distdir)/$$subdir \
+	        distdir) \
+	      || exit 1; \
+	  fi; \
+	done
+check-am: all-am
+check: check-recursive
+all-am: Makefile $(PROGRAMS)
+installdirs: installdirs-recursive
+installdirs-am:
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+
+installcheck: installcheck-recursive
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
+
+maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
+#>- clean: clean-recursive
+#>+ 1
+clean: kde-rpo-clean  clean-recursive
+
+#>- clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
+#>+ 1
+clean-am: clean-metasources clean-final  clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
+
+distclean: distclean-recursive
+
+distclean-am: clean-am distclean-compile distclean-depend \
+	distclean-generic distclean-libtool distclean-tags
+
+dvi: dvi-recursive
+
+dvi-am:
+
+info: info-recursive
+
+info-am:
+
+install-data-am:
+
+install-exec-am: install-binPROGRAMS
+
+install-info: install-info-recursive
+
+install-man:
+
+installcheck-am:
+
+maintainer-clean: maintainer-clean-recursive
+
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-recursive
+
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
+
+uninstall-am: uninstall-binPROGRAMS uninstall-info-am
+
+uninstall-info: uninstall-info-recursive
+
+.PHONY: $(RECURSIVE_TARGETS) GTAGS all all-am check check-am clean \
+	clean-binPROGRAMS clean-generic clean-libtool clean-recursive \
+	distclean distclean-compile distclean-depend distclean-generic \
+	distclean-libtool distclean-recursive distclean-tags distdir \
+	dvi dvi-am dvi-recursive info info-am info-recursive install \
+	install-am install-binPROGRAMS install-data install-data-am \
+	install-data-recursive install-exec install-exec-am \
+	install-exec-recursive install-info install-info-am \
+	install-info-recursive install-man install-recursive \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am installdirs-recursive maintainer-clean \
+	maintainer-clean-generic maintainer-clean-recursive mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	mostlyclean-recursive tags tags-recursive uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-info-recursive uninstall-recursive
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
+
+
+#>+ 3
+interactive_parameter.moc.cpp: $(srcdir)/interactive_parameter.h
+	$(MOC) $(srcdir)/interactive_parameter.h -o interactive_parameter.moc.cpp
+
+#>+ 3
+getgraphptr.moc.cpp: $(srcdir)/getgraphptr.h
+	$(MOC) $(srcdir)/getgraphptr.h -o getgraphptr.moc.cpp
+
+#>+ 3
+componentmaintenance.moc.cpp: $(srcdir)/componentmaintenance.h
+	$(MOC) $(srcdir)/componentmaintenance.h -o componentmaintenance.moc.cpp
+
+#>+ 3
+getfilename.moc.cpp: $(srcdir)/getfilename.h
+	$(MOC) $(srcdir)/getfilename.h -o getfilename.moc.cpp
+
+#>+ 3
+monitorchooser.moc.cpp: $(srcdir)/monitorchooser.h
+	$(MOC) $(srcdir)/monitorchooser.h -o monitorchooser.moc.cpp
+
+#>+ 3
+saysomething.moc.cpp: $(srcdir)/saysomething.h
+	$(MOC) $(srcdir)/saysomething.h -o saysomething.moc.cpp
+
+#>+ 3
+imagedisplay.moc.cpp: $(srcdir)/imagedisplay.h
+	$(MOC) $(srcdir)/imagedisplay.h -o imagedisplay.moc.cpp
+
+#>+ 3
+eelsmodel.moc.cpp: $(srcdir)/eelsmodel.h
+	$(MOC) $(srcdir)/eelsmodel.h -o eelsmodel.moc.cpp
+
+#>+ 3
+fitterchooser.moc.cpp: $(srcdir)/fitterchooser.h
+	$(MOC) $(srcdir)/fitterchooser.h -o fitterchooser.moc.cpp
+
+#>+ 3
+fitter_dialog.moc.cpp: $(srcdir)/fitter_dialog.h
+	$(MOC) $(srcdir)/fitter_dialog.h -o fitter_dialog.moc.cpp
+
+#>+ 3
+menu.moc.cpp: $(srcdir)/menu.h
+	$(MOC) $(srcdir)/menu.h -o menu.moc.cpp
+
+#>+ 3
+integerinput.moc.cpp: $(srcdir)/integerinput.h
+	$(MOC) $(srcdir)/integerinput.h -o integerinput.moc.cpp
+
+#>+ 3
+image.moc.cpp: $(srcdir)/image.h
+	$(MOC) $(srcdir)/image.h -o image.moc.cpp
+
+#>+ 3
+hello.moc.cpp: $(srcdir)/hello.h
+	$(MOC) $(srcdir)/hello.h -o hello.moc.cpp
+
+#>+ 3
+realinput.moc.cpp: $(srcdir)/realinput.h
+	$(MOC) $(srcdir)/realinput.h -o realinput.moc.cpp
+
+#>+ 3
+graph.moc.cpp: $(srcdir)/graph.h
+	$(MOC) $(srcdir)/graph.h -o graph.moc.cpp
+
+#>+ 3
+clean-metasources:
+	-rm -f  interactive_parameter.moc.cpp getgraphptr.moc.cpp componentmaintenance.moc.cpp getfilename.moc.cpp monitorchooser.moc.cpp saysomething.moc.cpp imagedisplay.moc.cpp eelsmodel.moc.cpp fitterchooser.moc.cpp fitter_dialog.moc.cpp menu.moc.cpp integerinput.moc.cpp image.moc.cpp hello.moc.cpp realinput.moc.cpp graph.moc.cpp
+
+#>+ 2
+docs-am:
+
+#>+ 6
+force-reedit:
+		cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  eelsmodel/Makefile
+	cd $(top_srcdir) && perl admin/am_edit eelsmodel-1.0/eelsmodel/Makefile.in
+
+
+#>+ 11
+eelsmodel.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/mlfitter_GSL.cpp $(srcdir)/eshift.cpp $(srcdir)/spinsplitedge.cpp $(srcdir)/wlsqfitter.cpp $(srcdir)/tag.cpp $(srcdir)/spectrum.cpp $(srcdir)/slice_iter.cpp $(srcdir)/saysomething.cpp $(srcdir)/realinput.cpp $(srcdir)/powerlaw.cpp $(srcdir)/plasmon.cpp $(srcdir)/parameter.cpp $(srcdir)/multispectrum.cpp $(srcdir)/multibyte.cpp $(srcdir)/mscatter.cpp $(srcdir)/monitor.cpp $(srcdir)/monitorchooser.cpp $(srcdir)/model.cpp $(srcdir)/mlfitter.cpp $(srcdir)/menu.cpp $(srcdir)/lsqfitter.cpp $(srcdir)/lorentz.cpp $(srcdir)/logpoly.cpp $(srcdir)/line.cpp $(srcdir)/ledge.cpp $(srcdir)/kedgerel.cpp $(srcdir)/kedge.cpp $(srcdir)/interactive_parameter.cpp $(srcdir)/integerinput.cpp $(srcdir)/imagedisplay.cpp $(srcdir)/image.cpp $(srcdir)/hsedge.cpp $(srcdir)/hello.cpp $(srcdir)/graph.cpp $(srcdir)/gettopspectrum.cpp $(srcdir)/getgraphptr.cpp $(srcdir)/getfilename.cpp $(srcdir)/gaussian.cpp $(srcdir)/fixedpattern.cpp $(srcdir)/fitter_dialog.cpp $(srcdir)/fitter.cpp $(srcdir)/fitterchooser.cpp $(srcdir)/expbackground.cpp $(srcdir)/edgefile.cpp $(srcdir)/curvematrix.cpp $(srcdir)/componentmaintenance.cpp $(srcdir)/component.cpp $(srcdir)/chisquare.cpp $(srcdir)/eelsmodel.cpp $(srcdir)/main.cpp fitterchooser.moc.cpp eelsmodel.moc.cpp interactive_parameter.moc.cpp getgraphptr.moc.cpp fitter_dialog.moc.cpp menu.moc.cpp integerinput.moc.cpp image.moc.cpp componentmaintenance.moc.cpp getfilename.moc.cpp monitorchooser.moc.cpp saysomething.moc.cpp hello.moc.cpp realinput.moc.cpp graph.moc.cpp imagedisplay.moc.cpp 
+	@echo 'creating eelsmodel.all_cpp.cpp ...'; \
+	rm -f eelsmodel.all_cpp.files eelsmodel.all_cpp.final; \
+	echo "#define KDE_USE_FINAL 1" >> eelsmodel.all_cpp.final; \
+	for file in mlfitter_GSL.cpp eshift.cpp spinsplitedge.cpp wlsqfitter.cpp tag.cpp spectrum.cpp slice_iter.cpp saysomething.cpp realinput.cpp powerlaw.cpp plasmon.cpp parameter.cpp multispectrum.cpp multibyte.cpp mscatter.cpp monitor.cpp monitorchooser.cpp model.cpp mlfitter.cpp menu.cpp lsqfitter.cpp lorentz.cpp logpoly.cpp line.cpp ledge.cpp kedgerel.cpp kedge.cpp interactive_parameter.cpp integerinput.cpp imagedisplay.cpp image.cpp hsedge.cpp hello.cpp graph.cpp gettopspectrum.cpp getgraphptr.cpp getfilename.cpp gaussian.cpp fixedpattern.cpp fitter_dialog.cpp fitter.cpp fitterchooser.cpp expbackground.cpp edgefile.cpp curvematrix.cpp componentmaintenance.cpp component.cpp chisquare.cpp eelsmodel.cpp main.cpp fitterchooser.moc.cpp eelsmodel.moc.cpp interactive_parameter.moc.cpp getgraphptr.moc.cpp fitter_dialog.moc.cpp menu.moc.cpp integerinput.moc.cpp image.moc.cpp componentmaintenance.moc.cpp getfilename.moc.cpp monitorchooser.moc.cpp saysomething.moc.cpp hello.moc.cpp realinput.moc.cpp graph.moc.cpp imagedisplay.moc.cpp ; do \
+	  echo "#include \"$$file\"" >> eelsmodel.all_cpp.files; \
+	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> eelsmodel.all_cpp.final; \
+	done; \
+	cat eelsmodel.all_cpp.final eelsmodel.all_cpp.files > eelsmodel.all_cpp.cpp; \
+	rm -f eelsmodel.all_cpp.final eelsmodel.all_cpp.files
+
+#>+ 3
+clean-final:
+	-rm -f eelsmodel.all_cpp.cpp
+
+#>+ 2
+final:
+	$(MAKE) eelsmodel_OBJECTS="$(eelsmodel_final_OBJECTS)" all-am
+#>+ 2
+final-install:
+	$(MAKE) eelsmodel_OBJECTS="$(eelsmodel_final_OBJECTS)" install-am
+#>+ 2
+no-final:
+	$(MAKE) eelsmodel_OBJECTS="$(eelsmodel_nofinal_OBJECTS)" all-am
+#>+ 2
+no-final-install:
+	$(MAKE) eelsmodel_OBJECTS="$(eelsmodel_nofinal_OBJECTS)" install-am
+#>+ 3
+cvs-clean:
+	$(MAKE) admindir=$(top_srcdir)/admin -f $(top_srcdir)/admin/Makefile.common cvs-clean
+
+#>+ 3
+kde-rpo-clean:
+	-rm -f *.rpo

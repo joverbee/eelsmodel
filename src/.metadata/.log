@@ -1,0 +1,23 @@
+!SESSION 2010-12-14 14:58:35.389 -----------------------------------------------
+eclipse.buildId=M20100909-0800
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=nl_BE
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.cpp.product -clean
+
+!ENTRY org.eclipse.help 4 0 2010-12-14 14:59:11.393
+!MESSAGE Required attribute "label" missing from "topic" element in "/com.trolltech.help_4.6.1/qt.xml" (skipping element)
+!SESSION 2011-01-03 10:19:21.599 -----------------------------------------------
+eclipse.buildId=M20100909-0800
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=nl_BE
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.cpp.product -clean
+
+!ENTRY org.eclipse.help 4 0 2011-01-03 10:19:50.038
+!MESSAGE Required attribute "label" missing from "topic" element in "/com.trolltech.help_4.6.1/qt.xml" (skipping element)
+
+!ENTRY org.eclipse.epp.usagedata.recording 1 0 2011-01-03 10:20:08.971
+!MESSAGE Usage data uploaded to http://udc.eclipse.org/upload.php in 4222 milliseconds.

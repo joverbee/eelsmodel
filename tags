@@ -1,0 +1,718 @@
+
+getgraphptr.cpp,278
+Getgraphptr::Getgraphptr(33,1364
+Getgraphptr::~Getgraphptr(62,2375
+void Getgraphptr::slot_ok(65,2407
+void Getgraphptr::slot_cancel(102,3271
+Spectrum* Getgraphptr::getpointer(105,3322
+Multispectrum* Getgraphptr::getmultipointer(108,3377
+bool Getgraphptr::ismulti(111,3443
+
+lsqfitter.cpp,252
+LSQFitter::LSQFitter(20,1066
+LSQFitter::~LSQFitter(25,1135
+double LSQFitter::goodness_of_fit(27,1162
+std::string LSQFitter::goodness_of_fit_string(43,1608
+void LSQFitter::calculate_beta_and_alpha(51,1869
+double LSQFitter::likelihoodratio(81,2907
+
+saysomething.cpp,73
+Saysomething::Saysomething(21,1080
+Saysomething::~Saysomething(33,1396
+
+slice_iter.cpp,0
+
+getfilename.cpp,295
+Getfilename::Getfilename(22,1115
+Getfilename::~Getfilename(31,1286
+std::string Getfilename::open(33,1317
+std::string Getfilename::save(39,1509
+void Getfilename::setdirname(45,1701
+void Getfilename::setfilter(48,1775
+void Getfilename::setname(51,1851
+void Getfilename::setcaption(54,1913
+
+wlsqfitter.cpp,254
+WLSQFitter::WLSQFitter(20,1068
+WLSQFitter::~WLSQFitter(27,1224
+double WLSQFitter::goodness_of_fit(29,1253
+std::string WLSQFitter::goodness_of_fit_string(46,1798
+void WLSQFitter::calculate_beta_and_alpha(54,2069
+double WLSQFitter::getweight(85,3157
+
+main.cpp,168
+const Eelsmodel* eelsmodelptr(61,1997
+void spectrumtest(67,2155
+void matrixtest(94,3061
+void chisquaretest(114,3610
+void parametertest(127,4023
+int main(173,5466
+
+componentmaintenance.cpp,868
+Componentmaintenance::Componentmaintenance(46,1667
+Componentmaintenance::~Componentmaintenance(148,5988
+void  Componentmaintenance::slot_update(155,6199
+void Componentmaintenance::slot_remove_components(225,8723
+void Componentmaintenance::slot_add_components(238,9321
+void  Componentmaintenance::slot_info(251,9724
+void  Componentmaintenance::slot_couple(267,10346
+void  Componentmaintenance::slot_monitor(286,11043
+void Componentmaintenance::slot_rename(306,11740
+void Componentmaintenance::slot_param_doubleclick(318,12139
+void Componentmaintenance::slot_param_rightclick(328,12509
+void Componentmaintenance::slot_param_rightpress(347,13244
+void Componentmaintenance::slot_param_click(356,13545
+bool  Componentmaintenance::modelvalid(407,15042
+bool Componentmaintenance::itemisparameter(423,15433
+bool Componentmaintenance::itemiscomponent(428,15620
+
+expbackground.cpp,252
+Expbackground::Expbackground(23,1149
+Expbackground::Expbackground(29,1311
+Expbackground::~Expbackground(54,2107
+void Expbackground::calculate(56,2142
+Expbackground* Expbackground::clone(84,2889
+Expbackground* Expbackground::new_component(86,2967
+
+multibyte.cpp,475
+Multibyte::Multibyte(22,1104
+Multibyte::Multibyte(28,1189
+Multibyte::~Multibyte(34,1266
+void Multibyte::setbyte(37,1294
+unsigned char Multibyte::getbyte(42,1440
+unsigned char Multibyte::getbyte(47,1567
+unsigned int Multibyte::getvalue(60,1949
+double Multibyte::getfloatvalue(71,2254
+int Multibyte::getsignedvalue(131,4050
+bool Multibyte::indexOK(152,4803
+void Multibyte::debug(157,4905
+std::ostream& Multibyte::put(169,5305
+std::istream& Multibyte::get(177,5490
+
+gettopspectrum.cpp,127
+Gettopspectrum::Gettopspectrum(25,1172
+Gettopspectrum::~Gettopspectrum(27,1210
+Spectrum* Gettopspectrum::getpointer(29,1247
+
+imagedisplay.cpp,447
+Imagedisplay::Imagedisplay(28,1229
+Imagedisplay::Imagedisplay(74,2556
+Imagedisplay::~Imagedisplay(124,3824
+bool Imagedisplay::reconvertImage(127,3858
+void Imagedisplay::paintEvent(140,4235
+void Imagedisplay::update(158,4868
+void Imagedisplay::setname(163,4920
+std::string Imagedisplay::getname(167,4991
+void Imagedisplay::mousePressEvent(177,5163
+void Imagedisplay::mouseMoveEvent(182,5316
+void Imagedisplay::mouseReleaseEvent(193,5697
+
+monitorchooser.cpp,105
+MonitorChooser::MonitorChooser(23,1131
+      retvalue=48,1777
+MonitorChooser::~MonitorChooser(50,1820
+
+chisquare.cpp,325
+double cumulative_chisquare(26,1217
+double cumulative_chisquareQ(30,1320
+#define	CHI_EPSILON 51,1870
+#define	CHI_MAX 52,1946
+#define	LOG_SQRT_PI 54,2014
+#define	I_SQRT_PI 55,2088
+#define	BIGX 56,2160
+#define	ex(ex57,2233
+double  pochisq 69,2592
+double critchi 120,3662
+#define	Z_MAX 155,4492
+double poz 166,4888
+
+kedgerel.cpp,201
+Kedgerel::Kedgerel(29,1367
+Kedgerel::Kedgerel(35,1694
+Kedgerel::~Kedgerel(85,3478
+void Kedgerel::calculate(87,3503
+Kedgerel* Kedgerel::clone(234,10527
+Kedgerel* Kedgerel::new_component(236,10590
+
+fitterchooser.cpp,101
+FitterChooser::FitterChooser(23,1148
+      retvalue=48,1879
+FitterChooser::~FitterChooser(50,1922
+
+integerinput.cpp,73
+Integerinput::Integerinput(22,1106
+Integerinput::~Integerinput(32,1484
+
+edgefile.cpp,199
+EdgeFile::EdgeFile(29,1553
+EdgeFile::EdgeFile(36,1767
+EdgeFile::~EdgeFile(92,3891
+void EdgeFile::calculate(96,3935
+EdgeFile* EdgeFile::clone(151,5976
+EdgeFile* EdgeFile::new_component(155,6043
+
+gaussian.cpp,264
+Gaussian::Gaussian(24,1152
+Gaussian::Gaussian(30,1292
+Gaussian::Gaussian(61,2148
+Gaussian::~Gaussian(81,2713
+void Gaussian::calculate(83,2738
+void Gaussian::getgradient(117,3862
+Gaussian* Gaussian::clone(162,5323
+Gaussian* Gaussian::new_component(164,5386
+
+model.cpp,798
+Model::Model(33,1500
+  #define MY_COMP_EXEC 46,2013
+Model::Model(49,2161
+  #define MY_COMP_EXEC 62,2773
+Model::~Model(69,2925
+void Model::maintaincomponents(78,3145
+Component* Model::getcomponent(86,3434
+Component* Model::getlastcomponent(90,3516
+int Model::getcomponentindexbyname(94,3593
+void Model::calculate(105,3947
+void Model::display(140,5196
+bool Model::ismulti(153,5560
+void Model::updateHL(158,5653
+void Model::updateHLnodraw(165,5837
+void Model::printcomponents(171,6028
+void Model::resetsigmas(177,6273
+std::vector<Component*>& Model::getcomponentvector(187,6581
+std::vector<Component*>& Model::getallcomponentvector(189,6663
+void Model::addcomponent(191,6751
+void Model::removecomponent(208,7339
+Model& Model::operator=(216,7764
+Model& Model::operator+=(225,8037
+
+realinput.cpp,61
+RealInput::RealInput(21,1073
+RealInput::~RealInput(32,1466
+
+line.cpp,153
+Line::Line(23,1099
+Line::Line(29,1216
+Line::~Line(51,1907
+void Line::calculate(53,1924
+Line* Line::clone(80,2602
+Line* Line::new_component(82,2653
+
+parameter.cpp,1537
+Parameter::Parameter(27,1161
+Parameter::Parameter(41,1359
+Parameter::Parameter(55,1571
+Parameter::Parameter(68,1807
+Parameter::~Parameter(83,2160
+void Parameter::setvalue(95,2517
+void Parameter::setsigma(111,2989
+void Parameter::interactivevalue(115,3041
+void Parameter::setunchanged(131,3696
+void Parameter::setchanged(135,3751
+double Parameter::getvalue(144,3982
+Parameter* Parameter::getmaster(163,4466
+double Parameter::getsigma(173,4676
+bool Parameter::boundaryOK(175,4728
+bool Parameter::setboundaries(177,4833
+double Parameter::getupperbound(199,5229
+double Parameter::getlowerbound(200,5290
+void  Parameter::setupperbound(201,5351
+void Parameter::setlowerbound(202,5407
+void Parameter::setchangeable(203,5462
+void Parameter::setcoupled(204,5515
+void Parameter::couple(215,5666
+void Parameter::deletecoupling(242,6409
+void Parameter::setbound(261,6795
+bool Parameter::changed(266,6916
+bool Parameter::ischangeable(269,6973
+bool Parameter::isbound(270,7030
+bool Parameter::iscoupled(271,7077
+void Parameter::setname(272,7128
+std::string Parameter::getname(273,7188
+std::string Parameter::getpurename(283,7428
+void Parameter::setwatched(287,7490
+void Parameter::killmonitor(297,7650
+void Parameter::setmonitor(312,8014
+Monitor* Parameter::getmonitor(329,8328
+bool Parameter::ismonitored(334,8472
+bool Parameter::iswatched(338,8531
+Parameter Parameter::operator+(342,8586
+Parameter Parameter::operator-(346,8706
+Parameter Parameter::operator*(350,8826
+Parameter Parameter::operator/(354,8948
+
+tag.cpp,544
+Tag::Tag(19,1036
+Tag::~Tag(92,2129
+std::string Tag::getname(94,2144
+unsigned int Tag::getsize(97,2195
+double Tag::getmin(114,2458
+double Tag::getmax(121,2617
+double Tag::getvalue(128,2776
+long Tag::getint(147,3112
+char Tag::getchar(151,3234
+double Tag::getreal(155,3358
+bool Tag::isreal(159,3486
+bool Tag::isint(162,3542
+bool Tag::ischar(165,3595
+bool Tag::indexOK(168,3650
+void Tag::seti1(185,3951
+void Tag::seti2(189,4076
+void Tag::seti4(193,4201
+void Tag::setf4(197,4327
+void Tag::setf8(201,4458
+void Tag::seta1(205,4589
+
+hello.cpp,108
+Hello::Hello(34,1362
+Hello::~Hello(65,2774
+void Hello::slot_ok(67,2793
+void Hello::slot_licence(71,2864
+
+ledge.cpp,166
+Ledge::Ledge(23,1161
+Ledge::Ledge(29,1345
+Ledge::~Ledge(88,3415
+void Ledge::calculate(91,3435
+Ledge* Ledge::clone(223,9832
+Ledge* Ledge::new_component(225,9886
+
+mscatter.cpp,235
+Mscatter::Mscatter(30,1378
+Mscatter::Mscatter(39,1820
+Mscatter::~Mscatter(113,4782
+void Mscatter::calculate(115,4807
+void Mscatter::updateLL(152,5970
+Mscatter* Mscatter::clone(213,8105
+Mscatter* Mscatter::new_component(215,8168
+
+spectrum.cpp,1734
+Spectrum::Spectrum(33,1338
+Spectrum::Spectrum(42,1503
+Spectrum::Spectrum(61,2007
+Spectrum::Spectrum(79,2519
+Spectrum::~Spectrum(278,9128
+unsigned int Spectrum::getnpoints(285,9260
+void Spectrum::setnpoints(286,9318
+double Spectrum::getpppc(294,9490
+void Spectrum::setpppc(295,9536
+Spectrum Spectrum::operator+=(299,9610
+Spectrum Spectrum::operator-=(310,9862
+Spectrum Spectrum::operator+=(321,10120
+Spectrum Spectrum::operator-=(330,10270
+Spectrum Spectrum::operator/=(339,10420
+Spectrum Spectrum::operator/=(350,10678
+Spectrum Spectrum::operator*=(358,10826
+Spectrum& Spectrum::operator=(376,11236
+Spectrum Spectrum::operator*(401,12003
+void Spectrum::clear(414,12150
+void Spectrum::setdatapoint 421,12296
+void Spectrum::seterror 428,12471
+void Spectrum::setexclude(433,12568
+void Spectrum::setexcluderegion(436,12641
+void Spectrum::resetexcluderegion(442,12794
+void Spectrum::resetexcluderegion(447,12948
+void Spectrum::setcounts 453,13074
+void Spectrum::getdatapoint(459,13171
+double Spectrum::getcounts(466,13363
+double Spectrum::getenergy(471,13464
+double Spectrum::geterrorbar(476,13558
+bool Spectrum::isexcluded(481,13656
+double Spectrum::getdispersion(486,13750
+void Spectrum::badindex(489,13839
+void Spectrum::display(493,13954
+const char* Spectrum::getname(501,14181
+const char* Spectrum::getxunits(505,14253
+const char* Spectrum::getyunits(509,14321
+void Spectrum::setname(516,14392
+void Spectrum::setxunits(520,14450
+void Spectrum::setyunits(524,14504
+void Spectrum::normalize(528,14558
+double Spectrum::cumsum(533,14643
+unsigned int Spectrum::getmaxindex(542,14813
+double Spectrum::getmax(555,15121
+double Spectrum::getmin(564,15319
+void Spectrum::initpoissonerror(572,15516
+
+component.cpp,608
+Component::Component(24,1267
+Component::Component(33,1418
+Component::~Component(43,1715
+void Component::calculate(49,1998
+void Component::setname(51,2029
+void Component::setdisplayname(55,2082
+void Component::setdescription(59,2145
+void Component::addparameter(63,2212
+void Component::setcanconvolute(67,2290
+void Component::sethasgradient(71,2352
+void Component::setunchanged(75,2412
+std::string Component::getname(85,2615
+std::string Component::getdisplayname(89,2672
+std::string Component::getdescription(93,2739
+Parameter* Component::getparameter(97,2810
+bool Component::indexOK(107,3011
+
+fitter.cpp,912
+Fitter::Fitter(31,1231
+Fitter::~Fitter(59,2158
+void Fitter::update(66,2350
+double Fitter::degreesoffreedom(72,2497
+void Fitter::createmodelinfo(85,2913
+void Fitter::partial_derivative(136,4810
+void Fitter::calculate_derivmatrix(179,6361
+void Fitter::modifiedcurve(187,6614
+void Fitter::storeparams(198,7117
+void Fitter::storeuserparams(205,7306
+void Fitter::retrieveuserparams(212,7507
+void Fitter::newparameters(222,7789
+double Fitter::estimatesigma(255,9034
+double Fitter::iteration(259,9153
+void Fitter::iterate(303,10464
+bool Fitter::iterate_and_check(309,10562
+void Fitter::calculate_sigma(318,10753
+bool Fitter::converged(324,11051
+void Fitter::addgoodness(335,11422
+int Fitter::getnumberofspectra(350,11939
+void Fitter::setcurrentspectrum(361,12191
+void Fitter::setmodelptr(369,12560
+double Fitter::LRtestconfidence(375,12662
+std::string  Fitter::LRtestconfidence_string(385,13050
+
+fixedpattern.cpp,243
+FixedPattern::FixedPattern(29,1557
+FixedPattern::FixedPattern(36,1797
+FixedPattern::~FixedPattern(92,3937
+void FixedPattern::calculate(96,3989
+FixedPattern* FixedPattern::clone(151,6034
+FixedPattern* FixedPattern::new_component(155,6113
+
+kedge.cpp,166
+Kedge::Kedge(23,1160
+Kedge::Kedge(29,1343
+Kedge::~Kedge(79,2983
+void Kedge::calculate(81,3002
+Kedge* Kedge::clone(185,7618
+Kedge* Kedge::new_component(187,7672
+
+multispectrum.cpp,846
+Multispectrum::Multispectrum(26,1161
+Multispectrum::~Multispectrum(35,1253
+void Multispectrum::addspectrum(38,1289
+void Multispectrum::display(47,1545
+void Multispectrum::update(60,2075
+std::string Multispectrum::getname(67,2322
+std::string Multispectrum::getfilename(70,2391
+Spectrum* Multispectrum::getspectrum(73,2464
+unsigned int Multispectrum::getnpoints(78,2588
+unsigned int Multispectrum::getcurrentslice(82,2683
+Spectrum* Multispectrum::getcurrentspectrum(86,2759
+void Multispectrum::setcurrentslice(90,2848
+unsigned int Multispectrum::getsize(95,2958
+double Multispectrum::getpppc(99,3028
+double Multispectrum::getmin(103,3114
+double Multispectrum::getmax(111,3313
+void Multispectrum::setname(119,3512
+void Multispectrum::setfilename(123,3590
+bool Multispectrum::indexOK(127,3672
+void Multispectrum::setpppc(130,3773
+
+plasmon.cpp,232
+Plasmon::Plasmon(27,1235
+Plasmon::Plasmon(37,1504
+Plasmon::~Plasmon(129,4278
+void Plasmon::calculate(138,4490
+Plasmon* Plasmon::clone(225,7106
+Plasmon* Plasmon::new_component(227,7166
+double Plasmon::poissonfraction(233,7347
+
+image.cpp,1952
+Image::Image(42,1495
+catch(54,1779
+catch(57,1890
+Image::~Image(76,2459
+void Image::paintEvent(80,2518
+bool Image::reconvertImage(89,2784
+void Image::scale(104,3253
+void Image::LoadDM3(120,3830
+  Multibyte i4=156,4942
+  Multibyte i4r=157,4971
+  Multibyte i2=158,5029
+  Multibyte i2r=159,5058
+  const int filelength=217,6385
+  const bool byteorder=225,6691
+  std::vector<Tag*> taglist;241,7019
+  char tag=244,7076
+        std::cout<<taglist[361,10476
+std::vector<unsigned int> imlist;384,11386
+std::vector<unsigned int> widthlist;389,11585
+std::vector<unsigned int> heightlist;390,11622
+std::vector<unsigned int> depthlist;391,11660
+double energyscale=393,11698
+double energyoffset=394,11722
+unsigned int theend;397,11804
+else theend=399,11878
+unsigned int width=400,11906
+unsigned int height=401,11928
+unsigned int depth=402,11951
+   for (unsigned int j=imlist[image];j<theend;404,11974
+std::cout<<"Image:"<<i<<" has dimensions "<<widthlist[445,13309
+std::cout<<"Image:"<<i<<" has dimensions "<<widthlist[i]<<" x "<<heightlist[445,13309
+std::cout<<"Image:"<<i<<" has dimensions "<<widthlist[i]<<" x "<<heightlist[i]<<" and pixeldepth "<<depthlist[445,13309
+unsigned int maxwidth=457,13823
+unsigned int currimage=458,13848
+const unsigned int width=466,13993
+const unsigned int height=467,14040
+unsigned int pixeldepth=468,14089
+const int max=469,14135
+const int min=470,14194
+mymspec=525,15809
+for (unsigned int y=0;y<height;527,15877
+  Spectrum* currentspec=529,15957
+  std::string result=531,16060
+  char indexstr[532,16091
+  result=534,16140
+  for (unsigned int x=0;x<width;536,16207
+      unsigned int index=537,16245
+      double cts=538,16283
+void Image::LoadDM2_5(551,16596
+std::string Image::getname(553,16623
+void Image::setname(556,16673
+unsigned int Image::getwidth(559,16731
+unsigned int Image::getheight(562,16798
+Multispectrum* Image::getmspec(565,16867
+void Image::readtype(570,16926
+
+interactive_parameter.cpp,603
+Interactive_Parameter::Interactive_Parameter(35,1419
+Interactive_Parameter::~Interactive_Parameter(120,5356
+void Interactive_Parameter::slot_change_upper_bound(122,5407
+void Interactive_Parameter::slot_change_lower_bound(131,5759
+void Interactive_Parameter::slot_change_val(140,6116
+void Interactive_Parameter::slot_change_name(146,6296
+double Interactive_Parameter::getnumber(150,6401
+void Interactive_Parameter::slot_change_bound(157,6572
+void Interactive_Parameter::slot_change_canchange(167,6888
+bool  Interactive_Parameter::validate(172,7010
+void Interactive_Parameter::slot_ok(192,7741
+
+logpoly.cpp,224
+Logpoly::Logpoly(26,1202
+Logpoly::Logpoly(36,1594
+Logpoly::~Logpoly(83,3096
+void Logpoly::calculate(86,3120
+Logpoly* Logpoly::clone(134,4493
+Logpoly* Logpoly::new_component(136,4553
+void Logpoly::getgradient(141,4733
+
+monitor.cpp,409
+Monitor::Monitor(35,1420
+Monitor::~Monitor(46,1699
+double Monitor::difference(55,1877
+double Monitor::sum(58,1958
+double Monitor::ratio(61,2032
+double Monitor::getresult(64,2108
+double Monitor::getsigma(79,2328
+double Monitor::differencesigma(94,2560
+double Monitor::sumsigma(109,2944
+double Monitor::ratiosigma(124,3314
+std::string Monitor::getresultstring(139,3733
+int Monitor::gettype(169,4628
+
+curvematrix.cpp,527
+CurveMatrix::CurveMatrix(24,1208
+CurveMatrix::CurveMatrix(36,1408
+void CurveMatrix::resize(48,1647
+void CurveMatrix::resize(55,1813
+CurveMatrix::~CurveMatrix(63,1993
+Slice_iter<double> CurveMatrix::row(67,2037
+Slice_iter<double> CurveMatrix::column(71,2139
+void CurveMatrix::clear(76,2247
+void CurveMatrix::clearupper(80,2353
+void CurveMatrix::clearlower(90,2632
+double CurveMatrix::getmin(99,2877
+double CurveMatrix::getmax(110,3131
+void CurveMatrix::inv_inplace(123,3387
+void CurveMatrix::debugdisplay(217,5957
+
+menu.cpp,1647
+MenuEelsmodel::MenuEelsmodel(34,1388
+MenuEelsmodel::~MenuEelsmodel(48,1735
+void MenuEelsmodel::initActions(50,1770
+void MenuEelsmodel::initMenuBar(242,12497
+void MenuEelsmodel::initToolBar(316,14805
+void MenuEelsmodel::initStatusBar(334,15292
+void MenuEelsmodel::initWorkspace(340,15460
+bool MenuEelsmodel::queryExit(350,15680
+void MenuEelsmodel::slotViewToolBar(370,16073
+void MenuEelsmodel::slotViewStatusBar(388,16406
+void MenuEelsmodel::slotEditCut(407,16749
+void MenuEelsmodel::slotEditCopy(414,16879
+void MenuEelsmodel::slotEditPaste(421,17023
+void MenuEelsmodel::slotEditUndoSelection(428,17166
+void MenuEelsmodel::slotEditExclude(434,17334
+void MenuEelsmodel::slotEditResetExclude(439,17488
+void MenuEelsmodel::slotFileNew(450,17683
+void MenuEelsmodel::slotFileOpenMSA(456,17834
+void MenuEelsmodel::slotFileProjectOpen(463,17986
+void MenuEelsmodel::slotFileOpenDM(470,18149
+void MenuEelsmodel::slotFileSave(477,18303
+void MenuEelsmodel::slotFileProjectSave(484,18453
+void MenuEelsmodel::slotFileReportSave(491,18615
+void MenuEelsmodel::slotFileSaveAs(497,18773
+void MenuEelsmodel::slotFileProjectSaveAs(505,18920
+void MenuEelsmodel::slotFileClose(512,19103
+void MenuEelsmodel::slotFilePrint(518,19250
+void MenuEelsmodel::slotFileQuit(535,19636
+void MenuEelsmodel::slotModelNew(552,19957
+void MenuEelsmodel::slotModelComponent(558,20116
+void MenuEelsmodel::slotModelFit(565,20307
+void MenuEelsmodel::slotModelPPPC(571,20429
+void MenuEelsmodel::slotHelpAbout(578,20561
+void MenuEelsmodel::slotHelpAboutQt(582,20632
+void MenuEelsmodel::resizeEvent(588,20741
+void MenuEelsmodel::slot_enable_model(593,20868
+
+mlfitter.cpp,444
+MLFitter::MLFitter(22,1104
+MLFitter::~MLFitter(27,1169
+double MLFitter::goodness_of_fit(29,1194
+double MLFitter::likelyhoodfunction(50,2104
+std::string MLFitter::goodness_of_fit_string(72,2964
+void MLFitter::calculate_beta_and_alpha(83,3360
+void MLFitter::CRLB(121,4897
+double MLFitter::getcovariance(139,5641
+void MLFitter::preparecovariance(152,5910
+double MLFitter::likelihoodratio(181,6921
+void MLFitter::updatemonitors(202,7719
+
+powerlaw.cpp,235
+Powerlaw::Powerlaw(22,1106
+Powerlaw::Powerlaw(32,1416
+Powerlaw::~Powerlaw(56,2180
+void Powerlaw::calculate(58,2205
+void Powerlaw::getgradient(88,3007
+Powerlaw* Powerlaw::clone(123,3953
+Powerlaw* Powerlaw::new_component(125,4016
+
+spinsplitedge.cpp,260
+SpinsplitEdge::SpinsplitEdge(58,2592
+SpinsplitEdge::SpinsplitEdge(69,2953
+SpinsplitEdge::~SpinsplitEdge(288,10493
+void SpinsplitEdge::calculate(296,10746
+SpinsplitEdge* SpinsplitEdge::clone(388,14607
+SpinsplitEdge* SpinsplitEdge::new_component(391,14688
+
+eelsmodel.cpp,1504
+Eelsmodel::Eelsmodel(45,1651
+Eelsmodel::~Eelsmodel(54,1801
+void Eelsmodel::newgraph(61,1969
+void Eelsmodel::newspectrum(66,2173
+void Eelsmodel::openmsa(74,2475
+Multispectrum* Eelsmodel::openDM(91,2973
+void Eelsmodel::componentmaintenance(112,3534
+void Eelsmodel::newmodel(138,4704
+void Eelsmodel::slot_model_update(198,6404
+void Eelsmodel::componentmaintenance_remove_components(202,6483
+void Eelsmodel::componentmaintenance_add_components(215,6890
+void Eelsmodel::componentmaintenance_updatescreen(229,7289
+void Eelsmodel::iterativefit(243,7781
+void Eelsmodel::fitter_dialog(270,8508
+void Eelsmodel::fitter_updatescreen(284,9100
+void Eelsmodel::undoselection(294,9335
+void Eelsmodel::exclude(306,9604
+void Eelsmodel::resetexclude(327,10182
+Spectrum* Eelsmodel::gettopspectrum(352,10866
+Multispectrum* Eelsmodel::gettopmultispectrum(363,11078
+Model* Eelsmodel::gettopmodel(374,11307
+Graph* Eelsmodel::gettopgraph(378,11390
+void Eelsmodel::slot_componentmaintenance_died(399,12033
+void Eelsmodel::slot_fitterdialog_died(404,12182
+void Eelsmodel::slot_save_project(412,12397
+void Eelsmodel::slot_open_project(425,12759
+void Eelsmodel::slot_model_pppc(439,13120
+void Eelsmodel::save_project(469,13939
+void Eelsmodel::load_project(623,20153
+void Eelsmodel::slot_save_model(1112,41871
+void Eelsmodel::slot_save_report(1193,44677
+void Eelsmodel::slot_start_multi_report(1207,45046
+void Eelsmodel::slot_add_multi_report(1222,45491
+std::string Eelsmodel::save_report(1240,45913
+
+fitter_dialog.cpp,738
+Fitter_dialog::Fitter_dialog(37,1440
+Fitter_dialog::~Fitter_dialog(170,7530
+void Fitter_dialog::slot_change_minstep(177,7639
+void Fitter_dialog::slot_change_maxstep(181,7774
+void Fitter_dialog::slot_change_fraction(185,7909
+void Fitter_dialog::slot_change_tolerance(190,8049
+void Fitter_dialog::slot_change_nmax(195,8193
+double Fitter_dialog::getnumber(203,8360
+void Fitter_dialog::slot_stop(210,8523
+void Fitter_dialog::slot_update(219,8779
+void Fitter_dialog::slot_set_update_allways(245,9635
+void Fitter_dialog::slot_set_usegradients(248,9708
+void Fitter_dialog::slot_set_multi(252,9819
+void Fitter_dialog::slot_set_previous(256,9892
+void Fitter_dialog::slot_undo(261,9955
+void Fitter_dialog::slot_iterations(269,10168
+
+graph.cpp,844
+Graph::Graph(40,1489
+Graph::Graph(59,2168
+Graph::~Graph(78,2966
+void Graph::setdefaults(83,3087
+void Graph::getmainwindowptr(115,3844
+void Graph::copydata(126,4192
+void Graph::reinit(141,4622
+void Graph::addgraph(151,4968
+void Graph::updategraph(164,5273
+bool Graph::validlayer(172,5469
+void Graph::scale(176,5549
+void Graph::setxlabel(198,6144
+void Graph::setylabel(200,6195
+void Graph::updateCaption(202,6246
+void Graph::paintEvent(204,6277
+Spectrum* Graph::getspectrumptr(362,11159
+Multispectrum* Graph::getmultispectrumptr(365,11218
+void Graph::slot_graph_clicked(369,11328
+void Graph::mousePressEvent(377,11533
+void Graph::mouseMoveEvent(412,12585
+void Graph::mouseReleaseEvent(444,13717
+int Graph::convert_coords_to_index(499,15590
+int Graph::convert_index_to_coords(519,16404
+void Graph::resetselection(538,17158
+
+hsedge.cpp,419
+HSedge::HSedge(67,2870
+HSedge::HSedge(75,3103
+HSedge::~HSedge(149,5726
+void HSedge::calculate(154,5817
+void HSedge::readGOSfile(284,11444
+double HSedge::getinterpolatedgos(384,14650
+double HSedge::getgosenergy(436,16260
+double HSedge::getgosq(442,16426
+std::string HSedge::getmultiplatformline(450,16638
+int HSedge::filetype(474,17143
+HSedge* HSedge::clone(524,18277
+HSedge* HSedge::new_component(527,18337
+
+lorentz.cpp,283
+Lorentz::Lorentz(24,1130
+Lorentz::Lorentz(32,1313
+Lorentz::Lorentz(62,2125
+Lorentz::~Lorentz(81,2685
+double Lorentz::getarea(84,2709
+void Lorentz::calculate(96,3020
+void Lorentz::getgradient(130,4125
+Lorentz* Lorentz::clone(179,5663
+Lorentz* Lorentz::new_component(181,5723
+
+eshift.cpp,237
+Eshift::Eshift(34,1604
+Eshift::Eshift(40,1734
+const Model* mymodel=62,2488
+HLptr=63,2540
+HLptr=64,2549
+Eshift::~Eshift(68,2687
+void Eshift::calculate(70,2708
+Eshift* Eshift::clone(121,4178
+Eshift* Eshift::new_component(123,4235

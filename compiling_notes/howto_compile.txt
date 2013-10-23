@@ -1,0 +1,81 @@
+//Compile instructions
+//QT4 (GPL) should be installed and configured properly (check the demo applications)
+//on Win32 you will need mingw which can be downloaded together with the QT4 gpl version from trolltech
+//the icon is set for win32 via an rc file, for mac it should read RC_FILE=eelsmodel.icns but you will have to make an icns file from one of the icons in the icons folder
+
+
+
+****************WIndows************************
+
+in directory eelsmodel/
+
+//for a release version
+qmake -project -r CONFIG+=exceptions CONFIG+=rtti QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT win32:RC_FILE=eelsmodelrc.rc LIBS+=-lfftw3-3  LIBS+=-Lf:\fftw_3_1 
+qmake -o Makefile eelsmodel.pro
+make release
+
+//for a debug version
+qmake -project -r CONFIG+=exceptions CONFIG+=debug CONFIG+=rtti QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT LIBS+=-lfftw3-3 LIBS+=-Lf:\fftw_3_1 
+qmake -o Makefile eelsmodel.pro
+make debug
+
+
+run eelsmodel as
+./eelsmodel
+
+in either the debug or release subdirectory, use eelsmodel >out.log to gather the text output in e.g. debugging sessions
+
+
+***************MAC OS X ***********************
+Mac OSX static linking (Works)
+
+qmake -project -r CONFIG+=exceptions CONFIG+=rtti QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT CONFIG+=-static RC_FILE=./icons/eelsmodel.icns
+
+qmake -o Makefile eelsmodel.pro
+make clean
+qmake -config release
+make
+
+
+
+***** (doesn`t work) Mac OS X dynamic linking (not nice but copies the qt libraries into the framework directory  in the application package)
+qmake -project -r CONFIG+=exceptions CONFIG+=rtti QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT QMAKE_LFLAGS_SONAME=-Wl,-install_name,@executable_path/../Frameworks/ frameworks.path=eelsmodel.app/Contents/Frameworks frameworks.files+=/usr/local/Trolltech/Qt-4.0.1/lib/Qt3Support.framework/Versions/4.0/Qt3Support frameworks.files+=/usr/local/Trolltech/Qt-4.0.1/lib/QtGui.framework/Versions/4.0/QtGui frameworks.files+=/usr/local/Trolltech/Qt-4.0.1/lib/QtNetwork.framework/Versions/4.0/QtNetwork frameworks.files+=/usr/local/Trolltech/Qt-4.0.1/lib/QtSql.framework/Versions/4.0/QtSql frameworks.files+=/usr/local/Trolltech/Qt-4.0.1/lib/QtXml.framework/Versions/4.0/QtXml frameworks.files+=/usr/local/Trolltech/Qt-4.0.1/lib/QtCore.framework/Versions/4.0/QtCore INSTALLS+=frameworks
+
+qmake -o Makefile eelsmodel.pro
+make clean
+qmake -config release
+
+make
+make install
+install_name_tool -id @executable_path/../Frameworks/QtCore eelsmodel.app/Contents/Frameworks/QtCore
+install_name_tool -id @executable_path/../Frameworks/QtGui eelsmodel.app/Contents/Frameworks/QtGui
+install_name_tool -id @executable_path/../Frameworks/QtXml eelsmodel.app/Contents/Frameworks/QtXml
+install_name_tool -id @executable_path/../Frameworks/QtSql eelsmodel.app/Contents/Frameworks/QtSql
+install_name_tool -id @executable_path/../Frameworks/Qt3Support eelsmodel.app/Contents/Frameworks/Qt3Support
+
+install_name_tool -id @executable_path/../Frameworks/QtNetwork eelsmodel.app/Contents/Frameworks/QtNetwork
+
+install_name_tool -change path/to/Qt/lib/QtCore.framework/Versions/4.0/QtCore @executable_path/../Frameworks/QtCore eelsmodel.app/Contents/MacOs/eelsmodel
+
+install_name_tool -change path/to/qt/lib/QtXml.framework/Versions/4.0/QtXml @executable_path/../Frameworks/QtXml eelsmodel.app/Contents/MacOs/eelsmodel
+install_name_tool -change path/to/qt/lib/QtSql.framework/Versions/4.0/QtSql @executable_path/../Frameworks/QtSql eelsmodel.app/Contents/MacOs/eelsmodel
+
+install_name_tool -change path/to/qt/lib/Qt3Support.framework/Versions/4.0/Qt3Support @executable_path/../Frameworks/Qt3Support eelsmodel.app/Contents/MacOs/eelsmodel
+
+install_name_tool -change path/to/qt/lib/QtNetwork.framework/Versions/4.0/QtNetwork @executable_path/../Frameworks/QtNetwork eelsmodel.app/Contents/MacOs/eelsmodel
+
+
+
+install_name_tool -change path/to/Qt/lib/QtCore.framework/Versions/4.0/QtCore @executable_path/../Frameworks/QtCore eelsmodel.app/Contents/Frameworks/QtGui
+
+install_name_tool -change path/to/Qt/lib/QtCore.framework/Versions/4.0/QtCore @executable_path/../Frameworks/QtCore eelsmodel.app/Contents/Frameworks/QtXml
+
+install_name_tool -change path/to/Qt/lib/QtCore.framework/Versions/4.0/QtCore @executable_path/../Frameworks/QtCore eelsmodel.app/Contents/Frameworks/QtSql
+
+install_name_tool -change path/to/Qt/lib/QtCore.framework/Versions/4.0/QtCore @executable_path/../Frameworks/QtCore eelsmodel.app/Contents/Frameworks/Qt3Support
+
+install_name_tool -change path/to/Qt/lib/QtCore.framework/Versions/4.0/QtCore @executable_path/../Frameworks/QtCore eelsmodel.app/Contents/Frameworks/QtNetwork
+
+
+
+

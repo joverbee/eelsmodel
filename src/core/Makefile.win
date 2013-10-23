@@ -1,0 +1,195 @@
+# Project: eelsmodelproject
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = eelsmodelproject_private.res
+OBJ  = chisquare.o component.o componentmaintenance.o curvematrix.o detectorchooser.o dos.o edgefile.o eelsmodel.o eshift.o expbackground.o fftw++.o fileopener.o fitter.o fitter_dialog.o fitterchooser.o fixedpattern.o fowler.o gaussian.o getfilename.o getgraphptr.o gettopspectrum.o graph.o hello.o hsedge.o image.o imagedisplay.o integerinput.o interactive_parameter.o kedge.o kedgerel.o ledge.o line.o logpoly.o lorentz.o lsqfitter.o menu.o mlfitter.o model.o monitor.o monitorchooser.o mscatter.o mscatterfft.o multibyte.o multispectrum.o parameter.o plasmon.o powerlaw.o realinput.o saysomething.o slice_iter.o spectrum.o spinsplitedge.o tag.o wlsqfitter.o main.o $(RES)
+LINKOBJ  = chisquare.o component.o componentmaintenance.o curvematrix.o detectorchooser.o dos.o edgefile.o eelsmodel.o eshift.o expbackground.o fftw++.o fileopener.o fitter.o fitter_dialog.o fitterchooser.o fixedpattern.o fowler.o gaussian.o getfilename.o getgraphptr.o gettopspectrum.o graph.o hello.o hsedge.o image.o imagedisplay.o integerinput.o interactive_parameter.o kedge.o kedgerel.o ledge.o line.o logpoly.o lorentz.o lsqfitter.o menu.o mlfitter.o model.o monitor.o monitorchooser.o mscatter.o mscatterfft.o multibyte.o multispectrum.o parameter.o plasmon.o powerlaw.o realinput.o saysomething.o slice_iter.o spectrum.o spinsplitedge.o tag.o wlsqfitter.o main.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -mwindows C:/Dev-Cpp/lib/libQt3Support4.a C:/Dev-Cpp/lib/libQtAssistantClient.a C:/Dev-Cpp/lib/libQtCore4.a C:/Dev-Cpp/lib/libQtDesigner4.a C:/Dev-Cpp/lib/libQtDesignerComponents4.a C:/Dev-Cpp/lib/libQtGui4.a C:/Dev-Cpp/lib/libqtmain.a C:/Dev-Cpp/lib/libQtNetwork4.a C:/Dev-Cpp/lib/libQtOpenGL4.a C:/Dev-Cpp/lib/libQtSql4.a C:/Dev-Cpp/lib/libQtXml4.a  
+INCS = 
+CXXINCS =  -I"C:/Qt/4.2.0/include"  -I"C:/Qt/4.2.0/include/ActiveQt"  -I"C:/Qt/4.2.0/include/Qt"  -I"C:/Qt/4.2.0/include/Qt3Support"  -I"C:/Qt/4.2.0/include/QtAssistant"  -I"C:/Qt/4.2.0/include/QtCore"  -I"C:/Qt/4.2.0/include/QtDBus"  -I"C:/Qt/4.2.0/include/QtDesigner"  -I"C:/Qt/4.2.0/include/QtGui"  -I"C:/Qt/4.2.0/include/QtNetwork"  -I"C:/Qt/4.2.0/include/QtOpenGL"  -I"C:/Qt/4.2.0/include/QtSql"  -I"C:/Qt/4.2.0/include/QtSvg"  -I"C:/Qt/4.2.0/include/QtTest"  -I"C:/Qt/4.2.0/include/QtUiTools"  -I"C:/Qt/4.2.0/include/QtXml" 
+BIN  = eelsmodelproject.exe
+CXXFLAGS = $(CXXINCS)  
+CFLAGS = $(INCS)  
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before eelsmodelproject.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "eelsmodelproject.exe" $(LIBS)
+
+chisquare.o: chisquare.cpp
+	$(CPP) -c chisquare.cpp -o chisquare.o $(CXXFLAGS)
+
+component.o: component.cpp
+	$(CPP) -c component.cpp -o component.o $(CXXFLAGS)
+
+componentmaintenance.o: componentmaintenance.cpp
+	$(CPP) -c componentmaintenance.cpp -o componentmaintenance.o $(CXXFLAGS)
+
+curvematrix.o: curvematrix.cpp
+	$(CPP) -c curvematrix.cpp -o curvematrix.o $(CXXFLAGS)
+
+detectorchooser.o: detectorchooser.cpp
+	$(CPP) -c detectorchooser.cpp -o detectorchooser.o $(CXXFLAGS)
+
+dos.o: dos.cpp
+	$(CPP) -c dos.cpp -o dos.o $(CXXFLAGS)
+
+edgefile.o: edgefile.cpp
+	$(CPP) -c edgefile.cpp -o edgefile.o $(CXXFLAGS)
+
+eelsmodel.o: eelsmodel.cpp
+	$(CPP) -c eelsmodel.cpp -o eelsmodel.o $(CXXFLAGS)
+
+eshift.o: eshift.cpp
+	$(CPP) -c eshift.cpp -o eshift.o $(CXXFLAGS)
+
+expbackground.o: expbackground.cpp
+	$(CPP) -c expbackground.cpp -o expbackground.o $(CXXFLAGS)
+
+fftw++.o: fftw++.cpp
+	$(CPP) -c fftw++.cpp -o fftw++.o $(CXXFLAGS)
+
+fileopener.o: fileopener.cpp
+	$(CPP) -c fileopener.cpp -o fileopener.o $(CXXFLAGS)
+
+fitter.o: fitter.cpp
+	$(CPP) -c fitter.cpp -o fitter.o $(CXXFLAGS)
+
+fitter_dialog.o: fitter_dialog.cpp
+	$(CPP) -c fitter_dialog.cpp -o fitter_dialog.o $(CXXFLAGS)
+
+fitterchooser.o: fitterchooser.cpp
+	$(CPP) -c fitterchooser.cpp -o fitterchooser.o $(CXXFLAGS)
+
+fixedpattern.o: fixedpattern.cpp
+	$(CPP) -c fixedpattern.cpp -o fixedpattern.o $(CXXFLAGS)
+
+fowler.o: fowler.cpp
+	$(CPP) -c fowler.cpp -o fowler.o $(CXXFLAGS)
+
+gaussian.o: gaussian.cpp
+	$(CPP) -c gaussian.cpp -o gaussian.o $(CXXFLAGS)
+
+getfilename.o: getfilename.cpp
+	$(CPP) -c getfilename.cpp -o getfilename.o $(CXXFLAGS)
+
+getgraphptr.o: getgraphptr.cpp
+	$(CPP) -c getgraphptr.cpp -o getgraphptr.o $(CXXFLAGS)
+
+gettopspectrum.o: gettopspectrum.cpp
+	$(CPP) -c gettopspectrum.cpp -o gettopspectrum.o $(CXXFLAGS)
+
+graph.o: graph.cpp
+	$(CPP) -c graph.cpp -o graph.o $(CXXFLAGS)
+
+hello.o: hello.cpp
+	$(CPP) -c hello.cpp -o hello.o $(CXXFLAGS)
+
+hsedge.o: hsedge.cpp
+	$(CPP) -c hsedge.cpp -o hsedge.o $(CXXFLAGS)
+
+image.o: image.cpp
+	$(CPP) -c image.cpp -o image.o $(CXXFLAGS)
+
+imagedisplay.o: imagedisplay.cpp
+	$(CPP) -c imagedisplay.cpp -o imagedisplay.o $(CXXFLAGS)
+
+integerinput.o: integerinput.cpp
+	$(CPP) -c integerinput.cpp -o integerinput.o $(CXXFLAGS)
+
+interactive_parameter.o: interactive_parameter.cpp
+	$(CPP) -c interactive_parameter.cpp -o interactive_parameter.o $(CXXFLAGS)
+
+kedge.o: kedge.cpp
+	$(CPP) -c kedge.cpp -o kedge.o $(CXXFLAGS)
+
+kedgerel.o: kedgerel.cpp
+	$(CPP) -c kedgerel.cpp -o kedgerel.o $(CXXFLAGS)
+
+ledge.o: ledge.cpp
+	$(CPP) -c ledge.cpp -o ledge.o $(CXXFLAGS)
+
+line.o: line.cpp
+	$(CPP) -c line.cpp -o line.o $(CXXFLAGS)
+
+logpoly.o: logpoly.cpp
+	$(CPP) -c logpoly.cpp -o logpoly.o $(CXXFLAGS)
+
+lorentz.o: lorentz.cpp
+	$(CPP) -c lorentz.cpp -o lorentz.o $(CXXFLAGS)
+
+lsqfitter.o: lsqfitter.cpp
+	$(CPP) -c lsqfitter.cpp -o lsqfitter.o $(CXXFLAGS)
+
+menu.o: menu.cpp
+	$(CPP) -c menu.cpp -o menu.o $(CXXFLAGS)
+
+mlfitter.o: mlfitter.cpp
+	$(CPP) -c mlfitter.cpp -o mlfitter.o $(CXXFLAGS)
+
+model.o: model.cpp
+	$(CPP) -c model.cpp -o model.o $(CXXFLAGS)
+
+monitor.o: monitor.cpp
+	$(CPP) -c monitor.cpp -o monitor.o $(CXXFLAGS)
+
+monitorchooser.o: monitorchooser.cpp
+	$(CPP) -c monitorchooser.cpp -o monitorchooser.o $(CXXFLAGS)
+
+mscatter.o: mscatter.cpp
+	$(CPP) -c mscatter.cpp -o mscatter.o $(CXXFLAGS)
+
+mscatterfft.o: mscatterfft.cpp
+	$(CPP) -c mscatterfft.cpp -o mscatterfft.o $(CXXFLAGS)
+
+multibyte.o: multibyte.cpp
+	$(CPP) -c multibyte.cpp -o multibyte.o $(CXXFLAGS)
+
+multispectrum.o: multispectrum.cpp
+	$(CPP) -c multispectrum.cpp -o multispectrum.o $(CXXFLAGS)
+
+parameter.o: parameter.cpp
+	$(CPP) -c parameter.cpp -o parameter.o $(CXXFLAGS)
+
+plasmon.o: plasmon.cpp
+	$(CPP) -c plasmon.cpp -o plasmon.o $(CXXFLAGS)
+
+powerlaw.o: powerlaw.cpp
+	$(CPP) -c powerlaw.cpp -o powerlaw.o $(CXXFLAGS)
+
+realinput.o: realinput.cpp
+	$(CPP) -c realinput.cpp -o realinput.o $(CXXFLAGS)
+
+saysomething.o: saysomething.cpp
+	$(CPP) -c saysomething.cpp -o saysomething.o $(CXXFLAGS)
+
+slice_iter.o: slice_iter.cpp
+	$(CPP) -c slice_iter.cpp -o slice_iter.o $(CXXFLAGS)
+
+spectrum.o: spectrum.cpp
+	$(CPP) -c spectrum.cpp -o spectrum.o $(CXXFLAGS)
+
+spinsplitedge.o: spinsplitedge.cpp
+	$(CPP) -c spinsplitedge.cpp -o spinsplitedge.o $(CXXFLAGS)
+
+tag.o: tag.cpp
+	$(CPP) -c tag.cpp -o tag.o $(CXXFLAGS)
+
+wlsqfitter.o: wlsqfitter.cpp
+	$(CPP) -c wlsqfitter.cpp -o wlsqfitter.o $(CXXFLAGS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+eelsmodelproject_private.res: eelsmodelproject_private.rc eelsmodelrc.rc Rsrc.rc 
+	$(WINDRES) -i eelsmodelproject_private.rc --input-format=rc -o eelsmodelproject_private.res -O coff 

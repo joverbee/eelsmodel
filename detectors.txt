@@ -1,0 +1,3 @@
+%Detector name	pppc	correlation factor
+EMAT CM30 GIF200 1K	0.89	0.5
+EMAT 3000F GIF2000 1K	0.18182	2.6175

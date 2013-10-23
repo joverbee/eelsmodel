@@ -1,0 +1,24 @@
+To Do list EELSMODEL 26-5-2005
+
+
+Make 2D SIs from DM possible
+store positions of windows in the project file (problem with qwidget->pos() seems to fail)
+make SPIM files possible (see Marcel Tence: ask him a DLL which can be included)
+model for Atom Probe ?
+Model for Direct/Indirect band gap (E-Eg)^alpha
+Model for gun energy shape: Fowler Nordheim (cold FEG), Thermionic, Schottky FEG
+Model for Voigt peak to simulate EDX spectra
+Z-selector: table of Mendelev in sigmak/sigmal/sigmakrel
+make Hartree Slater calculations to make our own tabulated GOS which can be distributed (WHO CAN DO THIS?)
+grid search in fitter: improves finding a difficult minimum-much slower than steepest gradient
+
+DOS: make it easier to graphically change points and boundaries, it`s impractical to do that for each parameter separately
+
+
+IMPORTANT: make all classes safe classes: resource aqcuisition is initialisation: do this first on spectrum
+there are problems with the graphptr->not a safe implementation
+
+Fully automated model builder. In principle a generic model could be build that can model almost any spectrum
+without aid of the user; Especially since we have the fine structure component.
+
+Model for Low loss including Kroeger formula for cerenkov losses

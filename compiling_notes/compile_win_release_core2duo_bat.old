@@ -1,0 +1,8 @@
+rem use make_release instead...directly edit the eelsmodel.pro and eelsmodelcore2duo.pro files in eclipse
+
+
+
+
+qmake -project -r CONFIG+=exceptions CONFIG+=rtti QMAKE_CXXFLAGS_RELEASE+=-O3 QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions  win32:RC_FILE=eelsmodelrc.rc LIBS+=-lfftw3-3  LIBS+=-lgsl LIBS+=-lgslcblas QMAKE_CXXFLAGS+=-DGSL_DLL QMAKE_CXXFLAGS+=-I"c:\gsl\include"  LIBS+=-L"c:\gsl\lib" LIBS+=-Lc:\fftw_3_1 LIBS+=-L"C:\atlas\ATLAS3.8.0\WIN32\lib" LIBS+=-llapack LIBS+=-lcblas LIBS+=-lf77blas LIBS+=-latlas  -o eelsmodelcore2duo.pro
+qmake -o Makefile eelsmodelcore2duo.pro
+make release

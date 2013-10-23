@@ -1,0 +1,3 @@
+qmake -project -r CONFIG+=exceptions CONFIG+=debug CONFIG+=rtti QMAKE_CXXFLAGS-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT LIBS+=-lfftw3-3 LIBS+=-Lc:\fftw_3_1 -o eelsmodel.pro 
+qmake -o Makefile eelsmodel.pro
+make debug

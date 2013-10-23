@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<!DOCTYPE CodeBlocks_project_file>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="eelsmodel"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="0"/>
+		<Build>
+			<Target title="Debug">
+				<Option output="Debug\eelsmodel.exe"/>
+				<Option working_dir="."/>
+				<Option object_output="obj\Debug\"/>
+				<Option deps_output=".deps"/>
+				<Option type="1"/>
+				<Option compiler="0"/>
+				<Option projectResourceIncludeDirsRelation="1"/>
+				<Compiler>
+					<Add option="-Wall"/>
+					<Add option="-g"/>
+					<Add directory="C:\Qt\4.2.3\include"/>
+					<Add directory="C:\Qt\4.2.3\lib"/>
+				</Compiler>
+				<Linker>
+					<Add library="..\MinGW\debug_new\nvwa-0.7\nvwa\nvwa\obj\Debug\debug_new.o"/>
+				</Linker>
+				<ExtraCommands>
+					<Add before="qmake -project -r CONFIG+=exceptions CONFIG+=debug CONFIG+=rtti QMAKE_CXXFLAGS-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT LIBS+=-lfftw3-3 LIBS+=-Lc:\fftw_3_1 -o eelsmodel.pro"/>
+					<Add before="qmake -o Makefile eelsmodel.pro"/>
+				</ExtraCommands>
+			</Target>
+			<Target title="Release">
+				<Option output="Release\eelsmodel.exe"/>
+				<Option working_dir="."/>
+				<Option object_output="obj\Release\"/>
+				<Option deps_output=".deps"/>
+				<Option type="0"/>
+				<Option compiler="0"/>
+				<Option projectResourceIncludeDirsRelation="0"/>
+				<Compiler>
+					<Add option="-O2"/>
+				</Compiler>
+				<Linker>
+					<Add option="-s"/>
+				</Linker>
+				<ExtraCommands>
+					<Add before="qmake -project -r CONFIG+=exceptions CONFIG+=rtti QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT win32:RC_FILE=eelsmodelrc.rc LIBS+=-lfftw3-3  LIBS+=-Lc:\fftw_3_1  -o eelsmodel.pro"/>
+					<Add before="qmake -o Makefile eelsmodel.pro"/>
+				</ExtraCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall"/>
+			<Add directory="C:\Qt\4.2.3\include"/>
+			<Add directory="C:\Qt\4.2.3\include\QtGui"/>
+			<Add directory="C:\Qt\4.2.3\lib"/>
+		</Compiler>
+		<Linker>
+			<Add library="QtCore4"/>
+			<Add library="QtGui4"/>
+			<Add directory="C:\Qt\4.2.3\lib"/>
+			<Add directory="C:\Qt\4.2.3\include"/>
+		</Linker>
+		<ExtraCommands>
+			<Add before="qmake -project -r CONFIG+=exceptions CONFIG+=debug CONFIG+=rtti QMAKE_CXXFLAGS-=-fno-exceptions QT+=qt3support CONFIG+=-DQT3_SUPPORT LIBS+=-lfftw3-3 LIBS+=-Lc:\fftw_3_1 -o eelsmodel.pro"/>
+			<Add before="qmake -o Makefile eelsmodel.pro"/>
+		</ExtraCommands>
+		<Unit filename="Atomchooser.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Atomchooser.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Drudeoptions.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Drudeoptions.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="GDOSoptions.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="GDOSoptions.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="chisquare.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="chisquare.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="component.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="component.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="componentmaintenance.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="componentmaintenance.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="componentselector.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="componentselector.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="curvematrix.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="curvematrix.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="debug_new.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+		</Unit>
+		<Unit filename="detectorchooser.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="detectorchooser.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="dieleclinear.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="dieleclinear.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="dielecmodel.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="dielecmodel.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="dos.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="dos.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="doslifetime.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="doslifetime.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="doslifetimespline.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="doslifetimespline.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="drudelorentz.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="drudelorentz.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="edgefile.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="edgefile.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="eelsmodel.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="eelsmodel.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="eelsmodelproject_private.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="energies.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="equalizer.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="equalizer.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="eshift.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="eshift.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="expbackground.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="expbackground.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fftw++.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fftw++.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fftw3.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fileopener.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fileopener.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fitter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fitter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fitter_dialog.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fitter_dialog.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fitterchooser.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fitterchooser.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fixedpattern.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fixedpattern.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fowler.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="fowler.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="gaussian.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="gaussian.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="gdos.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="gdos.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="getfilename.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="getfilename.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="getgraphptr.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="getgraphptr.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="gettopspectrum.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="gettopspectrum.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="graph.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="graph.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="hello.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="hello.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="hsedge.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="hsedge.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="image.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="image.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="imagedisplay.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="imagedisplay.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="integerinput.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="integerinput.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="interactive_parameter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="interactive_parameter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="kedge.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="kedge.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="kedgerel.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="kedgerel.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="ledge.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="ledge.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="levenbergmarquardt.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="levenbergmarquardt.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="line.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="line.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="logpoly.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="logpoly.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="lorentz.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="lorentz.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="lsqfitter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="lsqfitter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="main.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mendeleev.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="menu.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="menu.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mlfitter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mlfitter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mlfitter_gsl.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mlfitter_gsl.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="model.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="model.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="monitor.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="monitor.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="monitorchooser.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="monitorchooser.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mscatter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mscatter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mscatterexpfft.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="mscatterexpfft.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="mscatterfft.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mscatterfft.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="multibyte.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="multibyte.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="multispectrum.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="multispectrum.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="mycomponents.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="parameter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="parameter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="pearsonIV.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="pearsonIV.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="plasmon.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="plasmon.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="powerlaw.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="powerlaw.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="pseudovoigt.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="pseudovoigt.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="realinput.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="realinput.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="saysomething.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="saysomething.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="slice_iter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="slice_iter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="spectrum.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="spectrum.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="spinsplitedge.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="spinsplitedge.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="spinsplitedgegap.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="spinsplitedgehyd.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="spinsplitedgehyd.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Debug"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="tag.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="tag.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="wlsqfitter.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="wlsqfitter.h">
+			<Option compilerVar="CPP"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

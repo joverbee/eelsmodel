@@ -1,0 +1,29 @@
+!SESSION 2009-06-03 15:27:12.437 -----------------------------------------------
+eclipse.buildId=M20090211-1700
+java.version=1.6.0_07
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86 -data C:\EELSMODELoriginal -clean
+
+!ENTRY org.eclipse.epp.usagedata.recording 1 0 2009-06-03 15:27:33.937
+!MESSAGE Usage data uploaded to http://udc.eclipse.org/upload.php in 2219 milliseconds.
+!SESSION 2010-12-14 14:32:35.794 -----------------------------------------------
+eclipse.buildId=M20100909-0800
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=nl_BE
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.cpp.product -clean
+
+!ENTRY org.eclipse.epp.usagedata.recording 1 0 2010-12-14 14:33:40.557
+!MESSAGE Usage data uploaded to http://udc.eclipse.org/upload.php in 1391 milliseconds.
+!SESSION 2011-01-03 10:20:31.727 -----------------------------------------------
+eclipse.buildId=M20100909-0800
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=nl_BE
+Framework arguments:  -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -data C:\EELSMODELoriginal -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.cpp.product -clean
+
+!ENTRY org.eclipse.epp.usagedata.recording 1 0 2011-01-03 11:05:24.707
+!MESSAGE Usage data uploaded to http://udc.eclipse.org/upload.php in 920 milliseconds.
