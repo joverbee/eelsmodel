@@ -54,7 +54,7 @@ extern MenuEelsmodel* getmenuptr();
 //
 
 Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
- :QFrame(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints())),myworld(),stylelist()
+ :QFrame(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints())),myworld()
  // data()
 {
 
@@ -79,11 +79,11 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
   nplots=1;
   //resize data field for containing the graph
   qwtdata.clear(); //start with empty data
-  d_curves.clear();
+ // d_curves.clear();
   qwtdata.resize(nplots);
-  d_curves.resize(nplots);
 
   qwtdata[nplots-1].resize(npoints);
+ // d_curves.resize(nplots);
 
    // stylelist.resize(nplots);
    // stylelist[nplots-1]=1; //default style
@@ -106,7 +106,7 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
 
 
 Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
-   : QFrame(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints())),myworld(),stylelist()
+   : QFrame(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints())),myworld()
    // data()
 {
     myPlot = new QwtPlot(QwtText(name),this);
@@ -125,15 +125,16 @@ Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
   spectrumptr=mspec->getcurrentspectrum(); //a pointer to the current active spectrum
   multispectrumptr=mspec; //a pointer to the whole multispectrum
   scalefactor=1.0;
+
   nplots=1;
   //resize data field for containing the graph
   qwtdata.clear(); //start with empty data
+ // d_curves.clear();
   qwtdata.resize(nplots);
-  npoints=spectrumptr->getnpoints();
+
   qwtdata[nplots-1].resize(npoints);
-  d_curves.resize(nplots);
-  stylelist.resize(nplots);
-  stylelist[nplots-1]=1; //default style
+ // d_curves.resize(nplots);
+
 
   copydata(0,spectrumptr); //copy the spectrum data into the graph data field (integer conversion!)
 
@@ -265,7 +266,7 @@ void Graph::addgraph(Spectrum *spec)
   qwtdata.resize(nplots);    //increase size of data vector
   qwtdata[nplots-1].resize(spec->getnpoints());
   //qwtdata.resize(spec->getnpoints());
-  d_curves.resize(nplots);
+  //d_curves.resize(nplots);
 
   #ifdef GRAPHDEBUG
    std::cout <<"addgraph function\n";
@@ -280,7 +281,7 @@ void Graph::removelastgraph(){
     nplots--;
   qwtdata.resize(nplots);    //decrease size of data vector
   stylelist.resize(nplots);
-  d_curves.resize(nplots);
+  //d_curves.resize(nplots);
   #ifdef GRAPHDEBUG
    std::cout <<"removelastgraph function\n";
   std::cout <<"the new size of data is "<<data.size()<<"\n";

@@ -39,7 +39,7 @@ class MenuEelsmodel;
   Q_OBJECT
   public:
     Graph( QWorkspace *parent=0, const char *name=0,Spectrum *spec=0); //a graph of a normal spectrum
-    Graph( QWorkspace *parent, const char *name,Multispectrum *mspec); //a graph of a multispectrum
+    Graph( QWorkspace *parent=0, const char *name=0,Multispectrum *mspec=0); //a graph of a multispectrum
     ~Graph();
     void reinit();
     void Init();
