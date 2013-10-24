@@ -571,8 +571,6 @@ if (peaklist[0]!=0){
 }
 //#endif
 
-
-
 }
 
 DosLifetime* DosLifetime::clone()const{

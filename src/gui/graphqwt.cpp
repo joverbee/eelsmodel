@@ -266,6 +266,9 @@ void GraphQwt::copydata(int layer,Spectrum* spec){
      else{
        (data[layer][i]).setY(int(ydata*scalefactor));
      }
+     //and copy in the qwt specific store
+     qwtdata[i].setX(spectrumptr->getenergyindex(xdata));
+     qwtdata[i].setY(spectrumptr->getenergyindex(ydata));
 
 
   }
@@ -290,9 +293,8 @@ void GraphQwt::addGraphQwt(Spectrum *spec)
 {
   nplots++;
   data.resize(nplots);    //increase size of data vector
-  //qwtdata.resize(nplots);
+  qwtdata.resize(spec->getnpoints());
   data[nplots-1].resize(spec->getnpoints());
-  //qwtdata[nplots-1].resize(spec->getnpoints());
   stylelist.resize(nplots);
   stylelist[nplots-1]=1; //the default style
   #ifdef GraphQwtDEBUG
@@ -591,8 +593,8 @@ void GraphQwt::paintEvent( QPaintEvent * )
 
 
 
-    curve1->setData(qwtdata);
-    curve1->attach(myPlot);
+    curve1->setSamples(qwtdata);
+    //curve1->attach(myPlot);
 
 
     // finally, refresh the plot
@@ -827,7 +829,7 @@ void GraphQwt::setstartzoomindex(int i){
 void GraphQwt::setendzoomindex(int i){
      if ((i>=0)&&(i<npoints)) endzoomindex=i;
 }
-QPointF QwtSeriesData<QPointF>::sample( size_t i ) const{
+/*QPointF QwtSeriesData<QPointF>::sample( size_t i ) const{
     //return a qpointf at index i
     const QPointF thispoint(spectrumptr->getenergy(i),spectrumptr->getvalue(i));
     return thispoint;
@@ -839,3 +841,4 @@ QRectF QwtSeriesData<QPointF>::boundingRect() const{
     const QRectF myrect(left,top,width,height)
     return thispoint;
 }
+*/

@@ -27,7 +27,6 @@
 	 *  
 	 */
 
-
 class Component;
 class Graph; //somewhere there is a class Graph,needed to be able to declare a pointer to graph here
 class QWorkspace; //somewhere there is a class called QWorkspace

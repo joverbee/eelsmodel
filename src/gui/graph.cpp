@@ -37,6 +37,8 @@
 #include <QRubberBand>
 #include <vector>
 
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
 
 //#define GRAPH_DEBUG
 
@@ -55,6 +57,8 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
  :QWidget(parent),data(1, std::vector<QPoint>(spec->getnpoints())),myworld(),stylelist()
  // data()
 {
+    myPlot = new QwtPlot(QwtText(name),this);
+myPlot->show();
     this->setWindowTitle(name);
     #ifdef GRAPH_DEBUG
     std::cout << "Constructor of graph\n";
@@ -75,6 +79,8 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
   data.clear(); //start with empty data
   data.resize(nplots);
   data[nplots-1].resize(npoints);
+  qwtdata.resize(spec->getnpoints());
+
     stylelist.resize(nplots);
     stylelist[nplots-1]=1; //default style
 
@@ -94,6 +100,8 @@ Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
    : QWidget(parent),data(mspec->getsize(), std::vector<QPoint>(mspec->getnpoints())),myworld(),stylelist()
    // data()
 {
+     myPlot = new QwtPlot(QwtText(name),this);
+     myPlot->show();
      this->setWindowTitle(name);
       #ifdef GRAPH_DEBUG
     std::cout << "Constructor of graph for multispectrum\n";
@@ -114,6 +122,8 @@ Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
   data.resize(nplots);
   npoints=spectrumptr->getnpoints();
   data[nplots-1].resize(npoints);
+  qwtdata.resize(spectrumptr->getnpoints());
+
   stylelist.resize(nplots);
   stylelist[nplots-1]=1; //default style
 
@@ -131,6 +141,7 @@ Graph::~Graph(){
        if (rubberrect!=0){
           delete(rubberrect);
        }
+       delete(myPlot);
 }
 
 void Graph::Init(){
@@ -259,6 +270,10 @@ void Graph::copydata(int layer,Spectrum* spec){
      else{
        (data[layer][i]).setY(int(ydata*scalefactor));
      }
+     //and copy in the qwt specific store
+     qwtdata[i].setX(spectrumptr->getenergyindex(xdata));
+     qwtdata[i].setY(spectrumptr->getenergyindex(ydata));
+
   }
 #ifdef GRAPH_DEBUG
  std::cout <<"end of copydata\n";
@@ -282,6 +297,8 @@ void Graph::addgraph(Spectrum *spec)
   nplots++;
   data.resize(nplots);    //increase size of data vector
   data[nplots-1].resize(spec->getnpoints());
+  qwtdata.resize(spec->getnpoints());
+
   stylelist.resize(nplots);
   stylelist[nplots-1]=1; //the default style
   #ifdef GRAPHDEBUG
@@ -565,6 +582,12 @@ void Graph::paintEvent( QPaintEvent * )
      rubberrect->show();
      //paint.drawRect(grabrect);//draw a new one
       }
+
+    //do the qwt plotting
+    QwtPlotCurve *curve1 = new QwtPlotCurve("Experiment");
+    curve1->setSamples(qwtdata);
+    curve1->attach(myPlot);
+    myPlot->replot();
 }
 
 Spectrum* Graph::getspectrumptr(){

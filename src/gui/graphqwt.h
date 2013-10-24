@@ -37,13 +37,14 @@ class QWorkspace;
 class MenuEelsmodel;
 class QPointF;
 
-template <typename T> class QwtSeriesData<QPointF>{
+/*template <typename T> class QwtSeriesData<QPointF>{
     QPointF QwtSeriesData<QPointF>::sample( size_t i ) const;
     size_t QwtSeriesData<QPointF>::size() const;
     QRectF QwtSeriesData<QPointF>::boundingRect() const;
-}
+}*/
 
-  class GraphQwt : public QWidget
+
+class GraphQwt : public QWidget
 {
   Q_OBJECT
   public:
@@ -103,7 +104,9 @@ private:
     double scalefactor;
     //    std::vector <QPoint> singledata; //contains one single GraphQwt of pixel points
     std::vector < std::vector<QPoint> > data; //contains a set of GraphQwts for a multi-GraphQwt plot
-    QwtSeriesData <QPointF>*  qwtdata;
+    //QwtSeriesData <QPointF>*  qwtdata;
+    QVector< QPointF >	qwtdata;
+
     QwtPlot * myPlot; //a pointer to the qwt plot window
 
     QTransform myworld; //scale conversion matrix real positions- window positions
