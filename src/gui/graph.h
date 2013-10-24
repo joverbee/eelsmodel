@@ -94,8 +94,8 @@ private:
     double scalefactor;
     //    std::vector <QPoint> singledata; //contains one single graph of pixel points
     std::vector < std::vector<QPoint> > data; //contains a set of graphs for a multi-graph plot
-    QVector< QPointF >	qwtdata;
-    QwtPlot * myPlot; //a pointer to the qwt plot window
+   // QVector< QPointF >	qwtdata;
+   // QwtPlot * myPlot; //a pointer to the qwt plot window
     QTransform myworld; //scale conversion matrix real positions- window positions
     double border;
     double xmax;

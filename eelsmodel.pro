@@ -161,8 +161,7 @@ HEADERS += src/components/dieleclinear.h \
            ./icons/rectangle.xpm \
            ./icons/zoom.xpm \
            ./icons/gohome.xpm \
-           ./icons/connect_established.xpm \
-            src/gui/graphqwt.h
+           ./icons/connect_established.xpm
 SOURCES += src/components/dieleclinear.cpp \
            src/components/dielecmodel.cpp \
            src/components/dos.cpp \
@@ -237,8 +236,7 @@ SOURCES += src/components/dieleclinear.cpp \
            src/gui/menu.cpp \
            src/gui/monitorchooser.cpp \
            src/gui/realinput.cpp \
-           src/gui/saysomething.cpp \ 
-    src/gui/graphqwt.cpp
+           src/gui/saysomething.cpp  
 
 OTHER_FILES += \
     .gitignore
