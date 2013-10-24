@@ -1,1 +1,38 @@
-.o
+.DS_Store
+.obj
+*.moc
+
+Makefile*
+*.dylib
+*.so.*
+*.so
+*.so.debug
+*.o
+*~
+.cd.rc
+*.swp
+core
+moc_*.cpp
+*.Debug
+*.Release
+*.pdb
+*.idb
+*.ib_pdb_index
+
+#Visual Studio files
+*.sln
+*.vcproj
+*.suo
+*.ncb
+*.user
+
+#QtCreator project files
+*.pro.user
+=======
+*.pro.user*
+*~
+
+# Failed patch
+*.orig
+*.rej
+
