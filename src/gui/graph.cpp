@@ -37,8 +37,8 @@
 #include <QRubberBand>
 #include <vector>
 
-//#include <qwt_plot.h>
-//#include <qwt_plot_curve.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
 
 //#define GRAPH_DEBUG
 
@@ -54,11 +54,13 @@ extern MenuEelsmodel* getmenuptr();
 //
 
 Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
- :QWidget(parent),data(1, std::vector<QPoint>(spec->getnpoints())),myworld(),stylelist()
+ :QFrame(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints())),myworld(),stylelist()
  // data()
 {
-//    myPlot = new QwtPlot(QwtText(name),this);
-//myPlot->show();
+
+    myPlot = new QwtPlot(QwtText(name),this);
+    myPlot->show();
+
     this->setWindowTitle(name);
     #ifdef GRAPH_DEBUG
     std::cout << "Constructor of graph\n";
@@ -76,19 +78,26 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
 
   nplots=1;
   //resize data field for containing the graph
-  data.clear(); //start with empty data
-  data.resize(nplots);
-  data[nplots-1].resize(npoints);
-  //qwtdata.resize(spec->getnpoints());
+  qwtdata.clear(); //start with empty data
+  d_curves.clear();
+  qwtdata.resize(nplots);
+  d_curves.resize(nplots);
 
-    stylelist.resize(nplots);
-    stylelist[nplots-1]=1; //default style
+  qwtdata[nplots-1].resize(npoints);
+
+   // stylelist.resize(nplots);
+   // stylelist[nplots-1]=1; //default style
+
 
   copydata(0,spectrumptr); //copy the spectrum data into the graph data field (integer conversion!)
   setdefaults(); //set default border styles and colors etc
   scale(); //scale the data to fit in the graph, DO this after setdefaults()
   getmainwindowptr(); //get a pointer to the main window
   Init();
+
+
+
+
     #ifdef GRAPH_DEBUG
     std::cout << "End of constructor of Graph\n";
     #endif
@@ -97,12 +106,12 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
 
 
 Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
-   : QWidget(parent),data(mspec->getsize(), std::vector<QPoint>(mspec->getnpoints())),myworld(),stylelist()
+   : QFrame(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints())),myworld(),stylelist()
    // data()
 {
-   //  myPlot = new QwtPlot(QwtText(name),this);
-   //  myPlot->show();
-     this->setWindowTitle(name);
+    myPlot = new QwtPlot(QwtText(name),this);
+    myPlot->show();
+    this->setWindowTitle(name);
       #ifdef GRAPH_DEBUG
     std::cout << "Constructor of graph for multispectrum\n";
     std::cout << "parent adres is "<<parent<<"\n";
@@ -118,12 +127,11 @@ Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
   scalefactor=1.0;
   nplots=1;
   //resize data field for containing the graph
-  data.clear(); //start with empty data
-  data.resize(nplots);
+  qwtdata.clear(); //start with empty data
+  qwtdata.resize(nplots);
   npoints=spectrumptr->getnpoints();
-  data[nplots-1].resize(npoints);
- // qwtdata.resize(spectrumptr->getnpoints());
-
+  qwtdata[nplots-1].resize(npoints);
+  d_curves.resize(nplots);
   stylelist.resize(nplots);
   stylelist[nplots-1]=1; //default style
 
@@ -141,7 +149,7 @@ Graph::~Graph(){
        if (rubberrect!=0){
           delete(rubberrect);
        }
-       //delete(myPlot);
+       delete(myPlot);
 }
 
 void Graph::Init(){
@@ -227,59 +235,18 @@ void Graph::getmainwindowptr(){
     }
 }
 void Graph::copydata(int layer,Spectrum* spec){
- //copy the data from the spectrum into the data field
- //THE DATA IS CLIPPED TO INT!
- //a rescaling is done when the numbers are smaller than minpoints
- //it has only a cosmetical effect, and only works for single layer plots
- const double minpoints=4096.0; //minimum number of steps between 0 and max to allow scaling of a spec with a small dynamic range
-   //Determine scalefactor from layer 0 (spectrum stored in spectrumptr)
-   scalefactor=1.0;
-   const double range=(spectrumptr->getmax()-spectrumptr->getmin()); //always use the scale of layer 0
-   if (range<minpoints){
-     const double minrange=1e-6;
-     if (range>minrange){
-        scalefactor=fabs(minpoints/range);
-     }
-     else{
-          scalefactor=1.0;
-     }
-#ifdef GRAPH_DEBUG
- std::cout <<"spec->getmax():"<< spec->getmax() <<"\n";
- std::cout <<"spec->getmin():"<< spec->getmin() <<"\n";
- std::cout <<"range:"<< range <<"\n";
- std::cout <<"scalefactor:"<< scalefactor <<"\n";
-#endif
-
- }
- else{//if a multilayer plot
-           //keep same scalefactor as for first layer
-   //scalefactor=1.0;
-}
 
  for (size_t i=0;i<spec->getnpoints();i++){
      const double ydata=spec->getcounts(i);
      const double xdata=spec->getenergy(i);
-     //careful check for overflow before doing int cast, otherwise an exception is thrown which
-     //apparently can not be caught (why???)
-    (data[layer][i]).setX(spectrumptr->getenergyindex(xdata));
-
-     if ((int(ydata*scalefactor)<INT_MIN)||(int(ydata*scalefactor)>INT_MAX)){
-       //put zero in case of a nan or floating point error
-       (data[layer][i]).setY(0);
-     }
-     else{
-       (data[layer][i]).setY(int(ydata*scalefactor));
-     }
      //and copy in the qwt specific store
-     //qwtdata[i].setX(spectrumptr->getenergyindex(xdata));
-     //qwtdata[i].setY(spectrumptr->getenergyindex(ydata));
-
+     (qwtdata[layer][i]).setX(spectrumptr->getenergyindex(xdata));
+     (qwtdata[layer][i]).setY(spectrumptr->getenergyindex(ydata));
   }
 #ifdef GRAPH_DEBUG
  std::cout <<"end of copydata\n";
 #endif
 }
-
 
 
 void Graph::reinit(){
@@ -295,12 +262,11 @@ void Graph::reinit(){
 void Graph::addgraph(Spectrum *spec)
 {
   nplots++;
-  data.resize(nplots);    //increase size of data vector
-  data[nplots-1].resize(spec->getnpoints());
+  qwtdata.resize(nplots);    //increase size of data vector
+  qwtdata[nplots-1].resize(spec->getnpoints());
   //qwtdata.resize(spec->getnpoints());
+  d_curves.resize(nplots);
 
-  stylelist.resize(nplots);
-  stylelist[nplots-1]=1; //the default style
   #ifdef GRAPHDEBUG
    std::cout <<"addgraph function\n";
   std::cout <<"the new size of data is "<<data.size()<<"\n";
@@ -312,9 +278,9 @@ void Graph::addgraph(Spectrum *spec)
 }
 void Graph::removelastgraph(){
     nplots--;
-  data.resize(nplots);    //decrease size of data vector
+  qwtdata.resize(nplots);    //decrease size of data vector
   stylelist.resize(nplots);
-
+  d_curves.resize(nplots);
   #ifdef GRAPHDEBUG
    std::cout <<"removelastgraph function\n";
   std::cout <<"the new size of data is "<<data.size()<<"\n";
@@ -341,39 +307,7 @@ return ((layer>=0)&&(layer<nplots));
 }
 
 void Graph::scale(){
-#ifdef GRAPH_DEBUG
-    std::cout << "Starting scale\n";
-    std::cout << "nplots "<<nplots<<"\n";
-    std::cout << "startzoomindex "<<getstartzoomindex()<<"\n";
-    std::cout << "endzoomindex "<<getendzoomindex()<<"\n";
-    std::cout << "spectrumptr "<<spectrumptr<<"\n";
-    std::cout << "spectrumptr->getname "<<spectrumptr->getname()<<"\n";
-#endif
-//update xmax and xmin
-  xmin=spectrumptr->getenergy(getstartzoomindex());
-  #ifdef GRAPH_DEBUG
-  std::cout<<"before copy xmin: "<<xmin<<"\n";
-  #endif
-  xmax=spectrumptr->getenergy(getendzoomindex());
-  #ifdef GRAPH_DEBUG
-  std::cout<<"before copy xmax: "<<xmax<<"\n";
-  #endif
-//update the ymax and ymin
-
-  ymax=0.0;
-  ymin=0.0;
-  double ydata=0;
-  for (int layer=0;layer<(nplots);layer++){
-      for (size_t i=getstartzoomindex(layer);i<=getendzoomindex(layer);i++){
-       	const int y=(data[layer][i]).y();
-        ydata=double(y);
-        if (ydata>ymax) {ymax=ydata;}
-        if (ydata<ymin) {ymin=ydata;}
-        }
-      }
-  #ifdef GRAPH_DEBUG
-  std::cout<<"ymin: "<<ymin<<" ymax: "<<ymax<<" nplots:"<<nplots<<"\n";
-  #endif
+//do nothing
 }
 void Graph::setxlabel(const char* xl){xlabel=xl;}
 
@@ -381,215 +315,77 @@ void Graph::setylabel(const char* yl){ylabel=yl;}
 
 void Graph::updateCaption(){}
 
-void Graph::paintEvent( QPaintEvent * )
+void Graph::paintEvent( QPaintEvent *event )
 {
-    QPainter paint(this);
-    paint.setRenderHint(QPainter::NonCosmeticDefaultPen,true); //cosmetic width of 0 doesn't work on os x
-    this->setWindowTitle(spectrumptr->getname());
-    //determine size of current window
-    int w = width();
-    int h = height();
-    if(w <= 0 || h <= 0)
-        return;
-
-     //set some colors and fonts to use
-
-                     
-    paint.setBrush(bgcolor);// set random brush color
-    QFont myfont=QFont(); //get default font
-    
-    //myfont.System;
-    myfont.setPixelSize (int(double(fontsize*double(h))));
-    paint.setFont (myfont);
-    
-    paint.setPen(normalcolor);
-    QString label;
-
-
-    //determine size of printed text
-    int fontheight,fontwidth;
-    double dummy=-1.2356e34;
-    label.setNum(dummy,'g',precision); //create text with required precision and fontsize
-    QRect rt;
-    //draw text in center of screen
-    rt=paint.boundingRect (w/2,h/2, w, h,Qt::AlignLeft|Qt::AlignBottom,label);
-    fontheight=rt.height();
-    fontwidth=rt.width();
-
-    //calculate the border
-    int xborder,yborder;
-    xborder=fontwidth+int(double(border)*double(w));
-    yborder=int(double(border)*double(h));
-
-    int top,left,bottom,right,gw,gh;
-    int xmargin,ymargin;
-    xmargin=fontwidth+2*fontheight;
-    ymargin=3*fontheight;
-    left=xmargin;
-    top=yborder;
-    right=w-xborder;
-    bottom=h-ymargin;
-    gw=w-xborder-xmargin;//width and height of graph window
-    gh=h-yborder-ymargin;
-
-    //draw the graph region
-    QPoint p1(left,top);        // p1 = top left
-    QPoint p2(right,bottom);    // p2 = bottom right
-    r=QRect( p1, p2 );
-    
-
-    paint.setPen(axiscolor);
-    paint.drawRect( r );
-
-
-    //plot the data
-    double sx,sy,dx,dy;
-
-    //double sizex,sizey;
-    double sizex=xmax-xmin;
-    double sizey=ymax-ymin;
-
-        int npoints_zoom=1+getendzoomindex()-getstartzoomindex(); //size in pixels after zooming, pixel size is also size of bins in layer 0
-        sx=double(gw)/double(npoints_zoom);
-        sy=-double(gh)/sizey;  //put origin of y at bottom instead of top
-        dx=double(xmargin)-double(getstartzoomindex())*sx;
-        dy=double(yborder+gh);
-
-        //scale the data to fit on the screensize
-        //use worldmatrices
-        myworld.reset();
-        myworld.translate(dx,dy);
-        myworld.scale(sx,sy);
-        myworld.translate(0,-ymin);  //put lowest y value at the bottom of graph
-        paint.setWorldTransform( myworld );
-
-
-    for (int layer=nplots-1;layer>=0;layer--){
-
-       for (size_t index=getstartzoomindex(layer);index<=getendzoomindex(layer);index++){
-           if ((spectrumptr->isexcluded(index))&&(layer==1)) {
-                paint.setPen(excludecolor);
-           }
-        else {
-             if ((int)mycolors.size()>layer){
-                         paint.setPen(mycolors[layer]);
-             }
-             }
-
-                if (stylelist[layer]==1){
-                    //draw a line
-                    if ((index+1)<data[layer].size()){
-                        paint.drawLine(data[layer][index],data[layer][index+1]);
-                    }
-                }
-
-                else{
-                    //draw a circle on the datapoints
-                     if ((index)<data[layer].size()){
-                         const double totx=double(npoints_zoom);
-                         const int dotx=int(double(dotsize));
-                         const int doty=int(double(dotsize)*sizey/totx);
-                         const int width=dotx;
-                         const int height=doty;
-                         
-                        paint.drawEllipse ( data[layer][index].x()-width/2,data[layer][index].y()-height/2,width ,height);
-                        //draw a cross in the middle
-                        paint.drawLine(data[layer][index].x(),data[layer][index].y()-height/2,data[layer][index].x(),data[layer][index].y()+height/2);
-                        paint.drawLine(data[layer][index].x()-width/2,data[layer][index].y(),data[layer][index].x()+width/2,data[layer][index].y());
-                     }
-                    }
-
-
-        }
-      }
-
-
-    paint.setPen(normalcolor);
-     
-    myworld.reset();
-    paint.setWorldTransform( myworld );
-
-    //create axis labels and tick marks
-    double xtick,ytick,xticklabel,yticklabel;
-    xticklabel=(xmax-xmin)/double(xtickcount-1.0);
-    yticklabel=(ymax-ymin)/(double(ytickcount-1.0)*scalefactor); // take into account the scalefactor to have the proper labels
-    xtick=double(gw)/double(xtickcount-1.0);
-    ytick=double(gh)/double(ytickcount-1.0);
-    int tx,ty,xticklength,yticklength;
-    xticklength=int(ticksize*double(h));
-    yticklength=int(ticksize*double(w));
-
-    // x tick marks + labels
-    ty=h-ymargin;
-     paint.setPen(axiscolor);
-    for (int i=0;i<xtickcount;i++)
-    {
-    tx=xmargin+int(double(i)*xtick);
-    p1.setX(tx);
-    p2.setX(tx);
-    p1.setY(ty);
-    p2.setY(ty+yticklength);
-    paint.drawLine(p1,p2);
-    label.setNum(xmin+double(i)*xticklabel,'g',precision);
-    paint.drawText (tx,ty+yticklength, fontwidth, fontheight,Qt::AlignCenter|Qt::AlignBottom,label);
-    //was -1,0
-
-    }
-    // y tick marks + labels
-    tx=xmargin;
-  
-    paint.setPen(axiscolor);
-    for (int i=0;i<ytickcount;i++)
-    {
-    ty=(h-ymargin)-int(double(i)*ytick);
-    p1.setX(tx);
-    p2.setX(tx-xticklength);
-    p1.setY(ty);
-    p2.setY(ty);
-    paint.drawLine(p1,p2);
-
-    label.setNum(ymin/scalefactor+double(i)*yticklabel,'g',precision);
-    paint.drawText (tx-fontwidth-2,ty, fontwidth, fontheight,Qt::AlignLeft|Qt::AlignBottom,label);
-     //paint.drawText (tx-fontwidth-2,ty, fontwidth, fontheight,Qt::AlignLeft|Qt::AlignBottom,label,-1,0 );
-    }
-
-    // draw xlabel and ylabel in middle of axis
-    myfont.bold();
-    paint.setFont (myfont);
-    tx=xmargin+gw/2;
-    ty=bottom+2*fontheight;
-    paint.drawText (tx,ty, fontwidth, fontheight,Qt::AlignCenter|Qt::AlignBottom,xlabel );
-
-    tx=0;
-    ty=yborder+gh/2;
-    //draw this text vertical
-    myworld.reset();
-    myworld.translate(tx,ty);
-    myworld.rotate(-90);
-    myworld.translate(-tx,-ty);
-    paint.setWorldTransform( myworld );
-    paint.drawText (tx,ty, fontwidth, fontheight,Qt::AlignLeft|Qt::AlignBottom,ylabel);
-    myworld.reset();
-    paint.setWorldTransform( myworld );
-
-    //myworld.reset();
-    //on top of the data draw a selection window if one exists
-    if (getselected()){
-     QPoint topleft(convert_index_to_coords(getstartindex()),r.top());
-     QPoint bottomright(convert_index_to_coords(getendindex()),r.bottom());
-     grabrect=QRect(topleft,bottomright);
-     rubberrect->setGeometry(grabrect);
-     rubberrect->show();
-     //paint.drawRect(grabrect);//draw a new one
-      }
-
-    //do the qwt plotting
-    //QwtPlotCurve *curve1 = new QwtPlotCurve("Experiment");
-    //curve1->setSamples(qwtdata);
-    //curve1->attach(myPlot);
-    //myPlot->replot();
+    QFrame::paintEvent( event );
+    QPainter painter( this );
+    painter.setClipRect( contentsRect() );
+    drawContents( &painter );
 }
 
+void Graph::drawContents( QPainter *painter )
+    {
+        int deltay, i;
+
+        QRect r = contentsRect();
+
+        deltay = r.height() / nplots - 1;
+
+        r.setHeight( deltay );
+
+        //
+        //  draw curves
+        //
+        for ( i = 0; i < nplots; i++ )
+        {
+            //xMap.setPaintInterval( r.left(), r.right() );
+            //yMap.setPaintInterval( r.top(), r.bottom() );
+            painter->setRenderHint( QPainter::Antialiasing,d_curves[i].testRenderHint( QwtPlotItem::RenderAntialiased ) );
+            //d_curves[i].draw( painter, xMap, yMap, r );
+            //shiftDown( r, deltay );
+            d_curves[i].setSamples(qwtdata[i]);
+            d_curves[i].attach(myPlot);
+        }
+
+        //
+        // draw titles
+        //
+        /*r = contentsRect();     // reset r
+        painter->setFont( QFont( "Helvetica", 8 ) );
+
+        const int alignment = Qt::AlignTop | Qt::AlignHCenter;
+
+        painter->setPen( Qt::black );
+
+        painter->drawText( 0, r.top(), r.width(), painter->fontMetrics().height(),
+            alignment, "Style: Line/Fitted, Symbol: Cross" );
+        shiftDown( r, deltay );
+
+        painter->drawText( 0, r.top(), r.width(), painter->fontMetrics().height(),
+            alignment, "Style: Sticks, Symbol: Ellipse" );
+        shiftDown( r, deltay );
+
+        painter->drawText( 0 , r.top(), r.width(), painter->fontMetrics().height(),
+            alignment, "Style: Lines, Symbol: None" );
+        shiftDown( r, deltay );
+
+        painter->drawText( 0 , r.top(), r.width(), painter->fontMetrics().height(),
+            alignment, "Style: Lines, Symbol: None, Antialiased" );
+        shiftDown( r, deltay );
+
+        painter->drawText( 0, r.top(), r.width(), painter->fontMetrics().height(),
+            alignment, "Style: Steps, Symbol: None" );
+        shiftDown( r, deltay );
+
+        painter->drawText( 0, r.top(), r.width(), painter->fontMetrics().height(),
+            alignment, "Style: NoCurve, Symbol: XCross" );*/
+
+//do the qwt plotting
+
+
+
+myPlot->replot();
+}
 Spectrum* Graph::getspectrumptr(){
   return spectrumptr;
 }
@@ -789,20 +585,20 @@ void Graph::resetselection(){
 }
 
 size_t Graph::getstartzoomindex(int layer)const{
-    if (data[layer].size()!=data[0].size()){
-        for (size_t i=0;i<data[layer].size();i++){
-            if (data[layer][i].x()>data[0][startzoomindex].x()) return i; //for different size, take layer 0 as reference
+    if (qwtdata[layer].size()!=qwtdata[0].size()){
+        for (size_t i=0;i<qwtdata[layer].size();i++){
+            if (qwtdata[layer][i].x()>qwtdata[0][startzoomindex].x()) return i; //for different size, take layer 0 as reference
         }
         return 0;
     }
     return startzoomindex;
 }
 size_t Graph::getendzoomindex(int layer)const{
-     if (data[layer].size()!=data[0].size()){
-        for (size_t i=0;i<data[layer].size();i++){
-            if (data[layer][i].x()>data[0][endzoomindex].x()) return i; //for different size, take layer 0 as reference
+     if (qwtdata[layer].size()!=qwtdata[0].size()){
+        for (size_t i=0;i<qwtdata[layer].size();i++){
+            if (qwtdata[layer][i].x()>qwtdata[0][endzoomindex].x()) return i; //for different size, take layer 0 as reference
         }
-        return data[layer].size();
+        return qwtdata[layer].size();
     }
     return endzoomindex;
 }
