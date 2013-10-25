@@ -39,7 +39,7 @@
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
-
+#include <qwt_scale_engine.h>
 //#define GRAPH_DEBUG
 
 
@@ -54,12 +54,13 @@ extern MenuEelsmodel* getmenuptr();
 //
 
 Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
- :QFrame(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints())),myworld()
+    :QwtPlot(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints()))
  // data()
 {
 
-    myPlot = new QwtPlot(QwtText(name),this);
-    myPlot->show();
+    setFrameStyle( QFrame::Box );
+    setLineWidth( 2 );
+    setMidLineWidth( 3 );
 
     this->setWindowTitle(name);
     #ifdef GRAPH_DEBUG
@@ -84,8 +85,13 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
   qwtdata[nplots-1].resize(npoints);
 
   QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+
+  mycurveptr->setPen( Qt::darkBlue );
+  mycurveptr->setStyle( QwtPlotCurve::Lines );
+  mycurveptr->setRenderHint( QwtPlotItem::RenderAntialiased );
+
   d_curves.push_back(mycurveptr);
-  mycurveptr->attach(myPlot);
+  mycurveptr->attach(this);
    // stylelist.resize(nplots);
    // stylelist[nplots-1]=1; //default style
 
@@ -95,22 +101,31 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
   getmainwindowptr(); //get a pointer to the main window
   Init();
 
-
-
+  setAxisTitle( QwtPlot::xBottom, "Energy [eV]" );
+  setAxisTitle( QwtPlot::yLeft, "Intensity [/]" );
+  setAxisMaxMajor( QwtPlot::xBottom, 10 );
+  setAxisMaxMinor( QwtPlot::xBottom, 9 );
+  setAxisScaleEngine( QwtPlot::xBottom, new QwtLinearScaleEngine );
 
     #ifdef GRAPH_DEBUG
     std::cout << "End of constructor of Graph\n";
     #endif
+       show();
+
 }
 
 
 
 Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
-   : QFrame(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints())),myworld()
+   : QwtPlot(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints()))
    // data()
 {
-    myPlot = new QwtPlot(QwtText(name),this);
-    myPlot->show();
+    setFrameStyle( QFrame::Box );
+    setLineWidth( 2 );
+    setMidLineWidth( 3 );
+
+
+
     this->setWindowTitle(name);
       #ifdef GRAPH_DEBUG
     std::cout << "Constructor of graph for multispectrum\n";
@@ -124,7 +139,6 @@ Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
   multispectrum=true; //it's a multispectrum
   spectrumptr=mspec->getcurrentspectrum(); //a pointer to the current active spectrum
   multispectrumptr=mspec; //a pointer to the whole multispectrum
-  scalefactor=1.0;
 
   nplots=1;
   //resize data field for containing the graph
@@ -133,14 +147,28 @@ Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
 
   qwtdata[nplots-1].resize(npoints);
   QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+
+  mycurveptr->setPen( Qt::darkBlue );
+  mycurveptr->setStyle( QwtPlotCurve::Lines );
+  mycurveptr->setRenderHint( QwtPlotItem::RenderAntialiased );
+
+
   d_curves.push_back(mycurveptr);
-    mycurveptr->attach(myPlot);
+   mycurveptr->attach(this);
 
   copydata(0,spectrumptr); //copy the spectrum data into the graph data field (integer conversion!)
 
   setdefaults(); //set default border styles and colors etc
   getmainwindowptr(); //get a pointer to the main window
   Init();
+
+  setAxisTitle( QwtPlot::xBottom, "Energy [eV]" );
+  setAxisTitle( QwtPlot::yLeft, "Intensity [/]" );
+  setAxisMaxMajor( QwtPlot::xBottom, 10 );
+  setAxisMaxMinor( QwtPlot::xBottom, 9 );
+setAxisScaleEngine( QwtPlot::xBottom, new QwtLinearScaleEngine );
+show();
+
 }
 
 Graph::~Graph(){
@@ -149,8 +177,7 @@ Graph::~Graph(){
        if (rubberrect!=0){
           delete(rubberrect);
        }
-       delete(myPlot);
-       //the d_curves are automagically deleted by the destructor of myplot as well
+       //the d_curves are automagically deleted by the destructor this as well
 }
 
 void Graph::Init(){
@@ -241,11 +268,14 @@ void Graph::copydata(int layer,Spectrum* spec){
      const double ydata=spec->getcounts(i);
      const double xdata=spec->getenergy(i);
      //and copy in the qwt specific store
-     (qwtdata[layer][i]).setX(spectrumptr->getenergyindex(xdata));
-     (qwtdata[layer][i]).setY(spectrumptr->getenergyindex(ydata));
+     (qwtdata[layer][i]).setX(xdata);
+     (qwtdata[layer][i]).setY(ydata);
   }
  //and attach it to a curve
  d_curves[layer]->setSamples(qwtdata[layer]);
+
+
+
 
 #ifdef GRAPH_DEBUG
  std::cout <<"end of copydata\n";
@@ -268,8 +298,13 @@ void Graph::addgraph(Spectrum *spec)
   qwtdata.resize(nplots);    //increase size of data vector
   qwtdata[nplots-1].resize(spec->getnpoints());
   QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+  mycurveptr->setPen( Qt::darkRed );
+  mycurveptr->setStyle( QwtPlotCurve::Lines );
+  mycurveptr->setRenderHint( QwtPlotItem::RenderAntialiased );
+
+
   d_curves.push_back(mycurveptr);
-   mycurveptr->attach(myPlot);
+ mycurveptr->attach(this);
 
   #ifdef GRAPHDEBUG
    std::cout <<"addgraph function\n";
@@ -330,27 +365,24 @@ void Graph::paintEvent( QPaintEvent *event )
 
 void Graph::drawContents( QPainter *painter )
     {
-        int deltay, i;
+        /* QRect r = contentsRect();
+         xMap.setPaintInterval( r.left(), r.right() );
+         yMap.setPaintInterval( r.top(), r.bottom() );
 
-        QRect r = contentsRect();
-
-        deltay = r.height() / nplots - 1;
-
-        r.setHeight( deltay );
+         xMap.setScaleInterval(spectrumptr->getenergy(0), spectrumptr->getenergy(npoints-1) );
+         yMap.setScaleInterval(0, 1000.0);
 
         //
         //  draw curves
         //
-        for ( i = 0; i < nplots; i++ )
+        for (size_t i = 0; i < nplots; i++ )
         {
-            //xMap.setPaintInterval( r.left(), r.right() );
-            //yMap.setPaintInterval( r.top(), r.bottom() );
-            painter->setRenderHint( QPainter::Antialiasing,d_curves[i]->testRenderHint( QwtPlotItem::RenderAntialiased ) );
-            //d_curves[i].draw( painter, xMap, yMap, r );
-            //shiftDown( r, deltay );
 
+            painter->setRenderHint( QPainter::Antialiasing,d_curves[i]->testRenderHint( QwtPlotItem::RenderAntialiased ) );
+            d_curves[i]->draw( painter, xMap, yMap, r );
 
         }
+/*
 
         //
         // draw titles
@@ -389,7 +421,8 @@ void Graph::drawContents( QPainter *painter )
 
 
 
-myPlot->replot();
+
+    replot();
 }
 Spectrum* Graph::getspectrumptr(){
   return spectrumptr;

@@ -34,7 +34,7 @@ class Multispectrum;
 class QWorkspace;
 class MenuEelsmodel;
 
-  class Graph : public QFrame
+  class Graph : public QwtPlot
 {
   Q_OBJECT
   public:
@@ -91,14 +91,8 @@ private slots:
 private:
     int npoints;      //number of data points
     int nplots;       //number of layers in the plot
-    double scalefactor;
-    //    std::vector <QPoint> singledata; //contains one single graph of pixel points
-    //std::vector < std::vector<QPoint> > data; //contains a set of graphs for a multi-graph plot
-
     QVector<QwtPlotCurve*> d_curves;
     QVector<QVector< QPointF > >	qwtdata;
-    QwtPlot * myPlot; //a pointer to the qwt plot window
-    QTransform myworld; //scale conversion matrix real positions- window positions
     double border;
     double xmax;
     double ymax;
