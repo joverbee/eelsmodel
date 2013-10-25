@@ -79,19 +79,19 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
   nplots=1;
   //resize data field for containing the graph
   qwtdata.clear(); //start with empty data
- // d_curves.clear();
   qwtdata.resize(nplots);
 
   qwtdata[nplots-1].resize(npoints);
- // d_curves.resize(nplots);
 
+  QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+  d_curves.push_back(mycurveptr);
+  mycurveptr->attach(myPlot);
    // stylelist.resize(nplots);
    // stylelist[nplots-1]=1; //default style
 
 
   copydata(0,spectrumptr); //copy the spectrum data into the graph data field (integer conversion!)
   setdefaults(); //set default border styles and colors etc
-  scale(); //scale the data to fit in the graph, DO this after setdefaults()
   getmainwindowptr(); //get a pointer to the main window
   Init();
 
@@ -129,17 +129,16 @@ Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
   nplots=1;
   //resize data field for containing the graph
   qwtdata.clear(); //start with empty data
- // d_curves.clear();
   qwtdata.resize(nplots);
 
   qwtdata[nplots-1].resize(npoints);
- // d_curves.resize(nplots);
-
+  QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+  d_curves.push_back(mycurveptr);
+    mycurveptr->attach(myPlot);
 
   copydata(0,spectrumptr); //copy the spectrum data into the graph data field (integer conversion!)
 
   setdefaults(); //set default border styles and colors etc
-  scale(); //scale the data to fit in the graph, DO this after setdefaults()
   getmainwindowptr(); //get a pointer to the main window
   Init();
 }
@@ -151,6 +150,7 @@ Graph::~Graph(){
           delete(rubberrect);
        }
        delete(myPlot);
+       //the d_curves are automagically deleted by the destructor of myplot as well
 }
 
 void Graph::Init(){
@@ -244,6 +244,9 @@ void Graph::copydata(int layer,Spectrum* spec){
      (qwtdata[layer][i]).setX(spectrumptr->getenergyindex(xdata));
      (qwtdata[layer][i]).setY(spectrumptr->getenergyindex(ydata));
   }
+ //and attach it to a curve
+ d_curves[layer]->setSamples(qwtdata[layer]);
+
 #ifdef GRAPH_DEBUG
  std::cout <<"end of copydata\n";
 #endif
@@ -256,7 +259,6 @@ void Graph::reinit(){
  if (multispectrumptr==0) return;
  spectrumptr=multispectrumptr->getcurrentspectrum();
  copydata(0,spectrumptr); //copy the new data into layer 0, other layers are not affected
- scale();
  repaint();
 }
 
@@ -265,8 +267,9 @@ void Graph::addgraph(Spectrum *spec)
   nplots++;
   qwtdata.resize(nplots);    //increase size of data vector
   qwtdata[nplots-1].resize(spec->getnpoints());
-  //qwtdata.resize(spec->getnpoints());
-  //d_curves.resize(nplots);
+  QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+  d_curves.push_back(mycurveptr);
+   mycurveptr->attach(myPlot);
 
   #ifdef GRAPHDEBUG
    std::cout <<"addgraph function\n";
@@ -275,13 +278,18 @@ void Graph::addgraph(Spectrum *spec)
   #endif
   //add the data in the new layer
   copydata(nplots-1,spec);
-  scale();
 }
 void Graph::removelastgraph(){
     nplots--;
   qwtdata.resize(nplots);    //decrease size of data vector
   stylelist.resize(nplots);
-  //d_curves.resize(nplots);
+
+  QwtPlotCurve * mycurveptr=d_curves.last();
+  d_curves.pop_back();
+  mycurveptr->detach();
+  delete(mycurveptr);
+
+
   #ifdef GRAPHDEBUG
    std::cout <<"removelastgraph function\n";
   std::cout <<"the new size of data is "<<data.size()<<"\n";
@@ -300,16 +308,12 @@ void Graph::updategraph(int layer,Spectrum* spec){
     if  (!this->validlayer(layer)) return;
     //add the data
     copydata(layer,spec);
-    scale();
     repaint();
 }
 bool Graph::validlayer(int layer)const{
 return ((layer>=0)&&(layer<nplots));
 }
 
-void Graph::scale(){
-//do nothing
-}
 void Graph::setxlabel(const char* xl){xlabel=xl;}
 
 void Graph::setylabel(const char* yl){ylabel=yl;}
@@ -341,11 +345,11 @@ void Graph::drawContents( QPainter *painter )
         {
             //xMap.setPaintInterval( r.left(), r.right() );
             //yMap.setPaintInterval( r.top(), r.bottom() );
-            painter->setRenderHint( QPainter::Antialiasing,d_curves[i].testRenderHint( QwtPlotItem::RenderAntialiased ) );
+            painter->setRenderHint( QPainter::Antialiasing,d_curves[i]->testRenderHint( QwtPlotItem::RenderAntialiased ) );
             //d_curves[i].draw( painter, xMap, yMap, r );
             //shiftDown( r, deltay );
-            d_curves[i].setSamples(qwtdata[i]);
-            d_curves[i].attach(myPlot);
+
+
         }
 
         //
@@ -431,7 +435,6 @@ void Graph::mousePressEvent(QMouseEvent* e){
       //right clicking in zoom mode returns to normal zoom state
       setstartzoomindex(0);
       setendzoomindex(npoints-1);
-      this->scale();
       this->repaint();
     }
   }
@@ -506,8 +509,6 @@ void Graph::mouseReleaseEvent(QMouseEvent* e){
         setstartzoomindex(0);
         setendzoomindex(npoints-1);
         }
-     //rescale taking into account the new limits
-     this->scale();
      }
 
      if ((mainwindow->selectMode())){
