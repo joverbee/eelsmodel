@@ -16,13 +16,12 @@
  ***************************************************************************/
 
 #include "src/gui/fitterchooser.h"
+
+#include <QInputDialog>
+#include <QString>
+#include <QStringList>
+
 #include "src/fitters/fitter.h"
-#include <qinputdialog.h>
-#include <qstring.h>
-#include <qstringlist.h>
-
-
-
 
 FitterChooser::FitterChooser(QWidget *parent, const char *name,int& retvalue ) : QWidget(parent) {
 QStringList list;

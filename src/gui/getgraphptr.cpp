@@ -14,26 +14,28 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//#define GETGRAPHDEBUG
+
 #include "src/gui/getgraphptr.h"
-#include <qdialog.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <QGridLayout>
+
+//#define GETGRAPHDEBUG
+
 #include <iostream>
-#include <qlayout.h>
-#include "src/gui/saysomething.h"
-#include <qworkspace.h>
-#include <qwidget.h>
-#include  "src/gui/graph.h"
-#include <qapplication.h>
+
+#include <QApplication>
+#include <QDialog>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
+#include <QWidget>
+#include <QWorkspace>
+
 #include "src/core/eelsmodel.h"
 
+#include "src/gui/graph.h"
+#include "src/gui/saysomething.h"
 
-
-
-extern QWorkspace* getworkspaceptr();//main.cpp contains this global function with a pointer to eelsmodel
-
+QWorkspace* getworkspaceptr();
 
 Getgraphptr::Getgraphptr(QWidget *parent, const char *name,const char* message )
 : QDialog(parent,Qt::WindowStaysOnTopHint)

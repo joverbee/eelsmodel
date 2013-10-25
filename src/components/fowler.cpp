@@ -17,12 +17,11 @@ A Fowler Nordheim peak component to model a FEG zero loss peak
  ***************************************************************************/
 
 #include "src/components/fowler.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 
-
-
+#include "src/core/parameter.h"
 
 Fowler::Fowler()
 :Component()

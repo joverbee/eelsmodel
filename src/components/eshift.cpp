@@ -20,23 +20,22 @@
  ***************************************************************************/
 
 #include "src/components/eshift.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
-#include "src/gui/getgraphptr.h"
-#include "src/gui/gettopspectrum.h"
-#include "src/gui/saysomething.h"
 #include <vector>
+
 #include "src/core/eelsmodel.h"
 #include "src/core/multispectrum.h"
 #include "src/core/model.h"
+#include "src/core/parameter.h"
 
+#include "src/gui/getgraphptr.h"
+#include "src/gui/gettopspectrum.h"
+#include "src/gui/saysomething.h"
 
-
-
-//get two global pointers from main
-extern Eelsmodel* geteelsmodelptr();
-extern QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
+QWorkspace* getworkspaceptr();
 
 Eshift::Eshift()
 :Component()

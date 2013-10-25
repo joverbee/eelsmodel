@@ -14,19 +14,25 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//#define PARAMETER_DEBUG
+
 #include "src/core/parameter.h"
-#include "src/core/monitor.h"
+
+//#define PARAMETER_DEBUG
+
 #include <string>
-#include "src/gui/saysomething.h"
-#include "src/gui/interactive_parameter.h"
 #include <iostream>
 #include <sstream>
 #include <limits>
 
-#include <qworkspace.h>
-extern QWorkspace* getworkspaceptr();//main.cpp contains this global function with a pointer to eelsmodel
-//the functions
+#include <QWorkspace>
+
+#include "src/core/monitor.h"
+
+#include "src/gui/saysomething.h"
+#include "src/gui/interactive_parameter.h"
+
+QWorkspace* getworkspaceptr();
+
 Parameter::Parameter(){
   setdefaults();
   setvalue(0.0);

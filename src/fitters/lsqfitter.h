@@ -19,11 +19,10 @@
 #define LSQFITTER_H
 
 //#define FITTER_DEBUG  //print some debug statistics
-#include <src/fitters/fitter.h>
 
-/**Least Squares fitter, using a Levenberg Marquardt algorithm
-  *@author Jo Verbeeck
-  */
+#include "src/fitters/fitter.h"
+
+/* Least Squares fitter, using a Levenberg Marquardt algorithm. */
 
 class LSQFitter : public Fitter  {
 public:

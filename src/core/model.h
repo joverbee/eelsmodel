@@ -21,20 +21,20 @@ you should start with a pointer to the core loss spectrum as argument
 
 #ifndef MODEL_H
 #define MODEL_H
-#include "src/core/spectrum.h"
-#include <vector>
-#include "src/core/slice_iter.h"
-class Component;//somewhere there is a class Component
-class Graph;//somewhere there is a class Graph
-class QWorkspace;//somewhere there is a class QWorkspace
-class Parameter;
-class Multispectrum;
-class Fitter;
-class Imagedisplay;
-/**
-  *@author Jo Verbeeck
-  */
 
+#include <vector>
+
+#include "src/core/spectrum.h"
+#include "src/core/slice_iter.h"
+
+class Component;
+class Fitter;
+class Graph;
+class Imagedisplay;
+class Multispectrum;
+class Parameter;
+
+class QWorkspace;
 
 class Model : public Spectrum{
 

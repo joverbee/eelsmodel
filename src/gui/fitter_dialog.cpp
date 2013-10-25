@@ -16,33 +16,36 @@
  ***************************************************************************/
 
 #include "src/gui/fitter_dialog.h"
-#include <qlabel.h>
-#include <qpoint.h>
-#include <qlayout.h>
-#include <qprogressbar.h>
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <qapplication.h>
-#include <qtooltip.h>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <iostream>
-#include "src/fitters/fitter.h"
-#include "src/core/multispectrum.h"
-#include <QWorkspace>
-#include "getfilename.h"
-#include <qmessagebox.h>
-#include <fstream>
+
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <sstream>
-#include "src/core/eelsmodel.h"
 
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+#include <QApplication>
+#include <QCheckBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPoint>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QToolTip>
+#include <QValidator>
+#include <QVBoxLayout>
+#include <QWorkspace>
+
+#include "src/core/eelsmodel.h"
+#include "src/core/multispectrum.h"
+
+#include "src/fitters/fitter.h"
+
+#include "src/gui/getfilename.h"
+
+Eelsmodel* geteelsmodelptr();
 
 Fitter_dialog::Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitter)
 : QWidget(parent)

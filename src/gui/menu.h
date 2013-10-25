@@ -17,38 +17,27 @@
 
 #ifndef MENU_H
 #define MENU_H
-#include <qwidget.h>
-//#include <qlabel.h>
-#include <qapplication.h>
-#include <qmainwindow.h>
-//#include <qworkspace.h>
-//#include <qaction.h>
-//#include <qmenubar.h>
-#include <qmenu.h>
-//#include <qtoolbar.h>
-#include <qtoolbutton.h>
-#include <qstatusbar.h>
-#include <qwhatsthis.h>
-#include <qstring.h>
-#include <qpixmap.h>
-#include <qmessagebox.h>
-#include <qfiledialog.h>
-#include <qprinter.h>
-#include <qpainter.h>
-//Added by qt3to4:
+
+#include <QFileDialog>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMessageBox>
+#include <QPainter>
+#include <QPixmap>
+#include <QPrinter>
 #include <QResizeEvent>
-#include <qaction.h>
+#include <QStatusBar>
+#include <QString>
+#include <QToolButton>
+#include <QWhatsThis>
+#include <QWidget>
 
 class QWorkspace;
 class QSignalMapper;
-class QAction;
 class QMenuBar;
 class QToolBar;
 class QLabel;
 
-/**
-  *@author Jo Verbeeck
-  */
 class MenuEelsmodel : public QMainWindow
 {
     Q_OBJECT

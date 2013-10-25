@@ -18,15 +18,15 @@
 #ifndef LEVENBERGMARQUARDT_H
 #define LEVENBERGMARQUARDT_H
 
-
 //#define FITTER_DEBUG //print some debug info
-#include <src/fitters/fitter.h>
+
+#include "src/fitters/fitter.h"
 #include "src/core/model.h"
 #include "src/core/curvematrix.h"
-/**Maximum Likelyhood fitter for Poisson Statistics
-  *@author Jo Verbeeck
-  */
+
+/* Maximum Likelihood fitter for Poisson Statistics. */
 #define N 100
+
 class LevenbergMarquardt : public Fitter  {
     size_t lambdaiter; //number of iterations for lambda
     double lambdac; //alpha starting step

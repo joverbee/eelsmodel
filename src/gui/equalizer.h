@@ -19,16 +19,13 @@ A widget to graphically control the value of a large set of parameters
 #ifndef EQUALIZER_H
 #define EQUALIZER_H
 
-#include <qwidget.h>
-
-/**
-  *@author Jo Verbeeck
-  */
-class Component;
-class Parameter;
-#include <qslider.h>
+#include <QSlider>
+#include <QWidget>
 
 class QWorkspace;
+
+class Component;
+class Parameter;
 
 class Equalizer : public QWidget  {
    Q_OBJECT

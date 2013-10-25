@@ -19,15 +19,12 @@ A dielectric model for low loss eels
 #ifndef DIELECMODEL_H
 #define DIELECMODEL_H
 
-#include <src/core/component.h>
 #include <complex>
-/**
-  *@author Jo Verbeeck
-  */
 
+#include "src/core/component.h"
 #include "src/core/curvematrix.h"
-class Imagedisplay;
 
+class Imagedisplay;
 
 class DielecModel : public Component  {
     size_t nrofextraparams;

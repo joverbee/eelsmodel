@@ -6,7 +6,6 @@
 //Ahn and Krivanek (1983) EELS Atlas
 //Colliex C., Manoubi T.,Gasgnier M. Brown L.M. Near edfe fine structures on EELS core loss edges In scanning electron microscopy (1985), SEM inc, AMF O'Hare, Illinois, Part 2, p489-512
 
-
 const double energy_K[] ={
 13.6,
 24.6,

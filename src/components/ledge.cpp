@@ -19,12 +19,14 @@ treatment of convergence angle due to Kohl
  ***************************************************************************/
 
 #include "src/components/ledge.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
-#include "src/core/eelsmodel.h"
 
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+#include "src/core/eelsmodel.h"
+#include "src/core/parameter.h"
+
+Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
 
 Ledge::Ledge() //create a dummy version
 :Component(),tempspectrum()

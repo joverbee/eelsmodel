@@ -19,11 +19,10 @@
 
 #ifndef CSLICE_ITER_H
 #define CSLICE_ITER_H
+
 #include<valarray>
 
-/**needed for matrix class
-  *@author Jo Verbeeck
-  */
+/* needed for matrix class */
 
 template<class T> class Cslice_iter{
   std::valarray<T>* v;  //pointer to the valarray this slice is pointing to

@@ -55,19 +55,18 @@ use bi-cubic interpolation
 */
 
 #include "src/components/hsedge.h"
-#include "src/core/parameter.h"
-#include "src/gui/getfilename.h"
-#include <cmath>
 
+#include <cmath>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
+
 #include "src/core/curvematrix.h"
-#include "src/gui/imagedisplay.h"
+#include "src/core/parameter.h"
+
 #include "src/gui/fileopener.h"
-
-
-
+#include "src/gui/getfilename.h"
+#include "src/gui/imagedisplay.h"
 
 HSedge::HSedge() //create a dummy version
 :Component(),tempspectrum(){

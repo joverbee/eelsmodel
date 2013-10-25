@@ -19,11 +19,7 @@ Power law backround component
 #ifndef fast_BG_H
 #define fast_BG_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class fast_BG : public Component  {
 public:

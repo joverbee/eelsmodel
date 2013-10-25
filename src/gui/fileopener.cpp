@@ -15,23 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "src/gui/fileopener.h"
+
 //#define FILEOPEN_DEBUG
 
-#include "src/gui/fileopener.h"
-#include <QFileInfo>
-#include "src/gui/getfilename.h"
-#include <qstring.h>
-#include <string>
 #include <iostream>
+#include <string>
+
+#include <QFileInfo>
+#include <QString>
+
 #include "src/core/eelsmodel.h"
 
+#include "src/gui/getfilename.h"
 
-
-
-
-//get two global pointers from main
-extern Eelsmodel* geteelsmodelptr();
-extern QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
+QWorkspace* getworkspaceptr();
 
 Fileopener::Fileopener(QWidget *parent, const char *name ,std::string fname) : QWidget(parent)
 {

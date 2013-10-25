@@ -19,11 +19,7 @@ Hydrogenic K-edge component based on SigmaK by R.F. Egerton
 #ifndef KEDGEREL_H
 #define KEDGEREL_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Kedgerel : public Component  {
 Spectrum tempspectrum;

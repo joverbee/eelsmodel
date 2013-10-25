@@ -17,15 +17,14 @@ A pseudo voigt component
  ***************************************************************************/
 
 #include "src/components/pseudovoigt.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
+
 #include "src/components/lorentz.h"
 #include "src/components/gaussian.h"
 
-
-
-
+#include "src/core/parameter.h"
 
 PseudoVoigt::PseudoVoigt()
 :Component()

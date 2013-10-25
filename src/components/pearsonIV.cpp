@@ -5,7 +5,7 @@ A pearsonIV peak component
 based on:
 CDF/MEMO/STATISTICS/PUBLIC/6820
 A Guide to the Pearson Type IV Distribution
-Joel Heinrich—University of Pennsylvania
+Joel Heinrich University of Pennsylvania
 December 21, 2004
                              -------------------
     begin                : Sun Oct 27 2002
@@ -23,14 +23,14 @@ December 21, 2004
  ***************************************************************************/
 
 #include "src/components/pearsonIV.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 
-
 #include "src/core/eelsmodel.h"
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+#include "src/core/parameter.h"
 
+Eelsmodel* geteelsmodelptr();
 
 PearsonIV::PearsonIV()
 :Component()

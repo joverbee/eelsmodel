@@ -16,18 +16,18 @@
  ***************************************************************************/
 
 #include "src/gui/getfilename.h"
-#include <qstring.h>
-#include <qfiledialog.h>
-#include <string>
-#include <iostream>
-#include <qdir.h>
-#include <qfileinfo.h>
+
 //#define GETFILENAME_DEBUG
 
+#include <string>
+#include <iostream>
 
+#include <QDir>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QString>
 
-
-extern QString globaldirname; //global variable holding the current directory, defined in getfilename.h
+QString globaldirname; //global variable holding the current directory, declared in getfilename.h
 
 Getfilename::Getfilename(QWidget *parent, std::string nm ) : QWidget(parent)
 {

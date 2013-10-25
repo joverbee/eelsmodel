@@ -18,13 +18,13 @@
 #ifndef GETFILENAME_H
 #define GETFILENAME_H
 
-#include <qwidget.h>
 #include <string>
-#include <qstring.h>
 
-/**Qt implementation to select a file from a list
-  *@author Jo Verbeeck
-  */
+#include <QWidget>
+#include <QString>
+
+/* QWidget to select a file from a list. */
+
 class Getfilename : public QWidget  {
 Q_OBJECT
 private:

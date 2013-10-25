@@ -23,11 +23,7 @@ Use this componet to load experimental edges or calculated edges for example fro
 #ifndef FIXEDPATTERN_H
 #define FIXEDPATTERN_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class FixedPattern : public Component  {
 private:

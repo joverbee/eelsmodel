@@ -28,33 +28,39 @@ The subsampled dos function is mirrored to avoid edge artefacts at the edge wher
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 //#define SUMRULE
 //#define LINEAR
-
 //#define COMPONENT_DEBUG
+
 #include "src/components/dos.h"
-#include "src/gui/integerinput.h"
-#include "src/gui/componentselector.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
-#include "src/gui/graph.h"
-#include "src/core/eelsmodel.h"
-#include "src/gui/saysomething.h"
-#include "src/core/fftw++.h"
+
 #ifdef DEBUG
     #include "src/core/debug_new.h" //memory leak checker
 #endif
+
+#include "src/core/fftw++.h"
+#include "src/core/eelsmodel.h"
+#include "src/core/parameter.h"
+
+#include "src/gui/componentselector.h"
+#include "src/gui/graph.h"
+#include "src/gui/integerinput.h"
+#include "src/gui/saysomething.h"
+
 using namespace fftwpp;
 
-
 class QWorkspace;
-//get two global pointers from main
-extern QWorkspace* getworkspaceptr();
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+
+QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
+
 Dos::Dos() //create a dummy version
 :Component()
 {

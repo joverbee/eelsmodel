@@ -8,9 +8,7 @@
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
-
- namespace ublas = boost::numeric::ublas;
-
+namespace ublas = boost::numeric::ublas;
 
  /* Matrix inversion routine.
     Uses lu_factorize and lu_substitute in uBLAS to invert a matrix */

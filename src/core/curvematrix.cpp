@@ -15,18 +15,14 @@ A simple 2D matrix class to store curvature matrices based on an example in Stro
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 //#define SLOW //switch off use of ATLAS functions
 #define NDEBUG
 //#define CURVEMATRIXDEBUG
 
-#include "src/core/curvematrix.h"
-#include "src/core/slice_iter.h"
-#include "src/core/cslice_iter.h"
-
+#include <cmath>
 #include <iostream>
 #include <vector>
-#include <cmath>
-
 
 #include <boost/numeric/bindings/atlas/clapack.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
@@ -37,12 +33,9 @@ A simple 2D matrix class to store curvature matrices based on an example in Stro
 #include <boost/numeric/bindings/lapack/geqrf.hpp>
 #include <boost/numeric/bindings/lapack/ormqr.hpp>
 
-
-
-
-
-//#define DEBUG_CURVEMATRIX
-
+#include "src/core/cslice_iter.h"
+#include "src/core/curvematrix.h"
+#include "src/core/slice_iter.h"
 
 CurveMatrix::CurveMatrix(){
   //create an empty matrix

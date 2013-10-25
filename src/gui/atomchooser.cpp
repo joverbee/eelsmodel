@@ -16,21 +16,21 @@
  ***************************************************************************/
 
 #include "src/gui/atomchooser.h"
-#include <qinputdialog.h>
-#include <qstring.h>
-#include <qstringlist.h>
-#include <qcombobox.h>
-#include <qradiobutton.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <qlabel.h>
-#include <qstring.h>
-#include <QWorkspace>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <qpushbutton.h>
+
 #include <iostream>
 #include <sstream>
+
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QString>
+#include <QStringList>
+#include <QWorkspace>
+
 #include "src/gui/mendeleev.h" //defines table of mendeleev
 #include "src/gui/energies.h"
 

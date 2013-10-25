@@ -16,11 +16,14 @@
  ***************************************************************************/
 
 #include "src/gui/gettopspectrum.h"
-#include "src/gui/saysomething.h"
-#include <qapplication.h>
-#include <qwidget.h>
+
+#include <QApplication>
+#include <QWidget>
+
 #include "src/core/spectrum.h"
+
 #include "src/gui/graph.h"
+#include "src/gui/saysomething.h"
 
 //look in getgraphptr if you really want to scan through the list of windows
 //until you find a graph

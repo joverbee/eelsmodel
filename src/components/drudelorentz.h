@@ -19,15 +19,12 @@ A drude lorentz model for low loss eels
 #ifndef DRUDELORENTZ_H
 #define DRUDELORENTZ_H
 
-#include <src/core/component.h>
 #include <complex>
-/**
-  *@author Jo Verbeeck
-  */
 
+#include "src/core/component.h"
 #include "src/core/curvematrix.h"
-class Imagedisplay;
 
+class Imagedisplay;
 
 class DrudeLorentz : public Component  {
     size_t nrofextraparams;

@@ -19,11 +19,9 @@ A simple plasmon model to model the LL spectrum
 #ifndef PLASMON_H
 #define PLASMON_H
 
-#include <src/core/component.h>
+#include "src/core/component.h"
+
 class Lorentz;
-/**
-  *@author Jo Verbeeck
-  */
 
 class Plasmon : public Component  {
 int nrofplasmons; //number of plasmons that are simulated

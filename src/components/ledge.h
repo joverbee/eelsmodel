@@ -19,11 +19,7 @@ Hydrogenic L-edge component based on SigmaL2 by R.F. Egerton
 #ifndef LEDGE_H
 #define LEDGE_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Ledge : public Component  {
 Spectrum tempspectrum;

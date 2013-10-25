@@ -18,15 +18,16 @@
 #ifndef MSCATTEREXPFFT_H
 #define MSCATTEREXPFFT_H
 
-#include <src/core/component.h>
+//#define MSCATTEREXPFFT_DEBUG
+
 #include <vector>
+
+#include "src/core/component.h"
 #include "src/core/fftw++.h"
+
 class Spectrum;
 class Multispectrum;
-//#define MSCATTEREXPFFT_DEBUG
-/**
-  *@author Jo Verbeeck
-  */
+
 using namespace fftwpp;
 
 class MscatterExpfft : public Component  {

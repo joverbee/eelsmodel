@@ -18,17 +18,18 @@ This widget lets the user choose between different detectors that are stored in 
 
 #include "src/gui/detectorchooser.h"
 
-#include <qinputdialog.h>
-#include <qstring.h>
-#include <qstringlist.h>
-#include "src/core/model.h"
-#include "saysomething.h"
-#include <fstream>
-#include <qapplication>
-
-
-
 //#define COMPONENT_DEBUG
+
+#include <fstream>
+
+#include <QApplication>
+#include <QInputDialog>
+#include <QString>
+#include <QStringList>
+
+#include "src/core/model.h"
+
+#include "src/gui/saysomething.h"
 
 DetectorChooser::DetectorChooser(QWidget *parent, const char *name,Model* mymodel) : QWidget(parent) {
   QStringList list;

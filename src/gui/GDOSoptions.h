@@ -18,16 +18,16 @@
 #ifndef GDOSOPTIONS_H
 #define GDOSOPTIONS_H
 
-#include <qdialog.h>
-#include <qvalidator.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <qradiobutton.h>
-#include <qstring.h>
+#include <QComboBox>
+#include <QDialog>
+#include <QLineEdit>
+#include <QRadioButton>
+#include <QString>
+#include <QValidator>
+
 class QWorkspace;
-/**A Qwidget to choose the type of fitter to use
-  *@author Jo Verbeeck
-  */
+
+/* A Qwidget to choose the type of fitter to use. */
 
 class GDosoptions : public QDialog  {
    Q_OBJECT

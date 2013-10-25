@@ -17,17 +17,19 @@ Select a component in the model
  ***************************************************************************/
 
 #include "src/gui/componentselector.h"
-#include <qinputdialog.h>
-#include "src/core/model.h"
-#include "src/core/component.h"
-#include "src/core/eelsmodel.h"
+
 //#define COMPONENTSELECTOR_DEBUG
-#include <qstring.h>
+
 #include <sstream>
 
+#include <QInputDialog>
+#include <QString>
 
+#include "src/core/eelsmodel.h"
+#include "src/core/component.h"
+#include "src/core/model.h"
 
-extern Eelsmodel* geteelsmodelptr();
+Eelsmodel* geteelsmodelptr();
 
 Componentselector::Componentselector(QWidget *parent, const char *name,const char* message,int& value)
 : QWidget(parent) {

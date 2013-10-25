@@ -18,11 +18,11 @@
 #ifndef FITTERCHOOSER_H
 #define FITTERCHOOSER_H
 
-#include <qwidget.h>
+#include <QWidget>
+
 #include "src/fitters/fitter.h"
-/**A Qwidget to choose the type of fitter to use
-  *@author Jo Verbeeck
-  */
+
+/* A Qwidget to choose the type of fitter to use. */
 
 class FitterChooser : public QWidget  {
    Q_OBJECT

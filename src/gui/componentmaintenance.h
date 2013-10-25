@@ -21,22 +21,23 @@ The user can select amongst all possible components and remove and add to the cu
 #ifndef COMPONENTMAINTENANCE_H
 #define COMPONENTMAINTENANCE_H
 
-#include <qwidget.h>
+#include <map>
 #include <vector>
+
+#include <QLabel>
+#include <QPixmap>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QWidget>
+
 #include "src/core/parameter.h"
-#include <map>
-#include <qpixmap.h>
 #include "src/gui/monitorchooser.h"
-#include <qlabel.h>
-class Component;
+
 class QWorkspace;
+
+class Component;
 class Model;
 class Component;
-/**
-  *@author Jo Verbeeck
-  */
 
 class Componentmaintenance : public QWidget  {
   //member data

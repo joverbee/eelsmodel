@@ -16,10 +16,8 @@
  ***************************************************************************/
 
 #include "src/gui/realinput.h"
-#include <qinputdialog.h>
 
-
-
+#include <QInputDialog>
 
 RealInput::RealInput(QWidget *parent, const char *name,const char* message,double& value,const double min,const double max)
 : QWidget(parent) {

@@ -14,17 +14,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//#define FITTER_DEBUG
 
 #include "src/fitters/mlfitter.h"
-#include "src/core/model.h"
+
+//#define FITTER_DEBUG
+
 #include <cstdio>
 #include <cmath>
-#ifndef linux
-//#include <stdio>
-#endif
-#include "src/core/monitor.h"
 
+#include "src/core/model.h"
+#include "src/core/monitor.h"
 
 MLFitter::MLFitter(Model* m)
 :Fitter(m)

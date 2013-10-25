@@ -17,8 +17,6 @@
 
 #include "src/core/tag.h"
 
-
-
 Tag::Tag(std::string name,unsigned int size,tagid type)
 :intvector(),doublevector(),charvector()
 {

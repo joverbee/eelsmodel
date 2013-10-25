@@ -20,28 +20,33 @@ you should start with a pointer to the core loss spectrum as argument
  ***************************************************************************/
 
 #include "src/core/model.h"
-#include "src/core/multispectrum.h"
-#include "src/gui/graph.h"
-#include "src/gui/saysomething.h"
-#include "src/components/mycomponents.h"
-#include "src/core/slice_iter.h"
-#include <iostream>
-#include "src/gui/componentmaintenance.h"
-#include <vector>
-#include "src/fitters/fitter.h"
-#include "src/core/monitor.h"
-#include "src/core/eelsmodel.h"
-//just to get the date in the report file, not essential
-#include <qapplication.h>
-#include <qdatetime.h>
-#include "src/gui/imagedisplay.h"
-#define BUFSIZE 1024
-//buffer size for faster writing files
-
-
-
 
 //#define MODEL_DEBUG
+#define BUFSIZE 1024 //buffer size for faster writing files
+
+#include <iostream>
+#include <vector>
+
+#include <QApplication>
+#include <QDateTime>
+
+#include "src/components/mycomponents.h"
+
+#include "src/core/eelsmodel.h"
+#include "src/core/monitor.h"
+#include "src/core/multispectrum.h"
+#include "src/core/slice_iter.h"
+
+#include "src/fitters/fitter.h"
+
+#include "src/gui/componentmaintenance.h"
+#include "src/gui/graph.h"
+#include "src/gui/imagedisplay.h"
+#include "src/gui/saysomething.h"
+
+
+
+
 class Parameter;
 class QWorkspace;
 extern QWorkspace* getworkspaceptr();

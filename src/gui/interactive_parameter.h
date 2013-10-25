@@ -20,29 +20,22 @@ requires a pointer to an existing parameter for the initial values
 #ifndef INTERACTIVE_PARAMETER_H
 #define INTERACTIVE_PARAMETER_H
 
-#include <qwidget.h>
 #include <string>
 
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <qstring.h>
-#include <qdialog.h>
-#include "src/core/parameter.h"
-#include "qlabel.h"
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-//Added by qt3to4:
-#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QDialog>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QString>
+#include <QValidator>
+#include <QVBoxLayout>
+#include <QWidget>
 
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/parameter.h"
 
 class Interactive_Parameter : public QDialog  {
    Q_OBJECT

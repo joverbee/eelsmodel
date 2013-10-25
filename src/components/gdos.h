@@ -33,17 +33,16 @@ this class replaces all older DOSses and combines them in 1 component
 
 #ifndef GDOS_H
 #define GDOS_H
-#include "src/core/fftw++.h"
-#include <src/core/component.h>
+
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_spline.h>
+
+#include "src/core/component.h"
+#include "src/core/fftw++.h"
+
 using namespace fftwpp;
 
-//class Component;
-/**
-  *@author Jo Verbeeck
-  */
-  class Monitor;
+class Monitor;
 
 class GDos : public Component  {
 size_t degree; //degree of the polynomial

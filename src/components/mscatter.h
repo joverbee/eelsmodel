@@ -18,14 +18,14 @@
 #ifndef MSCATTER_H
 #define MSCATTER_H
 
-#include <src/core/component.h>
+//#define MSCATTER_DEBUG
+
 #include <vector>
+
+#include "src/core/component.h"
+
 class Spectrum;
 class Multispectrum;
-//#define MSCATTER_DEBUG
-/**
-  *@author Jo Verbeeck
-  */
 
 class Mscatter : public Component  {
 int ZLindex; //index of the ZL peak position in the LL spectrum

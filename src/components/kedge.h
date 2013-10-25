@@ -19,11 +19,7 @@ Hydrogenic K-edge component based on SigmaK by R.F. Egerton
 #ifndef KEDGE_H
 #define KEDGE_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Kedge : public Component  {
 Spectrum tempspectrum;

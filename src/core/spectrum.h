@@ -16,24 +16,21 @@
  ***************************************************************************/
 #ifndef SPECTRUM_H
 #define SPECTRUM_H
-#include <iostream>
-#include <vector>
-#include <iostream>
-#include <qmatrix.h>
-#include <string>
 
-/**
-	 *	Basic class that holds a single spectrum
-	 *  
-	 */
+#include <iostream>
+#include <string>
+#include <vector>
+
+#include <QMatrix>
 
 class Component;
-class Graph; //somewhere there is a class Graph,needed to be able to declare a pointer to graph here
-class QWorkspace; //somewhere there is a class called QWorkspace
-/**
-  *@author Jo Verbeeck
-  */
+class Graph;
+
+class QWorkspace;
+
 class loadmsa{};
+
+/* Basic class that holds a single spectrum */
 
 class Spectrum {
 //internal data

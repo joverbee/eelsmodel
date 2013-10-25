@@ -18,11 +18,7 @@
 #ifndef LINE_H
 #define LINE_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Line : public Component  {
 public:

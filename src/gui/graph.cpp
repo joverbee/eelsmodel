@@ -15,27 +15,23 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "src/gui/graph.h"
+
 //#define GRAPH_DEBUG
 
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
 
-
-#include "src/gui/graph.h"
-#include <qapplication.h>
+#include <QApplication>
+#include <QFont>
+#include <QMatrix>
 #include <QMouseEvent>
 #include <QPaintEvent>
-#include <stdlib.h>                             // defines rand() function
-#include <qmatrix.h>
-#include <cmath>
-#include <qfont.h>
-#include <qwidget.h>
-#include "src/core/spectrum.h"
-#include "src/core/multispectrum.h"
-#include <iostream>
-#include "src/gui/saysomething.h"
-#include "src/gui/menu.h"
-#include <QWorkspace>
 #include <QRubberBand>
-#include <vector>
+#include <QWidget>
+#include <QWorkspace>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -48,11 +44,17 @@
 #include <qwt_picker_machine.h>
 #include <qwt_plot_item.h>
 #include <qwt_plot_marker.h>
+
+#include "src/core/spectrum.h"
+#include "src/core/multispectrum.h"
+
+#include "src/gui/saysomething.h"
+#include "src/gui/menu.h"
+
 //#define GRAPH_DEBUG
 
-
-extern QWorkspace* getworkspaceptr();
-extern MenuEelsmodel* getmenuptr();
+QWorkspace* getworkspaceptr();
+MenuEelsmodel* getmenuptr();
 //
 // Graph - a widget that draws a Graph.
 //

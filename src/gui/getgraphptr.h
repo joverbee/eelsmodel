@@ -19,13 +19,12 @@
 #define GETGRAPHPTR_H
 
 #define GETGRAPHDEBUG
-#include <qdialog.h>
-#include <qwidget.h>
-class Spectrum;
+
+#include <QDialog>
+#include <QWidget>
+
 class Multispectrum;
-/**
-  *@author Jo Verbeeck
-  */
+class Spectrum;
 
 class Getgraphptr : public QDialog  {
    Q_OBJECT

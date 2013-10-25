@@ -20,21 +20,19 @@
 
 //#define DEBUG_IMDISPLAY
 
-
-#include <qwidget.h>
-#include <qimage.h>
-#include <qpixmap.h>
-//Added by qt3to4:
-#include <QMouseEvent>
+#include <QImage>
 #include <QPaintEvent>
+#include <QPixmap>
+#include <QMouseEvent>
+#include <QWidget>
 
-#include "src/core/multispectrum.h"
 #include "src/core/curvematrix.h"
+#include "src/core/multispectrum.h"
+
 class QWorkspace;
-/**A class to draw images or multispectra in image format
-Is 2D equiv of Graph
-  *@author Jo Verbeeck
-  */
+
+/* A class to draw images or multispectra in image format
+   Is 2D equiv of Graph */
 
 class Imagedisplay : public QWidget  {
    Q_OBJECT

@@ -17,11 +17,11 @@ A lorentz peak component
  ***************************************************************************/
 
 #include "src/components/lorentz.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 
-
+#include "src/core/parameter.h"
 
 Lorentz::Lorentz()
 :Component()

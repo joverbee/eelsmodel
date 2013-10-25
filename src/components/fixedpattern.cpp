@@ -21,15 +21,17 @@ Use this componet to load experimental edges or calculated edges for example fro
  ***************************************************************************/
 
 #include "src/components/fixedpattern.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
-#include "src/gui/getgraphptr.h"
+
 #include <QWorkspace>
 
+#include "src/core/parameter.h"
 
+#include "src/gui/getgraphptr.h"
 
-extern QWorkspace* getworkspaceptr();
+QWorkspace* getworkspaceptr();
 
 FixedPattern::FixedPattern()
 :Component()

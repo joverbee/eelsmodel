@@ -24,23 +24,19 @@
 
 #define LTMAX 256
 
-#include <qwidget.h>
-
-#include <QPaintEvent>
-#include <vector>
-#include <qpainter.h>
-
 #include <vector>
 #include <fstream>
 #include <string>
-#include <qpixmap.h>
 
+#include <QPainter>
+#include <QPaintEvent>
+#include <QPixmap>
+#include <QWidget>
 
 class Tag;
 class Multispectrum;
-/**class to show 2D data as images, same as graph for 1D
-  *@author Jo Verbeeck
-  */
+
+/* class to show 2D data as images, same as graph for 1D */
 
 class Image : public QWidget  {
 

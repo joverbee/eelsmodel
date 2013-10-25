@@ -16,7 +16,8 @@
  ***************************************************************************/
 
 #include "src/gui/saysomething.h"
-#include <qmessagebox.h>
+
+#include <QMessageBox>
 
 Saysomething::Saysomething(QWidget *parent, const char *name,const char* message,bool error ) : QWidget(parent) {
       QMessageBox msgbox;

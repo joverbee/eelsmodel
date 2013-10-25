@@ -25,11 +25,9 @@
 #ifndef ESHIFT_H
 #define ESHIFT_H
 
-#include <src/core/component.h>
+#include "src/core/component.h"
+
 class Model;
-/**
-  *@author Jo Verbeeck
-  */
 
 class Eshift : public Component  {
 

@@ -23,11 +23,11 @@ Rainer Knippelmeier, Petra Wahlbring, Helmut Kohl, Ultramicroscopy 68 (1997) 25-
  ***************************************************************************/
 
 #include "src/components/kedgerel.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 
-
+#include "src/core/parameter.h"
 
 Kedgerel::Kedgerel() //create a dummy version
 :Component(),tempspectrum()

@@ -27,15 +27,14 @@ which are interpolated with a quadratic spline
 #define DOSLIFETIMESPLINE_H
 
 //#define COMPONENT_DEBUG
-#include <src/core/component.h>
+
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_spline.h>
 
+#include "src/core/component.h"
+
 class Spectrum;
 
-/**
-  *@author Jo Verbeeck
-  */
 class DosLifetimeSpline : public Component  {
   size_t degree; //degree of the polynomial
   std::vector<double> Evector; //a vector with energy positions of the different points

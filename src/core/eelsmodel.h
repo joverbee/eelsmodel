@@ -20,26 +20,26 @@
 
 //#define DEBUG_EELSMODEL //print some debugging info
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#include <vector>
 
 //#include <kapp.h>
-#include <qwidget.h>
-#include <vector>
-class Component;
-class Fitter;
-class Spectrum;
-class Multispectrum;
-class Imagedisplay;
-class QWorkspace;
+#include <QWidget>
+
 #include "src/core/model.h"
-class QWorkspace;
-class Graph;
+
+class Component;
 class Componentmaintenance;
+class Fitter;
 class Fitter_dialog;
+class Graph;
 class Image;
-/** Eelsmodel is the base class of the project */
+class Multispectrum;
+class Spectrum;
+class Imagedisplay;
+
+class QWorkspace;
+
+/* Eelsmodel is the base class of the project */
 class Eelsmodel : public QWidget
 {
   Q_OBJECT

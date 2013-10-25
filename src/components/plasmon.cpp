@@ -17,15 +17,17 @@ a simple plasmon model to model the LL spectrum
  ***************************************************************************/
 
 #include "src/components/plasmon.h"
-#include "src/components/lorentz.h"
-#include "src/gui/integerinput.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
 
+#include "src/components/lorentz.h"
 
+#include "src/core/parameter.h"
+
+#include "src/gui/integerinput.h"
 
 Plasmon::Plasmon() //create a dummy version
 :Component()

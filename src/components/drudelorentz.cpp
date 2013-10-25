@@ -17,24 +17,25 @@ A lorentz peak component
  ***************************************************************************/
 
 #include "src/components/drudelorentz.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
+#include <complex>
 #include <iostream>
 #include <string>
-#include <math.h>
 #include <sstream>
-#include "src/gui/integerinput.h"
-#include "src/core/eelsmodel.h"
 
-#include <complex>
+#include "src/core/eelsmodel.h"
+#include "src/core/parameter.h"
 #include "src/core/curvematrix.h"
+
+#include "src/gui/Drudeoptions.h"
+#include "src/gui/integerinput.h"
 #include "src/gui/imagedisplay.h"
-#include "src/gui/drudeoptions.h"
 
 class QWorkspace;
-//get two global pointers from main
-extern QWorkspace* getworkspaceptr();
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+
+QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
 
 DrudeLorentz::DrudeLorentz()
 :Component()

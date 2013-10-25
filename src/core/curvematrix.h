@@ -19,8 +19,9 @@ A simple 2D matrix class to store curvature matrices based on an example in Stro
 #ifndef CURVEMATRIX_H
 #define CURVEMATRIX_H
 
+#include <iostream>
+
 //use the boost library for matrices, faster because bindings to ATLAS
-//moreover boost will become part of c++ standard
 #include <boost/numeric/bindings/atlas/clapack.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
@@ -28,15 +29,9 @@ A simple 2D matrix class to store curvature matrices based on an example in Stro
 #include <boost/numeric/bindings/lapack/geqrf.hpp>
 #include <boost/numeric/bindings/lapack/ormqr.hpp>
 
-#include <iostream>
-
 namespace ublas = boost::numeric::ublas;
 namespace atlas = boost::numeric::bindings::atlas;
 namespace lapack = boost::numeric::bindings::lapack;
-
-/**
-  *@author Jo Verbeeck
-  */
 
 class CurveMatrix {
 //member data

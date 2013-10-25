@@ -18,16 +18,16 @@
 #ifndef ATOMCHOOSER_H
 #define ATOMCHOOSER_H
 
-#include <qdialog.h>
-#include <qvalidator.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <qradiobutton.h>
-#include <qstring.h>
 #include <vector>
 
-class QWorkspace;
+#include <QComboBox>
+#include <QDialog>
+#include <QLineEdit>
+#include <QRadioButton>
+#include <QString>
+#include <QValidator>
 
+class QWorkspace;
 
 class Atomchooser : public QDialog  {
    Q_OBJECT

@@ -17,24 +17,26 @@ simulates an infinite self convolution
  *                                                                         *
  ***************************************************************************/
 
-#include "src/components/MscatterExpfft.h"
-#include "src/core/parameter.h"
+#include "src/components/mscatterexpfft.h"
+
 #include <cmath>
 #include <iostream>
+#include <vector>
+
+#include "src/core/eelsmodel.h"
+#include "src/core/fftw++.h"
+#include "src/core/multispectrum.h"
+#include "src/core/parameter.h"
+
+#include "src/gui/componentselector.h"
 #include "src/gui/getgraphptr.h"
 #include "src/gui/gettopspectrum.h"
 #include "src/gui/saysomething.h"
-#include <vector>
-#include "src/core/eelsmodel.h"
-#include "src/core/multispectrum.h"
-#include "src/core/fftw++.h"
-#include "src/gui/componentselector.h"
+
 using namespace fftwpp;
 
-
-//get two global pointers from main
-extern Eelsmodel* geteelsmodelptr();
-extern QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
+QWorkspace* getworkspaceptr();
 
 MscatterExpfft::MscatterExpfft()
 :Component()

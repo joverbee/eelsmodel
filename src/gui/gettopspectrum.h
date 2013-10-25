@@ -18,12 +18,11 @@
 #ifndef GETTOPSPECTRUM_H
 #define GETTOPSPECTRUM_H
 
-#include <qwidget.h>
+#include <QWidget>
+
 class Spectrum;
 
-/**gets the spectrum of the top active window if it is a graph, otherwise 0 is returned
-  *@author Jo Verbeeck
-  */
+/* gets the spectrum of the top active window if it is a graph, otherwise 0 is returned. */
 
 class Gettopspectrum   {
 public: 

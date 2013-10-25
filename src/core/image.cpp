@@ -14,33 +14,36 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "src/core/image.h"
-#include "src/core/multibyte.h"
-#include "src/gui/saysomething.h"
-#include "src/gui/getfilename.h"
 
-#include "src/core/tag.h"
-#include "src/core/spectrum.h"
-#include "src/core/multispectrum.h"
-#include <qwidget.h>
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qimage.h>
-#include <qapplication.h>
-#include <qpushbutton.h>
-#include <qrect.h>
-#include <qcolor.h>
-#include <qcursor.h>
-#include <QPaintEvent>
-#include <cmath>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
+#include "src/core/image.h"
+
 //covnert 2D SI to 1D SI?
 //#define CONVERT2D
 
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
+#include <QApplication>
+#include <QColor>
+#include <QCursor>
+#include <QImage>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QPixmap>
+#include <QPushButton>
+#include <QRect>
+#include <QWidget>
+
+#include "src/core/multibyte.h"
+#include "src/core/multispectrum.h"
+#include "src/core/spectrum.h"
+#include "src/core/tag.h"
+
+#include "src/gui/getfilename.h"
+#include "src/gui/saysomething.h"
 
 Image::Image(QWidget *parent, const char *name,std::string filename,bool silent)
   :QWidget(parent),pm(),pmScaled()

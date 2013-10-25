@@ -19,20 +19,20 @@ calculate like e.g. a lorentz peak
  ***************************************************************************/
 
 #include "component.h"
-#include <vector>
-#include "src/gui/saysomething.h"
-#include "src/core/eelsmodel.h"
-#include "src/gui/graph.h"
-#include "src/gui/equalizer.h"
+
 #include <sstream>
+#include <vector>
 
+#include "src/core/eelsmodel.h"
 
+#include "src/gui/equalizer.h"
+#include "src/gui/graph.h"
+#include "src/gui/saysomething.h"
 
 class QWorkspace;
-//get two global pointers from main
-extern Eelsmodel* geteelsmodelptr();
-extern QWorkspace* getworkspaceptr();
 
+Eelsmodel* geteelsmodelptr();
+QWorkspace* getworkspaceptr();
 
 Component::Component()
   :Spectrum(1,0,1.0),parametervector(),hasgradient(),gradient(1,0,1.0)

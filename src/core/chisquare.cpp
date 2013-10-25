@@ -18,12 +18,10 @@ partly taken from netlib, see comment at the routines
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
 #include "src/core/chisquare.h"
+
+#include <cmath>
 #include <iostream>
-
-
-
 
 double cumulative_chisquare(double x,int nu){
   double cumchi=1.0-pochisq(x,nu);

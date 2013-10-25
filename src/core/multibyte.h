@@ -17,11 +17,11 @@
 
 #ifndef MULTIBYTE_H
 #define MULTIBYTE_H
-#include <vector>
+
 #include <iostream>
-/**A class to represent multi-byte variables, with possibilities for little endian, big endian and reversed order
-  *@author Jo Verbeeck
-  */
+#include <vector>
+
+/* A class to represent multi-byte variables, with possibilities for little endian, big endian and reversed order */
 
 class Multibyte {
 std::vector<unsigned char> bytestring;

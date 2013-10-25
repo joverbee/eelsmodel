@@ -18,25 +18,18 @@
 #ifndef HELLO_H
 #define HELLO_H
 
-#include <qwidget.h>
-#include <qdialog.h>
-
-
-
-#include <qpushbutton.h>
-#include <qlabel.h>
-#include <qpixmap.h>
-#include <qlayout.h>
-#include <qwidget.h>
-#include <qdir.h>
-#include <QVBoxLayout>
+#include <QDialog>
+#include <QDir>
 #include <QHBoxLayout>
-#include <qtextedit.h>
+#include <QLabel>
+#include <QLayout>
+#include <QPixmap>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QWidget>
 
-
-/**popup screen when EELSMODEL starts, shows author copyright and licence info
-  *@author Jo Verbeeck
-  */
+/* popup screen when EELSMODEL starts, shows author copyright and licence info. */
 
 class Hello : public QDialog  {
     Q_OBJECT

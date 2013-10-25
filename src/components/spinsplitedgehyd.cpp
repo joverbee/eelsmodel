@@ -43,21 +43,24 @@ the same ratio is taken for the jumps to the continuum
  *                                                                         *
  ***************************************************************************/
 
-
 #include "src/components/spinsplitedgehyd.h"
-#include "src/core/parameter.h"
-#include "src/gui/getfilename.h"
+
+#define GAUSS
+
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
+
+#include "src/core/parameter.h"
 #include "src/core/curvematrix.h"
+
+#include "src/gui/getfilename.h"
 #include "src/gui/imagedisplay.h"
+
 #include "src/components/ledge.h"
 #include "src/components/gaussian.h"
 #include "src/components/lorentz.h"
-#define GAUSS
-
 
 SpinsplitEdgeHyd::SpinsplitEdgeHyd() //create a dummy version
 :Component(),tempspectrum(){

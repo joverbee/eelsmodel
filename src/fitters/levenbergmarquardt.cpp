@@ -23,18 +23,18 @@
 
  //the method was first implemented in Matlab for testing, it was shown there is a small bias when choosing normal distribution on poisson experimental data
 
+#include "src/fitters/levenbergmarquardt.h"
+
 //#define FITTER_DEBUG
 //#define FITTER_DEBUG_DETAIL
 //#define FITTER_DEBUG_LIN
 
-#include "src/fitters/levenbergmarquardt.h"
-#include "src/core/model.h"
-#include <cstdio>
 #include <cmath>
-#include "src/core/monitor.h"
+#include <cstdio>
+
 #include "src/core/component.h"
-
-
+#include "src/core/model.h"
+#include "src/core/monitor.h"
 
 LevenbergMarquardt::LevenbergMarquardt(Model* m)
 :Fitter(m)

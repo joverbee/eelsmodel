@@ -19,11 +19,7 @@ Ask for an integer value
 #ifndef INTEGERINPUT_H
 #define INTEGERINPUT_H
 
-#include <qwidget.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include <QWidget>
 
 class Integerinput : public QWidget  {
    Q_OBJECT

@@ -17,12 +17,11 @@ Exponential background component
  ***************************************************************************/
 
 #include "src/components/expbackground.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 
-
-
+#include "src/core/parameter.h"
 
 Expbackground::Expbackground() //create a dummy version
 :Component()

@@ -25,15 +25,12 @@ which are linearly interpolated
 
 #ifndef DOS_H
 #define DOS_H
+
+#include "src/core/component.h"
 #include "src/core/fftw++.h"
-#include <src/core/component.h>
 
 using namespace fftwpp;
 
-//class Component;
-/**
-  *@author Jo Verbeeck
-  */
 class Dos : public Component  {
 size_t degree; //degree of the polynomial
  Component* compptr; //pointer to component that we are multiplying

@@ -35,33 +35,39 @@ this class replaces all older DOSses and combines them in 1 component
 //#define LINEAR
 #define MASS_CENTER
 //#define COMPONENT_DEBUG
-#include "src/components/gdos.h"
-#include "src/gui/integerinput.h"
-#include "src/gui/componentselector.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
-#include "src/gui/graph.h"
-#include "src/core/eelsmodel.h"
-#include "src/gui/saysomething.h"
-#include "src/core/fftw++.h"
-
-#include "src/gui/gdosoptions.h"
-#include <qdialog.h>
 
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_vector.h>
+
+#include <QDialog>
+
+#include "src/components/gdos.h"
+
+#include "src/core/fftw++.h"
+#include "src/core/eelsmodel.h"
 #include "src/core/monitor.h"
+#include "src/core/parameter.h"
+
+#include "src/gui/integerinput.h"
+#include "src/gui/componentselector.h"
+#include "src/gui/graph.h"
+#include "src/gui/saysomething.h"
+#include "src/gui/GDOSoptions.h"
+
 using namespace fftwpp;
 
 class QWorkspace;
-//get two global pointers from main
-extern QWorkspace* getworkspaceptr();
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+
+QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
+
 GDos::GDos() //create a dummy version
 :Component(),Evector(),Yvector(),b(),c(),d()
 {

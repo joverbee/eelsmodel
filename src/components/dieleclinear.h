@@ -19,15 +19,12 @@ A dielectric model for low loss eels using a piecewise linear model for the loss
 #ifndef DIELECLINEAR_H
 #define DIELECLINEAR_H
 
-#include "src/core/component.h"
 #include <complex>
-/**
-  *@author Jo Verbeeck
-  */
 
+#include "src/core/component.h"
 #include "src/core/curvematrix.h"
-class Imagedisplay;
 
+class Imagedisplay;
 
 class DielecLinear : public Component  {
     size_t nrofextraparams;

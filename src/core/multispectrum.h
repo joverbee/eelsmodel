@@ -18,15 +18,15 @@
 #ifndef MULTISPECTRUM_H
 #define MULTISPECTRUM_H
 
-#include "src/core/spectrum.h"
-#include "src/gui/graph.h"
 #include <vector>
 #include <string>
+
+#include "src/core/spectrum.h"
+#include "src/gui/graph.h"
+
 class Imagedisplay;
 
-/**An array of spectra together, indexed by a number. Can be used everywhere where a normal spectrum can be used. You just get the current indexed spectrum
-  *@author Jo Verbeeck
-  */
+/* An array of spectra together, indexed by a number. Can be used everywhere where a normal spectrum can be used. You just get the current indexed spectrum */
 
 class Multispectrum : public Spectrum  {
   std::vector<Spectrum*> dataset;

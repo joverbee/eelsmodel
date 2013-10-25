@@ -18,11 +18,10 @@
 #ifndef WLSQFITTER_H
 #define WLSQFITTER_H
 
-#include <src/fitters/fitter.h>
+#include "src/fitters/fitter.h"
 #include "src/core/model.h"
-/**Weighted Least Squares Fitter
-  *@author Jo Verbeeck
-  */
+
+/* Weighted Least Squares Fitter. */
 
 class WLSQFitter : public Fitter  {
 

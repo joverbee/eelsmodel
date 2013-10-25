@@ -23,11 +23,7 @@ Use this componet to load experimental edges or calculated edges for example fro
 #ifndef EDGEFILE_H
 #define EDGEFILE_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class EdgeFile : public Component  {	
 private:

@@ -14,50 +14,48 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 //#define DEBUG_EELSMODEL
 #define GSLFITTER
 
-#include "src/core/eelsmodel.h"
-#include "src/gui/graph.h"
-#include "src/core/image.h"
-#include "src/gui/imagedisplay.h"
-#include <qmessagebox.h>
-#include "src/core/spectrum.h"
-#include "src/core/multispectrum.h"
-#include "src/core/component.h"
-#include "src/components/powerlaw.h"
-#include "src/core/model.h"
-#include "src/gui/saysomething.h"
-#include <qworkspace.h>
-#include <qapplication.h>
-#include "src/gui/componentmaintenance.h"
-#include "src/fitters/fitter.h"
-#include "src/gui/fitter_dialog.h"
-#include "src/gui/fitterchooser.h"
-#include "src/fitters/lsqfitter.h"
-#include "src/fitters/wlsqfitter.h"
-#include "src/fitters/mlfitter.h"
-
-//make sure the gsl library is installed and the include and library directives are pointing to the right directories
-#include "src/fitters/mlfitter_gsl.h"
-#include "src/fitters/levenbergmarquardt.h"
-
-
-#include "src/gui/getfilename.h"
-#include <fstream>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <sstream>
-#include <qdatetime.h>
-#include "src/gui/realinput.h"
+
+#include <QMessageBox>
+#include <QWorkspace>
+#include <QApplication>
+#include <QDateTime>
+
+#include "src/components/powerlaw.h"
+
+#include "src/core/component.h"
+#include "src/core/eelsmodel.h"
+#include "src/core/image.h"
+#include "src/core/model.h"
 #include "src/core/monitor.h"
+#include "src/core/multispectrum.h"
+#include "src/core/spectrum.h"
+
+#include "src/fitters/fitter.h"
+#include "src/fitters/levenbergmarquardt.h"
+#include "src/fitters/lsqfitter.h"
+#include "src/fitters/mlfitter.h"
+#include "src/fitters/mlfitter_gsl.h"
+#include "src/fitters/wlsqfitter.h"
+
+#include "src/gui/componentmaintenance.h"
 #include "src/gui/detectorchooser.h"
+#include "src/gui/fitterchooser.h"
+#include "src/gui/fitter_dialog.h"
+#include "src/gui/getfilename.h"
+#include "src/gui/graph.h"
+#include "src/gui/imagedisplay.h"
+#include "src/gui/realinput.h"
+#include "src/gui/saysomething.h"
 
-
-
-
-
-extern QWorkspace* getworkspaceptr();//defined in main
+QWorkspace* getworkspaceptr();
 
 Eelsmodel::Eelsmodel(QWidget* parent, const char *name) : QWidget(0)
 {
