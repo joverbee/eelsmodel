@@ -98,7 +98,7 @@ void getdatapoint(int index,double* en,double* cts,double* err)const;
 double getcounts(int index)const;
 double getenergy(int index)const;
 size_t getenergyindex(double energy)const;
-
+Spectrum* getcurrentspectrum(){return this;} //for convenience to make it have same interface as multispectrum
 double getrawenergy(int index)const;
 double geterrorbar(int index)const;
 bool isexcluded(int index)const;

@@ -64,7 +64,6 @@ class MenuEelsmodel;
     void setcaption(std::string name){this->setWindowTitle(name.c_str());} //change caption
 protected:
     void paintEvent( QPaintEvent * );
-    void drawContents( QPainter *painter );
     void mousePressEvent(QMouseEvent* e);//override the qwidget mousepressEvent
     void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
     void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
