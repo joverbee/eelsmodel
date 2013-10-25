@@ -29,10 +29,14 @@
 #include <QRubberBand>
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
+
 class Spectrum;
 class Multispectrum;
 class QWorkspace;
 class MenuEelsmodel;
+class QwtPlotZoomer;
+class QwtPlotPicker;
+class QwtPlotPanner;
 
   class Graph : public QwtPlot
 {
@@ -65,8 +69,9 @@ class MenuEelsmodel;
 protected:
     void paintEvent( QPaintEvent * );
     void mousePressEvent(QMouseEvent* e);//override the qwidget mousepressEvent
-    void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
-    void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
+   // void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
+   // void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
+    void mouseMoveEvent(QMouseEvent *evt);
     void setselection(bool b){selection=b;}
     void setstartindex(int i);
     void setendindex(int i);
@@ -86,12 +91,17 @@ protected:
 
 private slots:
     void        updateCaption();
-    void slot_graph_clicked();
+   //void slot_graph_clicked();
 private:
     int npoints;      //number of data points
     int nplots;       //number of layers in the plot
     QVector<QwtPlotCurve*> d_curves;
     QVector<QVector< QPointF > >	qwtdata;
+
+    QwtPlotZoomer *d_zoomer[2];
+    QwtPlotPicker *d_picker;
+    QwtPlotPanner *d_panner;
+
     double border;
     double xmax;
     double ymax;

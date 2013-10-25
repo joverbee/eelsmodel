@@ -40,6 +40,12 @@
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_scale_engine.h>
+#include <qwt_plot_panner.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_zoomer.h>
+#include <qwt_plot_panner.h>
+#include <qwt_plot_renderer.h>
+#include <qwt_picker_machine.h>
 //#define GRAPH_DEBUG
 
 
@@ -48,20 +54,35 @@ extern MenuEelsmodel* getmenuptr();
 //
 // Graph - a widget that draws a Graph.
 //
+class Zoomer: public QwtPlotZoomer
+{
+public:
+    Zoomer( int xAxis, int yAxis, QWidget *canvas ):
+        QwtPlotZoomer( xAxis, yAxis, canvas )
+    {
+        setTrackerMode( QwtPicker::AlwaysOff );
+        setRubberBand( QwtPicker::NoRubberBand );
 
+        // RightButton: zoom out by 1
+        // Ctrl+RightButton: zoom out to full size
+
+        setMousePattern( QwtEventPattern::MouseSelect2,
+            Qt::RightButton, Qt::ControlModifier );
+        setMousePattern( QwtEventPattern::MouseSelect3,
+            Qt::RightButton );
+    }
+};
 //
 // Constructs a Graph widget.
 //
 
 Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
     :QwtPlot(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints()))
- // data()
 {
     multispectrum=false;
     spectrumptr=spec;
     this->setWindowTitle(name);
     parent->addWindow(this); //add it explicitly to the workspace (important in QT4)
-
     #ifdef GRAPH_DEBUG
     std::cout << "Constructor of graph\n";
     std::cout << "parent adres is "<<parent<<"\n";
@@ -79,7 +100,6 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
 
 Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
    : QwtPlot(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints()))
-   // data()
 {
 
     this->setWindowTitle(name);
@@ -116,6 +136,8 @@ void Graph::Init(){
      #ifdef GRAPH_DEBUG
     std::cout << "Start of init\n";
     #endif
+
+
     getmainwindowptr(); //get a pointer to the main window
     // setFrameStyle( QFrame::Raised);
      setLineWidth( 2 );
@@ -123,6 +145,8 @@ void Graph::Init(){
      npoints=spectrumptr->getnpoints();
     //prepare first single spectrum plot
     //you can add spectra later with addgraph
+
+
 
     nplots=1;
     //resize data field for containing the graph
@@ -162,10 +186,24 @@ void Graph::Init(){
 
     show();
 
-
+    //init the zoom and pan function
+    d_zoomer[0] = new Zoomer( QwtPlot::xBottom, QwtPlot::yLeft,this->canvas() );
+    d_zoomer[0]->setRubberBand( QwtPicker::RectRubberBand );
+    d_zoomer[0]->setRubberBandPen( QColor( Qt::green ) );
+    d_zoomer[0]->setTrackerMode( QwtPicker::ActiveOnly );
+    d_zoomer[0]->setTrackerPen( QColor( Qt::black ) );
+    d_zoomer[1] = new Zoomer( QwtPlot::xTop, QwtPlot::yRight,this->canvas() );
+    d_panner = new QwtPlotPanner( this->canvas() );
+    d_panner->setMouseButton( Qt::MidButton );
+    d_picker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn,this->canvas() );
+    d_picker->setStateMachine( new QwtPickerDragPointMachine() );
+    d_picker->setRubberBandPen( QColor( Qt::green ) );
+    d_picker->setRubberBand( QwtPicker::CrossRubberBand );
+    d_picker->setTrackerPen( QColor( Qt::black ) );
+    this->autoReplot();
   //init a pointer to a rubberband for selection purposes
-  rubberrect=new QRubberBand(QRubberBand::Rectangle,this);
-  rubberrect->hide();
+  //rubberrect=new QRubberBand(QRubberBand::Rectangle,this);
+  //rubberrect->hide();
   //rubberrect->setGeometry(0,0,0,0);
 }
 
@@ -326,12 +364,21 @@ void Graph::updateCaption(){}
 
 void Graph::paintEvent( QPaintEvent *event )
 {
-    QFrame::paintEvent( event );
-    QPainter painter( this );
-    painter.setClipRect( contentsRect() );
+   // QFrame::paintEvent( event );
+   //QPainter painter( this );
+   //painter.setClipRect( contentsRect() );
+
+
+
+
     replot();
 }
 
+void Graph::mouseMoveEvent(QMouseEvent *evt)
+        {
+    //do nothing we don't want moves
+
+}
 
 Spectrum* Graph::getspectrumptr(){
   return spectrumptr;
@@ -340,15 +387,27 @@ Multispectrum* Graph::getmultispectrumptr(){
   if (multispectrum) return multispectrumptr;
   else return 0;
 }
-void Graph::slot_graph_clicked(){
-    QPainter paint( this );
+
+void Graph::mousePressEvent(QMouseEvent* e){
+    //update the state of the zoom or selection
+    d_panner->setEnabled( mainwindow->zoomMode());
+    d_zoomer[0]->setEnabled( mainwindow->zoomMode() );
+    d_zoomer[0]->zoom( 0 );
+    d_zoomer[1]->setEnabled( mainwindow->zoomMode() );
+    d_zoomer[1]->zoom( 0 );
+    d_picker->setEnabled( mainwindow->selectMode());
+
+   /* QPainter paint( this );
     QPoint p1(0,0);        // p1 = top left
     QPoint p2(20,20);    // p2 = bottom right
     QRect r( p1, p2 );
     (void) r; // get rid of unused variable warning
     //paint.drawRect( r );
-}
+*/
 
+
+}
+/*
 void Graph::mousePressEvent(QMouseEvent* e){
   //override the qwidget mousepressEvent
   //if the left mouse button was pressed
@@ -480,6 +539,7 @@ void Graph::mouseReleaseEvent(QMouseEvent* e){
   this->setCursor (arrow);
   this->repaint();
 }
+*/
 
 int Graph::convert_coords_to_index(int i){
   //convert image coordinates to indices in the spectrum
