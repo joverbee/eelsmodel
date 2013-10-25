@@ -19,11 +19,7 @@ A Pseudo-Voigt peak
 #ifndef PSEUDOVOIGT_H
 #define PSEUDOVOIGT_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class PseudoVoigt : public Component  {
     Component * Lorentzptr;

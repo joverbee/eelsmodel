@@ -18,11 +18,7 @@
 #ifndef SAYSOMETHING_H
 #define SAYSOMETHING_H
 
-#include <qwidget.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include <QWidget>
 
 class Saysomething : public QWidget  {
    Q_OBJECT

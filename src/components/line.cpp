@@ -16,12 +16,11 @@
  ***************************************************************************/
 
 #include "src/components/line.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 
-
-
+#include "src/core/parameter.h"
 
 Line::Line()
 :Component()

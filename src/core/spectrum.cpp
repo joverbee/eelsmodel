@@ -15,23 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-//#define DEBUGSPECTRUM
 #include "src/core/spectrum.h"
-#include "src/core/component.h"
-#include <iostream>
-#include <vector>
-#include <iostream>
-#include <qmatrix.h>
-#include <string>
+
+//#define DEBUGSPECTRUM
+
 #include <cmath>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
+#include <QMatrix>
+
+#include "src/core/component.h"
+
+#include "src/gui/fileopener.h"
 #include "src/gui/graph.h"
 #include "src/gui/getfilename.h"
-#include <fstream>
 #include "src/gui/saysomething.h"
-//#include <stdlib>
-#include "src/gui/fileopener.h"
-
-
 
 class QWorkspace;
 

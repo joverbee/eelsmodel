@@ -16,13 +16,8 @@
  ***************************************************************************/
 
 #include "src/fitters/lsqfitter.h"
+
 #include <cstdio>
-
-#ifndef linux
-//#include <stdio>
-#endif
-
-
 
 LSQFitter::LSQFitter(Model* m)
 :Fitter(m)

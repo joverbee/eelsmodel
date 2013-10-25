@@ -18,10 +18,9 @@
 #ifndef MONITORCHOOSER_H
 #define MONITORCHOOSER_H
 
-#include <qwidget.h>
-/**A Qwidget to choose the type of monitor to use
-  *@author Jo Verbeeck
-  */
+#include <QWidget>
+
+/* A Qwidget to choose the type of monitor to use. */
 
 class MonitorChooser : public QWidget  {
    Q_OBJECT

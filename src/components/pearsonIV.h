@@ -19,11 +19,7 @@ A pearsoniV peak component
 #ifndef PEARSONIV_H
 #define PEARSONIV_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class PearsonIV : public Component  {
 public:

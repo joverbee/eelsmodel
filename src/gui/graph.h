@@ -14,34 +14,35 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/**
-  *@author Jo Verbeeck
-  */
 
 #ifndef GRAPH_H
 #define GRAPH_H
-#include <qwidget.h>
-#include <qmatrix.h>
+
+#include <vector>
+
+#include <QMatrix>
 #include <QMouseEvent>
 #include <QPaintEvent>
-#include <vector>
-#include <qpainter.h>
+#include <QPainter>
 #include <QRubberBand>
+
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 
-class Spectrum;
-class Multispectrum;
+class QPolygon;
 class QWorkspace;
-class MenuEelsmodel;
-class Zoomer;
-class Picker;
+
 class QwtPlotPanner;
 class QwtPlotMarker;
-class QPolygon;
 class QwtPlotCurveSpecial;
 
-  class Graph : public QwtPlot
+class MenuEelsmodel;
+class Multispectrum;
+class Picker;
+class Spectrum;
+class Zoomer;
+
+class Graph : public QwtPlot
 {
   Q_OBJECT
   public:

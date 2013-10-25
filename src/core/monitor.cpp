@@ -14,20 +14,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//#define MONITOR_DEBUG
+
 #include "src/core/monitor.h"
-#include <string>
-#include <iostream>
-#include <sstream>
+
+//#define MONITOR_DEBUG
+
 #include <cmath>
 #include <cstdio>
-#ifndef linux
-//#include <stdio>
-#endif
 #include <iostream>
-
-
-
+#include <sstream>
+#include <string>
 
 
 // make use of
@@ -37,9 +33,6 @@
 //
 // var(gamma)=dgamma/dtheta COV dgamma/dtheta`
 // with COV 2x2 the covariance matrix (inverse Fischer information matrix)
-
-
-
 
 Monitor::Monitor(Parameter* parp1,Parameter* parp2,int typeindex){
   //init the monitor

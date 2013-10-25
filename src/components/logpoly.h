@@ -19,11 +19,7 @@ Log polynomial background component
 #ifndef LOGPOLY_H
 #define LOGPOLY_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Logpoly : public Component  {
 size_t degree; //degree of the polynomial

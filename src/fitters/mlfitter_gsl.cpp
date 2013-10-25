@@ -20,25 +20,26 @@
  ***************************************************************************/
 
 #include "src/fitters/mlfitter_gsl.h"
-#include "src/core/model.h"
-//#include <cstdio>
-#include "src/core/monitor.h"
+
 //#define COPYING //do this only if the fast pointer way of working seems to create problems
 
-namespace GSL{
-#include  <gsl/gsl_multifit_nlin.h>
-#include <gsl/gsl_blas.h>
+namespace GSL
+{
+  #include  <gsl/gsl_multifit_nlin.h>
+  #include <gsl/gsl_blas.h>
 }
+
+#include "src/core/model.h"
+#include "src/core/monitor.h"
 
 #include "src/gui/saysomething.h"
 
-
 //C-style functions required for call-back, the this pointer is passed as a parameter
 //to simulate member-type functionality
-static int model_f(const gsl_vector * x, void * params, gsl_vector * f);
-static int model_f_norecalc(const gsl_vector * x, void * params, gsl_vector * f);
-static int model_df (const gsl_vector * x, void *params,gsl_matrix * J);
-static int model_fdf (const gsl_vector * x, void *params,gsl_vector * f, gsl_matrix * J);
+int model_f(const gsl_vector * x, void * params, gsl_vector * f);
+int model_f_norecalc(const gsl_vector * x, void * params, gsl_vector * f);
+int model_df (const gsl_vector * x, void *params,gsl_matrix * J);
+int model_fdf (const gsl_vector * x, void *params,gsl_vector * f, gsl_matrix * J);
 //static gsl_matrix_view Jv; //matrix view of the real derivmatrix, so we don't need to copy it to pass as gsl_matrix
 
 MLFitterGSL::MLFitterGSL(Model* m)
@@ -283,7 +284,7 @@ void MLFitterGSL::initfdf(){ //function to be minimized and derivatives
 
 }
 
-static int model_f(const gsl_vector * x, void * params, gsl_vector * f){
+int model_f(const gsl_vector * x, void * params, gsl_vector * f){
   //this function should store the vector result f(x,params) in f for argument x and parameters params,
   //returning an appropriate error code if the function cannot be computed.
 
@@ -317,7 +318,7 @@ static int model_f(const gsl_vector * x, void * params, gsl_vector * f){
   return GSL_SUCCESS;
 }
 
-static int model_f_norecalc(const gsl_vector * x, void * params, gsl_vector * f){
+int model_f_norecalc(const gsl_vector * x, void * params, gsl_vector * f){
   //this function should store the vector result f(x,params) in f for argument x and parameters params,
   //returning an appropriate error code if the function cannot be computed.
 
@@ -344,7 +345,7 @@ static int model_f_norecalc(const gsl_vector * x, void * params, gsl_vector * f)
 
 
 
-static int model_df (const gsl_vector * x, void *params,gsl_matrix * J)
+int model_df (const gsl_vector * x, void *params,gsl_matrix * J)
 {
   //store the derivative matrix in J
   MLFitterGSL* pointertothis=(MLFitterGSL *)params;
@@ -378,7 +379,7 @@ static int model_df (const gsl_vector * x, void *params,gsl_matrix * J)
   return GSL_SUCCESS;
 }
 
-static int model_fdf (const gsl_vector * x, void *params,gsl_vector * f, gsl_matrix * J)
+int model_fdf (const gsl_vector * x, void *params,gsl_vector * f, gsl_matrix * J)
 {
   //do df first, this already calculates the model, so we can save some time
   model_df (x, params, J);

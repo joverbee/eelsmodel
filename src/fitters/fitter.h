@@ -19,16 +19,17 @@
 #define FITTER_H
 
 //#define FITTER_DEBUG //print some debug info
+
+#include <map>
+#include <valarray>
+#include <vector>
+
 #include "src/core/curvematrix.h"
 #include "src/core/parameter.h"
-#include <vector>
 #include "src/core/model.h"
-#include <valarray>
-#include <map>
 #include "src/core/chisquare.h"
-/**A pure virtual function to derive different fitting classes. Takes a Model class and changes its free parameters to optimise the goodness of fit
-  *@author Jo Verbeeck
-  */
+
+/* A pure virtual function to derive different fitting classes. Takes a Model class and changes its free parameters to optimise the goodness of fit. */
 
 class Fitter {
 //member data

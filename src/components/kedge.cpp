@@ -17,14 +17,16 @@ Hydrogenic K-edge component based on SigmaK by R.F. Egerton
  ***************************************************************************/
 
 #include "src/components/kedge.h"
-#include "src/core/parameter.h"
+
+//#define COMPONENT_DEBUG
+
 #include <cmath>
 #include <iostream>
 
 #include "src/core/eelsmodel.h"
+#include "src/core/parameter.h"
 
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
-//#define COMPONENT_DEBUG
+Eelsmodel* geteelsmodelptr();
 
 Kedge::Kedge() //create a dummy version
 :Component(),tempspectrum()

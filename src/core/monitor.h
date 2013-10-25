@@ -17,12 +17,14 @@
 
 #ifndef MONITOR_H
 #define MONITOR_H
+
 //#define MONITOR_DEBUG
-#include <src/core/parameter.h>
+
 #include <string>
-/**A monitor class to monitor the ratio,difference or sum of two parameters and the statistical standard deviation of two parameters
-  *@author Jo Verbeeck
-  */
+
+#include "src/core/parameter.h"
+
+/* A monitor class to monitor the ratio,difference or sum of two parameters and the statistical standard deviation of two parameters */
 
 class Monitor {
 private:

@@ -23,12 +23,10 @@ added an extra energy gap to simulate extra energy needed to reach the continuum
 #ifndef SPINSPLITEDGE_H
 #define SPINSPLITEDGE_H
 
-#include <src/core/component.h>
 #include <fstream>
+
+#include "src/core/component.h"
 #include "src/core/curvematrix.h"
-/**
-  *@author Jo Verbeeck
-  */
 
 class SpinsplitEdge : public Component  {
 Spectrum tempspectrum; //temporary storage of the spectrum shape

@@ -19,11 +19,7 @@ Exponential background component
 #ifndef EXPBACKGROUND_H
 #define EXPBACKGROUND_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Expbackground : public Component  {
 public:

@@ -25,19 +25,15 @@ which are linearly interpolated
 
 #ifndef DOSLIFETIME_H
 #define DOSLIFETIME_H
-#define USELORENTZ
-//choose between either Gauss or Lorentzian
 
+#define USELORENTZ //choose between either Gauss or Lorentzian
 //#define COMPONENT_DEBUG
-#include <src/core/component.h>
+
+#include "src/core/component.h"
 
 class Lorentz;
 class Gaussian;
 
-//class Component;
-/**
-  *@author Jo Verbeeck
-  */
 class DosLifetime : public Component  {
   size_t degree; //degree of the polynomial
   #ifdef USELORENTZ

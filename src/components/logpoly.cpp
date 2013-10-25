@@ -17,16 +17,16 @@ Log polynomial background component
  ***************************************************************************/
 
 #include "src/components/logpoly.h"
-#include "src/gui/integerinput.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
-#include <string>
 #include <sstream>
-#include <iostream>
+#include <string>
 #include <vector>
 
+#include "src/core/parameter.h"
 
+#include "src/gui/integerinput.h"
 
 Logpoly::Logpoly() //create a dummy version
 :Component()

@@ -18,16 +18,17 @@
 #ifndef FILEOPENER_H
 #define FILEOPENER_H
 
-#include <qwidget.h>
 #include <string>
-#include <qstring.h>
-/**Qt to open a file from a filename
-* if the filename is not found the path is stripped and the modelpath is taken
-* if file is still not found a fileopener window is show
-* if this is cancelled an empty string is returned
-* if file found the full filename with path is returned
-  *@author Jo Verbeeck
-  */
+
+#include <QWidget>
+#include <QString>
+
+/* QWidget to open a file from a filename
+ * if the filename is not found the path is stripped and the modelpath is taken
+ * if file is still not found a fileopener window is show
+ * if this is cancelled an empty string is returned
+ * if file found the full filename with path is returned
+ */
 
 class Fileopener : public QWidget  {
    Q_OBJECT

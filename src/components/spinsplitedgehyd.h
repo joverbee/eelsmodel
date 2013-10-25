@@ -21,12 +21,10 @@ build from two hartree slater cross sections and two lorentzians
 #ifndef SPINSPLITEDGEHYD_H
 #define SPINSPLITEDGEHYD_H
 
-#include <src/core/component.h>
 #include <fstream>
+
+#include "src/core/component.h"
 #include "src/core/curvematrix.h"
-/**
-  *@author Jo Verbeeck
-  */
 
 class SpinsplitEdgeHyd : public Component  {
 Spectrum tempspectrum; //temporary storage of the spectrum shape

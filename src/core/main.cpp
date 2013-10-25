@@ -15,23 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "src/core/eelsmodel.h"
-#include <qapplication.h>
+#include <ctime>
 #include <iostream>
-#include "src/gui/menu.h"
-#include <qworkspace.h>
-#include <qwidget.h>
-#include <qfont.h>
-#include <qstring.h>
-#include <qtextcodec.h>
-#include <qtranslator.h>
-#include "src/gui/hello.h"
-#include "src/core/curvematrix.h"
 
-
-
-//#include <gsl/gsl_linalg.h> //for matrixtest to compare with gsl
-//#include <gsl/gsl_blas.h> //for matrixtest
+#include <QApplication>
+#include <QWorkspace>
+#include <QWidget>
+#include <QFont>
+#include <QString>
+#include <QTextCodec>
+#include <QTranslator>
 
 //for the boost part in testmatrix
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
@@ -40,17 +33,19 @@
 #include <boost/numeric/bindings/lapack/ormqr.hpp>
 #include <boost/numeric/bindings/lapack/lapack.hpp>
 #include <boost/numeric/bindings/atlas/clapack.hpp>
-
 #include <boost/numeric/bindings/blas/blas.hpp>
 
-#include <time.h>
+//#include <gsl/gsl_linalg.h> //for matrixtest to compare with gsl
+//#include <gsl/gsl_blas.h> //for matrixtest
 
+#include "src/core/curvematrix.h"
+#include "src/core/eelsmodel.h"
 
-
+#include "src/gui/hello.h"
+#include "src/gui/menu.h"
 
 //TEST TEST TEST
 //#include  <mpatrol.h>
-
 
 //global vars keeping a pointer to eelsmodel and to the qt workspace
 Eelsmodel* global_eelsmodelptr=0;

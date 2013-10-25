@@ -16,26 +16,28 @@
  ***************************************************************************/
 
 #include "src/gui/hello.h"
-#include <qmessagebox.h>
-#include <qdialog.h>
-#include <qpushbutton.h>
-#include <qlabel.h>
-#include <qpixmap.h>
-#include <qlayout.h>
-#include <qtextedit.h>
-#include <qwidget.h>
-#include <qdir.h>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLayout>
-#include "./welcomescreen/eelsmodel_3_3.xpm"
-#include "src/gui/licence.txt"
+
 #include <string>
+
+#include <QMessageBox>
+#include <QDialog>
+#include <QDir>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
+#include <QPixmap>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QWidget>
+
+#include "./welcomescreen/eelsmodel_3_3.xpm"
+
+#include "src/gui/licence.txt"
 
 #ifdef DEBUG
     #include "debug_new.h" //memory leak checker
 #endif
-
 
 Hello::Hello(QWidget *parent, const char *name ) : QDialog(parent,Qt::Dialog) {
 this->setWindowModality(Qt::ApplicationModal);

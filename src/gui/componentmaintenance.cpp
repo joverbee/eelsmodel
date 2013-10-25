@@ -14,35 +14,48 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//#define DEBUG_COMPONENTMAINTENANCE
+
 #include "src/gui/componentmaintenance.h"
-#include <qnamespace.h>
-#include <qapplication.h>
+
+//#define DEBUG_COMPONENTMAINTENANCE
+
+#include <map>
 #include <sstream>
-#include <QTreeWidget>
-#include <QHeaderView>
-#include <QList>
-#include <qlabel.h>
-#include <qstandarditemmodel.h>
-#include <QTreeWidgetItem>
-#include <qstring.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qpoint.h>
-#include <qwidget.h>
-#include <QPixmap>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include "src/core/component.h"
 #include <vector>
 #include <string>
-#include <qmessagebox.h>
-#include <qapplication.h>
-#include <map>
-#include "saysomething.h"
-#include <qcursor.h>
-#include "src/core/monitor.h"
+#include <iostream>
+#include <string>
+#include <sstream>
+
+#include <QApplication>
+#include <QCursor>
+#include <QEvent>
+#include <QTreeWidget>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QLayout>
+#include <QList>
+#include <QMessageBox>
+#include <QPixmap>
+#include <QPoint>
+#include <QPushButton>
+#include <QStandardItemModel>
+#include <QString>
+#include <QTreeWidgetItem>
+#include <QVBoxLayout>
+#include <QWidget>
 #include <QWorkspace>
+
+#include "src/core/component.h"
+#include "src/core/eelsmodel.h"
+#include "src/core/model.h"
+#include "src/core/monitor.h"
+
+#include "src/gui/atomchooser.h"
+#include "src/gui/saysomething.h"
+
 //embedded icons
 #include "./icons/locked.xpm"
 #include "./icons/unlock.xpm"
@@ -53,21 +66,9 @@
 #include "./icons/ok.xpm"
 #include "./icons/monitor.xpm"
 #include "./icons/atomwiz.xpm"
-//#include <qkeyevent> //was in windows
-#include <qevent.h> //for linux
-#include "src/core/model.h"
-#include "src/core/eelsmodel.h"
-#include "src/gui/atomchooser.h"
-#include <iostream>
-#include <string>
-#include <sstream>
-//get global pointers from main
-class QWorkspace;
-extern QWorkspace* getworkspaceptr();
-extern Eelsmodel* geteelsmodelptr();
 
-
-
+QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
 
 Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
                                            ,const std::vector<Component*>& componentvector

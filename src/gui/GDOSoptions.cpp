@@ -15,21 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "src/gui/gdosoptions.h"
-#include "src/fitters/fitter.h"
-#include <qinputdialog.h>
-#include <qstring.h>
-#include <qstringlist.h>
-#include <qcombobox.h>
-#include <qradiobutton.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <qlabel.h>
-#include <qstring.h>
-#include <QWorkspace>
-#include <QVBoxLayout>
+#include "src/gui/GDOSoptions.h"
+
+#include <QComboBox>
 #include <QHBoxLayout>
-#include <qpushbutton.h>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QString>
+#include <QStringList>
+#include <QValidator>
+#include <QVBoxLayout>
+#include <QWorkspace>
+
+#include "src/fitters/fitter.h"
 
 GDosoptions::GDosoptions(QWorkspace *parent, const char *name,size_t degree,size_t interpolationtype,bool dosumrule,size_t broadeningtype,double integrationwidth ,double threshold) : QDialog(parent) {
 

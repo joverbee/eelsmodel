@@ -16,12 +16,8 @@
  ***************************************************************************/
 
 #include "src/fitters/wlsqfitter.h"
+
 #include <cstdio>
-#ifndef linux
-//#include <stdio>
-#endif
-
-
 
 WLSQFitter::WLSQFitter(Model* m)
 :Fitter(m)

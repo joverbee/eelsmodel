@@ -16,11 +16,10 @@
  ***************************************************************************/
 
 #include "src/core/multibyte.h"
-#include <iostream>
+
 #include <fstream>
+#include <iostream>
 #include <cmath>
-
-
 
 Multibyte::Multibyte(unsigned int n)
 :bytestring(n)

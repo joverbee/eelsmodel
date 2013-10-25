@@ -19,11 +19,7 @@ Power law backround component
 #ifndef POWERLAW_H
 #define POWERLAW_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Powerlaw : public Component  {
 public:

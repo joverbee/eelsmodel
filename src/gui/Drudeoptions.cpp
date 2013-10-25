@@ -15,23 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "src/gui/drudeoptions.h"
-#include <qinputdialog.h>
-#include <qstring.h>
-#include <qstringlist.h>
-#include <qcombobox.h>
-#include <qcheckbox.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <qlabel.h>
-#include <qstring.h>
+#include "src/gui/Drudeoptions.h"
 
-#include <QWorkspace>
-#include <QVBoxLayout>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLineEdit>
 #include <QHBoxLayout>
-#include <qpushbutton.h>
-#include <qcombobox.h>
-#include <qstringlist.h>
+#include <QInputDialog>
+#include <QPushButton>
+#include <QString>
+#include <QStringList>
+#include <QValidator>
+#include <QVBoxLayout>
+#include <QWorkspace>
 
 Drudeoptions::Drudeoptions(QWorkspace *parent, const char *name,size_t nosc,size_t thetapoints,bool integrate,bool show,bool dokroeger,bool dorel,int outputformat) : QDialog(parent) {
  parent->addWindow(this); //add it explicitly to the workspace

@@ -16,16 +16,16 @@
  ***************************************************************************/
 
 #include "src/core/multispectrum.h"
-#include "src/core/spectrum.h"
-#include "src/gui/graph.h"
-#include "src/gui/imagedisplay.h"
-#include <vector>
-#include <string>
+
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <vector>
 
+#include "src/core/spectrum.h"
 
-
+#include "src/gui/graph.h"
+#include "src/gui/imagedisplay.h"
 
 Multispectrum::Multispectrum()
 :dataset()

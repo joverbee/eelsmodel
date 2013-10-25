@@ -17,26 +17,27 @@ A dielectric model for low loss eels
  ***************************************************************************/
 
 #include "src/components/dielecmodel.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
+#include <complex>
 #include <iostream>
-#include <string>
-#include <math.h>
 #include <sstream>
-#include "src/gui/integerinput.h"
-#include "src/core/eelsmodel.h"
+
 #ifdef DEBUG
     #include "debug_new.h" //memory leak checker
 #endif
-#include <complex>
+#include "src/core/eelsmodel.h"
+#include "src/core/parameter.h"
 #include "src/core/curvematrix.h"
+
+#include "src/gui/integerinput.h"
 #include "src/gui/imagedisplay.h"
-#include "src/gui/drudeoptions.h"
+#include "src/gui/Drudeoptions.h"
 
 class QWorkspace;
-//get two global pointers from main
-extern QWorkspace* getworkspaceptr();
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+
+QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
 
 DielecModel::DielecModel()
 :Component()

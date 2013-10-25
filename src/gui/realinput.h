@@ -18,11 +18,9 @@
 #ifndef REALINPUT_H
 #define REALINPUT_H
 
-#include <qwidget.h>
+#include <QWidget>
 
-/**Ask for a real number input from user 
-  *@author Jo Verbeeck
-  */
+/* Ask for a real number input from user. */
 
 class RealInput : public QWidget  {
    Q_OBJECT

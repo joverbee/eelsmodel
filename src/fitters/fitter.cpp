@@ -14,26 +14,22 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//#define FITTER_DEBUG
 
 #include "src/fitters/fitter.h"
-#include "src/core/component.h"
-#include <vector>
-#include "src/core/parameter.h"
+
+//#define FITTER_DEBUG
 #include <cmath>
-#include <math.h>
+#include <cstdio>
 #include <iostream>
 #include <valarray>
-#include <cstdio>
-#include "src/core/multispectrum.h"
+#include <vector>
+
+#include "src/core/component.h"
 #include "src/core/curvematrix.h"
+#include "src/core/parameter.h"
+#include "src/core/multispectrum.h"
 
-
-
-
-
-extern QWorkspace* getworkspaceptr();
-//#include <limits>
+QWorkspace* getworkspaceptr();
 
 Fitter::Fitter(Model* m)
 :beta(),goodnessqueue()

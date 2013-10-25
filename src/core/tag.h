@@ -17,12 +17,11 @@
 
 #ifndef TAG_H
 #define TAG_H
+
 #include <string>
 #include <vector>
-/**A tag to hold information for the DM3 image file format. A tag has a name and data attached to it
-  *@author Jo Verbeeck
-  */
 
+/* A tag to hold information for the DM3 image file format. A tag has a name and data attached to it. */
 
 class Tag {
 

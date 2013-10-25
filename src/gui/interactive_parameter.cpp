@@ -16,20 +16,23 @@
  ***************************************************************************/
 
 #include "src/gui/interactive_parameter.h"
-#include "qlabel.h"
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <iostream>
-#include "src/core/parameter.h"
-#include <QPalette>
 
 //#define DEBUG
+
+#include <iostream>
+
+#include <QCheckBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QPalette>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QValidator>
+#include <QVBoxLayout>
+
+#include "src/core/parameter.h"
 
 Interactive_Parameter::Interactive_Parameter(QWidget *parent, const char *name,const Parameter* initialparameter,const std::string& description)
 : QDialog(parent)

@@ -16,25 +16,22 @@
  ***************************************************************************/
 
 #include "src/components/mscatter.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
+#include <vector>
+
+#include <QWorkspace>
+
+#include "src/core/parameter.h"
+#include "src/core/eelsmodel.h"
+#include "src/core/multispectrum.h"
 #include "src/gui/getgraphptr.h"
 #include "src/gui/gettopspectrum.h"
 #include "src/gui/saysomething.h"
-#include <vector>
-#include "src/core/eelsmodel.h"
-#include "src/core/multispectrum.h"
 
-
-
-
-#include <QWorkspace>
-extern QWorkspace* getworkspaceptr();
-
-//get two global pointers from main
-extern Eelsmodel* geteelsmodelptr();
-extern QWorkspace* getworkspaceptr();
+QWorkspace* getworkspaceptr();
+Eelsmodel* geteelsmodelptr();
 
 Mscatter::Mscatter()
 :Component(),LLspectrum()

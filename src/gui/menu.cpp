@@ -15,15 +15,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-#include <QPixmap>
-#include <QActionGroup>
-#include <QResizeEvent>
-#include <QMenu>
-#include <qaction.h>
 #include "src/gui/menu.h"
+
+#include <QApplication>
+#include <QAction>
+#include <QActionGroup>
+#include <QMenu>
+#include <QMenuBar>
+#include <QPixmap>
+#include <QResizeEvent>
+#include <QSignalMapper>
+#include <QToolBar>
+#include <QWorkspace>
+
+#include "src/gui/hello.h"
+
 #include "./icons/filesave.xpm"
 #include "./icons/fileopen.xpm"
 #include "./icons/filenew.xpm"
@@ -32,13 +38,6 @@
 #include "./icons/zoom.xpm"
 #include "./icons/gohome.xpm"
 #include "./icons/connect_established.xpm"
-#include "src/gui/hello.h"
-#include <QSignalMapper>
-#include <QWorkspace>
-#include <qmenubar.h>
-#include <qtoolbar.h>
-
-
 
 MenuEelsmodel::MenuEelsmodel(){
  setWindowTitle(tr("Eelsmodel 3.3") );

@@ -19,11 +19,7 @@ A Fowler Nordheim peak component to model a zero loss peak of a FEG
 #ifndef FOWLER_H
 #define FOWLER_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Fowler : public Component  {
 public:

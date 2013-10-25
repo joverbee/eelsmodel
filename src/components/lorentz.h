@@ -19,11 +19,7 @@ A lorentz peak component
 #ifndef LORENTZ_H
 #define LORENTZ_H
 
-#include <src/core/component.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include "src/core/component.h"
 
 class Lorentz : public Component  {
 public:

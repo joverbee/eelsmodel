@@ -44,19 +44,20 @@ the same ratio is taken for the jumps to the continuum
 
 
 #include "src/components/spinsplitedge.h"
-#include "src/core/parameter.h"
-#include "src/gui/getfilename.h"
+
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
-#include "src/core/curvematrix.h"
-#include "src/gui/imagedisplay.h"
+
 #include "src/components/hsedge.h"
 #include "src/components/gaussian.h"
 
+#include "src/core/parameter.h"
+#include "src/core/curvematrix.h"
 
-
+#include "src/gui/getfilename.h"
+#include "src/gui/imagedisplay.h"
 
 SpinsplitEdge::SpinsplitEdge() //create a dummy version
 :Component(),tempspectrum(){

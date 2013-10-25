@@ -17,11 +17,9 @@
 
 #include "src/gui/monitorchooser.h"
 
-#include <qinputdialog.h>
-#include <qstring.h>
-#include <qstringlist.h>
-
-
+#include <QInputDialog>
+#include <QString>
+#include <QStringList>
 
 MonitorChooser::MonitorChooser(QWidget *parent, const char *name,int& retvalue ) : QWidget(parent) {
 QStringList list;

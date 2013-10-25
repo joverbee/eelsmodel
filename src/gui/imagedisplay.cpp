@@ -16,23 +16,24 @@
  ***************************************************************************/
 
 #include "src/gui/imagedisplay.h"
-#include <qimage.h>
-#include <qlayout.h>
-#include <qpixmap.h>
-#include <qcolor.h>
-#include <qapplication.h>
-#include <qpainter.h>
-#include <qpoint.h>
-#include <qcursor.h>
+
+#include <QApplication>
+#include <QColor>
+#include <QCursor>
+#include <QImage>
+#include <QLayout>
+#include <QPainter>
+#include <QPixmap>
+#include <QPoint>
 #include <QMouseEvent>
 #include <QPaintEvent>
-#include "src/core/curvematrix.h"
 #include <QWorkspace>
+
+#include "src/core/curvematrix.h"
 
 //#ifdef DEBUG
 //    #include "debug_new.h" //memory leak checker
 //#endif
-
 
 Imagedisplay::Imagedisplay(QWorkspace *parent, const char *name, Multispectrum* mspec)
 : QWidget(parent),image()

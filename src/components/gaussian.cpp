@@ -16,15 +16,15 @@ A gaussian peak component
  *                                                                         *
  ***************************************************************************/
 
+//#define COMPONENT_DEBUG
+
 #include "src/components/gaussian.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
 #include <valarray>
 
-
-
-//#define COMPONENT_DEBUG
+#include "src/core/parameter.h"
 
 Gaussian::Gaussian()
 :Component()

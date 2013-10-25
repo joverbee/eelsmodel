@@ -20,13 +20,7 @@ partly taken from netlib
 #ifndef CHISQUARE_H
 #define CHISQUARE_H
 
-
-/**
-  *@author Jo Verbeeck
-  */
-
-
-double  pochisq (double x,int df);
+double pochisq (double x,int df);
 double critchi (double p,int df);
 double poz(double z);
 

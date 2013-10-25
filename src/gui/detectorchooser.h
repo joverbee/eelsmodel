@@ -18,11 +18,12 @@
 #ifndef DETECTORCHOOSER_H
 #define DETECTORCHOOSER_H
 
-#include <qwidget.h>
-/**A Qwidget to choose the type of detector to use
-  *@author Jo Verbeeck
-  */
+#include <QWidget>
+
 class Model;
+
+/* A Qwidget to choose the type of detector to use */
+
 class DetectorChooser : public QWidget  {
    Q_OBJECT
 public:

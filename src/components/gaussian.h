@@ -19,11 +19,9 @@ A gaussian peak component
 #ifndef GAUSSIAN_H
 #define GAUSSIAN_H
 
-#include <src/core/component.h>
 #include <valarray>
-/**
-  *@author Jo Verbeeck
-  */
+
+#include "src/core/component.h"
 
 class Gaussian : public Component  {
 double eps;

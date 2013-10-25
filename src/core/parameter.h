@@ -17,12 +17,12 @@
 
 #ifndef PARAMETER_H
 #define PARAMETER_H
+
 //#define PARAMETER_DEBUG
+
 #include<string>
+
 class Monitor;
-/**
-  *@author Jo Verbeeck
-  */
 
 class Parameter {
 //class data

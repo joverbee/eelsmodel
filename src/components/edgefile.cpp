@@ -21,14 +21,17 @@ Use this component to load experimental edges or calculated edges for example fr
  ***************************************************************************/
 
 #include "src/components/edgefile.h"
-#include "src/core/parameter.h"
+
 #include <cmath>
 #include <iostream>
-#include "src/gui/getgraphptr.h"
-
 
 #include <QWorkspace>
-extern QWorkspace* getworkspaceptr();
+
+#include "src/core/parameter.h"
+
+#include "src/gui/getgraphptr.h"
+
+QWorkspace* getworkspaceptr();
 
 EdgeFile::EdgeFile()
 :Component(),tempspectrum()

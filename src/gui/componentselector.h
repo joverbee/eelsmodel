@@ -19,11 +19,7 @@ Select a component in the model
 #ifndef COMPONENTSELECTOR_H
 #define COMPONENTSELECTOR_H
 
-#include <qwidget.h>
-
-/**
-  *@author Jo Verbeeck
-  */
+#include <QWidget>
 
 class Componentselector : public QWidget  {
    Q_OBJECT

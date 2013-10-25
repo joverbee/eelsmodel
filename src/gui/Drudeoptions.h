@@ -18,18 +18,17 @@
 #ifndef DRUDEOPTIONS_H
 #define DRUDEOPTIONS_H
 
-#include <qdialog.h>
-#include <qvalidator.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qstring.h>
-#include <qcombobox.h>
-#include <qstringlist.h>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDialog>
+#include <QLineEdit>
+#include <QString>
+#include <QStringList>
+#include <QValidator>
+
 class QWorkspace;
-/**A Qwidget to choose the options for Drude Lorentz
-  *@author Jo Verbeeck
-  */
+
+/* A Qwidget to choose the options for Drude Lorentz. */
 
 class Drudeoptions : public QDialog  {
    Q_OBJECT

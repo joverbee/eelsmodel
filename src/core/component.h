@@ -20,16 +20,16 @@ calculate like e.g. a lorentz peak
 
 #ifndef COMPONENT_H
 #define COMPONENT_H
-#include "src/core/spectrum.h"
-#include <valarray>
-#include "src/core/parameter.h"
-#include <vector>
-#include "src/core/slice_iter.h"
+
 //#define COMPONENT_DEBUG
 
-/**
-  *@author Jo Verbeeck
-  */
+#include <valarray>
+#include <vector>
+
+#include "src/core/parameter.h"
+#include "src/core/slice_iter.h"
+#include "src/core/spectrum.h"
+
 class Equalizer;
 
 class Component : public Spectrum {

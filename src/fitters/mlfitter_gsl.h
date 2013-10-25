@@ -17,24 +17,17 @@
  *                                                                         *
  ***************************************************************************/
 
-
-
-
 #ifndef MLFITTERGSL_H
 #define MLFITTERGSL_H
 
-//namespace GSL{
 //#define FITTER_DEBUG //print some debug info
-#include <src/fitters/fitter.h>
-#include "src/core/model.h"
-namespace GSL{
-#include  <gsl/gsl_multifit_nlin.h>
-}
 
-using namespace GSL;
-/**Maximum Likelyhood fitter for Poisson Statistics
-  *@author Jo Verbeeck
-  */
+#include  <gsl/gsl_multifit_nlin.h>
+
+#include "src/core/model.h"
+#include "src/fitters/fitter.h"
+
+/* Maximum likelihood fitter for Poisson Statistics. */
 
 class MLFitterGSL : public Fitter  {
 public:

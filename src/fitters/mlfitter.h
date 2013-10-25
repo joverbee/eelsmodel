@@ -18,13 +18,12 @@
 #ifndef MLFITTER_H
 #define MLFITTER_H
 
-
 //#define FITTER_DEBUG //print some debug info
-#include <src/fitters/fitter.h>
+
+#include "src/fitters/fitter.h"
 #include "src/core/model.h"
-/**Maximum Likelyhood fitter for Poisson Statistics
-  *@author Jo Verbeeck
-  */
+
+/* Maximum Likelihood fitter for Poisson Statistics. */
 
 class MLFitter : public Fitter  {
 public: 

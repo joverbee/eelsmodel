@@ -19,22 +19,20 @@ A dialog to control the fitter
 #ifndef FITTER_DIALOG_H
 #define FITTER_DIALOG_H
 
-#include <qwidget.h>
 #include <string>
-//#include <qwidgetfactory.h>
-#include <qlineedit.h>
-#include <qvalidator.h>
-#include <qstring.h>
-#include <qdialog.h>
-#include "src/fitters/fitter.h"
-#include <qlabel.h>
-#include <qprogressbar.h>
-#include "qpushbutton.h"
-#include <qcheckbox.h>
 
-/**
-  *@author Jo Verbeeck
-  */
+#include <QCheckBox>
+#include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QString>
+#include <QValidator>
+#include <QWidget>
+
+#include "src/fitters/fitter.h"
+
 class QWorkspace;
 
 class Fitter_dialog : public QWidget  {

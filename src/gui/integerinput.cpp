@@ -17,10 +17,8 @@ Ask for an integer value
  ***************************************************************************/
 
 #include "src/gui/integerinput.h"
-#include <qinputdialog.h>
 
-
-
+#include <QInputDialog>
 
 Integerinput::Integerinput(QWidget *parent, const char *name,const char* message,int& value,const int min,const int max) : QWidget(parent) {
   int step=1;
