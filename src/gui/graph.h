@@ -37,6 +37,8 @@ class MenuEelsmodel;
 class QwtPlotZoomer;
 class QwtPlotPicker;
 class QwtPlotPanner;
+class QPolygon;
+class QwtPlotCurveSpecial;
 
   class Graph : public QwtPlot
 {
@@ -51,7 +53,6 @@ class QwtPlotPanner;
     void removelastgraph();
     void setxlabel(const char* xl);
     void setylabel(const char* yl);
-    void updategraph(int layer,Spectrum* spec);
     bool validlayer(int layer)const;
     Spectrum* getspectrumptr();
     Multispectrum* getmultispectrumptr();
@@ -64,13 +65,14 @@ class QwtPlotPanner;
     size_t getendzoomindex(int layer=0)const;
     int getnplots()const{return nplots;}
     void resetselection();
-    void setstyle(int layer,size_t style);
+    void setstyle(size_t layer,size_t style);
     void setcaption(std::string name){this->setWindowTitle(name.c_str());} //change caption
+    void updategraph(int layer,Spectrum* spec);
 protected:
     void paintEvent( QPaintEvent * );
     void mousePressEvent(QMouseEvent* e);//override the qwidget mousepressEvent
    // void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
-   // void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
+    void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
     void mouseMoveEvent(QMouseEvent *evt);
     void setselection(bool b){selection=b;}
     void setstartindex(int i);
@@ -78,9 +80,6 @@ protected:
     void setstartzoomindex(int i);
     void setendzoomindex(int i);
     void setzoom(bool b){zoomed=b;}
-
-    int convert_coords_to_index(int i);
-    int convert_index_to_coords(int i);
     void setexcludecolor(QColor c){excludecolor=c;}
     void setnormalcolor(QColor c){normalcolor=c;}
     void setaxiscolor(QColor c){axiscolor=c;}
@@ -91,15 +90,16 @@ protected:
 
 private slots:
     void        updateCaption();
+    void        selectionmade(const QPolygon & 	polygon);
    //void slot_graph_clicked();
 private:
     int npoints;      //number of data points
     int nplots;       //number of layers in the plot
-    QVector<QwtPlotCurve*> d_curves;
+    QVector<QwtPlotCurveSpecial*> d_curves;
     QVector<QVector< QPointF > >	qwtdata;
-
+    QVector< QPen >	penvector;
     QwtPlotZoomer *d_zoomer[2];
-    QwtPlotPicker *d_picker;
+    QwtPlotPicker *d_picker[2];
     QwtPlotPanner *d_panner;
 
     double border;
@@ -132,7 +132,6 @@ private:
     int endzoomindex;
     bool zoomed;
     QColor excludecolor,normalcolor,axiscolor,bgcolor;
-    std::vector<size_t> stylelist; //a list with plot style code per layer
 };
 
 #endif

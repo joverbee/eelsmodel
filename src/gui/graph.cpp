@@ -46,6 +46,7 @@
 #include <qwt_plot_panner.h>
 #include <qwt_plot_renderer.h>
 #include <qwt_picker_machine.h>
+
 //#define GRAPH_DEBUG
 
 
@@ -54,6 +55,39 @@ extern MenuEelsmodel* getmenuptr();
 //
 // Graph - a widget that draws a Graph.
 //
+class QwtPlotCurveSpecial: public QwtPlotCurve
+{
+private:
+    bool penvectorset;
+    QVector<QPen> v_pen;
+public:
+    QwtPlotCurveSpecial(const QString &title=QString::null):
+        QwtPlotCurve(title)
+    {penvectorset=false;};
+    void setPenVector(QVector<QPen> &vec)
+    {
+        v_pen = vec;
+        penvectorset=true;
+    };
+    bool hasPenVector(){
+      return penvectorset;
+    };
+    void drawlines(QPainter *p, const QwtScaleMap &xMap, const QwtScaleMap &yMap, const QRectF &canvasRect, int from, int to) const{
+        if (penvectorset){
+                //overload drawlines
+                //change color of line if points are excluded
+               for (int counter = from; counter < to; counter++)
+               {
+                p->setPen(v_pen[counter]);
+                QwtPlotCurve::drawLines(p,xMap,yMap,canvasRect,counter,counter+1);
+               }
+        }
+        else{
+             QwtPlotCurve::drawLines(p,xMap,yMap,canvasRect,from,to);
+        }
+
+     };
+};
 class Zoomer: public QwtPlotZoomer
 {
 public:
@@ -153,9 +187,10 @@ void Graph::Init(){
     qwtdata.clear(); //start with empty data
     qwtdata.resize(1);
     qwtdata[0].resize(npoints);
-    QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+    penvector.resize(npoints);
+    QwtPlotCurveSpecial * mycurveptr=new QwtPlotCurveSpecial("plot");
 
-    mycurveptr->setPen( Qt::darkBlue );
+    mycurveptr->setPen(normalcolor);
     mycurveptr->setStyle( QwtPlotCurve::Lines );
     mycurveptr->setRenderHint( QwtPlotItem::RenderAntialiased );
 
@@ -187,26 +222,44 @@ void Graph::Init(){
     show();
 
     //init the zoom and pan function
+    //QwtPlot::yLeft
     d_zoomer[0] = new Zoomer( QwtPlot::xBottom, QwtPlot::yLeft,this->canvas() );
     d_zoomer[0]->setRubberBand( QwtPicker::RectRubberBand );
     d_zoomer[0]->setRubberBandPen( QColor( Qt::green ) );
-    d_zoomer[0]->setTrackerMode( QwtPicker::ActiveOnly );
+    d_zoomer[0]->setTrackerMode( QwtPicker::AlwaysOff );
     d_zoomer[0]->setTrackerPen( QColor( Qt::black ) );
     d_zoomer[1] = new Zoomer( QwtPlot::xTop, QwtPlot::yRight,this->canvas() );
     d_panner = new QwtPlotPanner( this->canvas() );
     d_panner->setMouseButton( Qt::MidButton );
-    d_picker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn,this->canvas() );
-    d_picker->setStateMachine( new QwtPickerDragPointMachine() );
-    d_picker->setRubberBandPen( QColor( Qt::green ) );
-    d_picker->setRubberBand( QwtPicker::CrossRubberBand );
-    d_picker->setTrackerPen( QColor( Qt::black ) );
+
+
+    d_picker[0] = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::RectRubberBand, QwtPicker::AlwaysOff,this->canvas() );
+    //d_picker[0] = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft,QwtPlotPicker::VLineRubberBand, QwtPicker::AlwaysOff,this->canvas() );
+    //QwtPickerDragPointMachine
+   d_picker[0]->setStateMachine( new QwtPickerDragRectMachine() );
+  // d_picker[0]->setStateMachine( new QwtPickerDragLineMachine() );
+    d_picker[0]->setRubberBandPen( QColor( Qt::green ) );
+    d_picker[0]->setRubberBand( QwtPicker::RectRubberBand );
+    //d_picker[0]->setRubberBand( QwtPlotPicker::VLineRubberBand );
+    d_picker[0]->setTrackerPen( QColor( Qt::black ) );
+    d_picker[1] = new QwtPlotPicker( QwtPlot::xTop, QwtPlot::yRight, QwtPlotPicker::RectRubberBand, QwtPicker::AlwaysOff,this->canvas() );
+    //d_picker[1] = new QwtPlotPicker( QwtPlot::xTop, QwtPlot::yRight, QwtPlotPicker::VLineRubberBand, QwtPicker::AlwaysOn,this->canvas() );
+
+    connect(d_picker[0], SIGNAL(selected(const QPolygon &)), SLOT(selectionmade(const QPolygon &)));
+
     this->autoReplot();
-  //init a pointer to a rubberband for selection purposes
-  //rubberrect=new QRubberBand(QRubberBand::Rectangle,this);
-  //rubberrect->hide();
-  //rubberrect->setGeometry(0,0,0,0);
 }
 
+void Graph::selectionmade(const QPolygon & 	polygon){
+    //get the selection points and apply to spectrum
+    QRect r=polygon.boundingRect();
+    double estart= this->invTransform(QwtPlot::xBottom,r.left());
+    double estop=this->invTransform(QwtPlot::xBottom,r.right());
+    setstartindex(spectrumptr->getenergyindex(estart));
+    setendindex(spectrumptr->getenergyindex(estop));
+    setselection(true);
+
+}
 void Graph::setdefaults(){
       #ifdef GRAPH_DEBUG
     std::cout << "Start of setdefaults\n";
@@ -269,6 +322,10 @@ void Graph::getmainwindowptr(){
     throw;
     }
 }
+
+
+
+
 void Graph::copydata(int layer,Spectrum* spec){
 
  for (size_t i=0;i<spec->getnpoints();i++){
@@ -277,12 +334,18 @@ void Graph::copydata(int layer,Spectrum* spec){
      //and copy in the qwt specific store
      (qwtdata[layer][i]).setX(xdata);
      (qwtdata[layer][i]).setY(ydata);
+     if ((spec->isexcluded(i))&&(layer==0)){
+        penvector[i]=excludecolor;
+     }
+     else{
+        penvector[i]=normalcolor;
+     }
   }
  //and attach it to a curve
  d_curves[layer]->setSamples(qwtdata[layer]);
-
-
-
+if (layer==0){
+ d_curves[layer]->setPenVector(penvector);
+}
 
 #ifdef GRAPH_DEBUG
  std::cout <<"end of copydata\n";
@@ -304,14 +367,14 @@ void Graph::addgraph(Spectrum *spec)
   nplots++;
   qwtdata.resize(nplots);    //increase size of data vector
   qwtdata[nplots-1].resize(spec->getnpoints());
-  QwtPlotCurve * mycurveptr=new QwtPlotCurve("plot");
+  QwtPlotCurveSpecial * mycurveptr=new QwtPlotCurveSpecial("plot");
   mycurveptr->setPen( Qt::darkRed );
   mycurveptr->setStyle( QwtPlotCurve::Lines );
   mycurveptr->setRenderHint( QwtPlotItem::RenderAntialiased );
 
 
   d_curves.push_back(mycurveptr);
- mycurveptr->attach(this);
+  mycurveptr->attach(this);
 
   #ifdef GRAPHDEBUG
    std::cout <<"addgraph function\n";
@@ -319,14 +382,14 @@ void Graph::addgraph(Spectrum *spec)
    std::cout <<"the new size of data[0] is "<<data[0].size()<<"\n";
   #endif
   //add the data in the new layer
-   copydata(nplots-1,spec->getcurrentspectrum());
+   copydata(nplots-1,spec);
+   this->replot();
 }
 void Graph::removelastgraph(){
     nplots--;
   qwtdata.resize(nplots);    //decrease size of data vector
-  stylelist.resize(nplots);
 
-  QwtPlotCurve * mycurveptr=d_curves.last();
+  QwtPlotCurveSpecial * mycurveptr=d_curves.last();
   d_curves.pop_back();
   mycurveptr->detach();
   delete(mycurveptr);
@@ -339,11 +402,6 @@ void Graph::removelastgraph(){
   #endif
 }
 
-
-void Graph::setstyle(int layer,size_t style){
-    //set the plotstyle of a graph
-    stylelist[layer]=style;
-}
 
 void Graph::updategraph(int layer,Spectrum* spec){
     //check if valid layer
@@ -364,20 +422,12 @@ void Graph::updateCaption(){}
 
 void Graph::paintEvent( QPaintEvent *event )
 {
-   // QFrame::paintEvent( event );
-   //QPainter painter( this );
-   //painter.setClipRect( contentsRect() );
-
-
-
-
     replot();
 }
 
 void Graph::mouseMoveEvent(QMouseEvent *evt)
         {
     //do nothing we don't want moves
-
 }
 
 Spectrum* Graph::getspectrumptr(){
@@ -395,17 +445,8 @@ void Graph::mousePressEvent(QMouseEvent* e){
     d_zoomer[0]->zoom( 0 );
     d_zoomer[1]->setEnabled( mainwindow->zoomMode() );
     d_zoomer[1]->zoom( 0 );
-    d_picker->setEnabled( mainwindow->selectMode());
-
-   /* QPainter paint( this );
-    QPoint p1(0,0);        // p1 = top left
-    QPoint p2(20,20);    // p2 = bottom right
-    QRect r( p1, p2 );
-    (void) r; // get rid of unused variable warning
-    //paint.drawRect( r );
-*/
-
-
+    d_picker[0]->setEnabled( mainwindow->selectMode());
+    d_picker[1]->setEnabled( mainwindow->selectMode());
 }
 /*
 void Graph::mousePressEvent(QMouseEvent* e){
@@ -476,10 +517,18 @@ void Graph::mouseMoveEvent(QMouseEvent* e){
      }
     }
 }
-
+*/
 void Graph::mouseReleaseEvent(QMouseEvent* e){
   //override the qwidget mouseReleaseEvent
   //check if we are in grabbing mode
+    if (mainwindow->selectMode()){
+     //   const QPolygon p1 =d_picker[0]->pickedPoints();
+      //  const QPolygon p2 =d_picker[1]->pickedPoints();
+        //and convert these to energies to select or deselect
+
+    }
+
+    /*
   if (grabbing){
      if ((mainwindow->zoomMode())){
      //end of zoom mode
@@ -538,47 +587,11 @@ void Graph::mouseReleaseEvent(QMouseEvent* e){
   QCursor arrow(Qt::ArrowCursor);
   this->setCursor (arrow);
   this->repaint();
-}
-*/
+  */
 
-int Graph::convert_coords_to_index(int i){
-  //convert image coordinates to indices in the spectrum
-  //take care of scaling etc
-  //make sure you return valid indices
-  //rectangle r contains the whole spectrum (if not zoomed)
-  //these coordinates need to be mapped on the indices between 0 and npoints-1
-  int mincoord=r.left();
-  int maxcoord=r.right();
-  int length=maxcoord-mincoord;
-  //check if our coordinate i lies in the range
-  if ((i<mincoord)||(i>maxcoord)) return 0;
-  const double npoints_zoom=1+getendzoomindex()-getstartzoomindex();
-  double dindex=(double(i-mincoord)/double(length))*double(npoints_zoom);
-  int index=int(dindex)+getstartzoomindex(); //round it off to integer
-  //check if this index is valid
-  if (index<0) return 0;
-  if (index>(npoints-1)) return npoints-1;
-  return index;
 }
 
-int Graph::convert_index_to_coords(int i){
-  //convert spectrum index to image coordinates
-  //take care of scaling etc
-  //rectangle r contains the whole spectrum (if not zoomed)
-  //these coordinates need to be mapped on the indices between 0 and npoints-1
-  int mincoord=r.left();
-  int maxcoord=r.right();
-  int length=maxcoord-mincoord;
-  //check if index i is valid
-  if ((i<0)||(i>(npoints))) return 0;
-  const double npoints_zoom=1+getendzoomindex()-getstartzoomindex();
-  double dcoord=double(length)*(double(i-getstartzoomindex())/double(npoints_zoom));
-  int coord=mincoord+int(dcoord); //round it off to integer
-  //check if coordinate is valid
-  if (coord<mincoord) return mincoord;
-  if (coord>maxcoord) return maxcoord;
-  return coord;
-}
+
 
 void Graph::resetselection(){
   grabrect=QRect(0,0,0,0);
@@ -588,24 +601,7 @@ void Graph::resetselection(){
   repaint();
 }
 
-size_t Graph::getstartzoomindex(int layer)const{
-    if (qwtdata[layer].size()!=qwtdata[0].size()){
-        for (size_t i=0;i<qwtdata[layer].size();i++){
-            if (qwtdata[layer][i].x()>qwtdata[0][startzoomindex].x()) return i; //for different size, take layer 0 as reference
-        }
-        return 0;
-    }
-    return startzoomindex;
-}
-size_t Graph::getendzoomindex(int layer)const{
-     if (qwtdata[layer].size()!=qwtdata[0].size()){
-        for (size_t i=0;i<qwtdata[layer].size();i++){
-            if (qwtdata[layer][i].x()>qwtdata[0][endzoomindex].x()) return i; //for different size, take layer 0 as reference
-        }
-        return qwtdata[layer].size();
-    }
-    return endzoomindex;
-}
+
 void Graph::setstartindex(int i){
     if ((i>=0)&&(i<npoints)) startindex=i;
 }
@@ -617,4 +613,19 @@ void Graph::setstartzoomindex(int i){
 }
 void Graph::setendzoomindex(int i){
      if ((i>=0)&&(i<npoints)) endzoomindex=i;
+}
+void Graph::setstyle(size_t layer,size_t style){
+    if (validlayer(layer)){
+        switch (style){
+            case 0: d_curves[layer]->setStyle( QwtPlotCurve::Lines );
+                    break;
+            case 1:d_curves[layer]->setStyle( QwtPlotCurve::Lines );
+                    break;
+            case 2:d_curves[layer]->setStyle( QwtPlotCurve::Dots);
+                    break;
+            case 3:d_curves[layer]->setStyle( QwtPlotCurve::Sticks);
+                break;
+            default:d_curves[layer]->setStyle( QwtPlotCurve::Lines );
+        }
+    }
 }
