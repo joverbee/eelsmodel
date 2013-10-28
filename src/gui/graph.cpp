@@ -46,7 +46,8 @@
 #include <qwt_plot_panner.h>
 #include <qwt_plot_renderer.h>
 #include <qwt_picker_machine.h>
-
+#include <qwt_plot_item.h>
+#include <qwt_plot_marker.h>
 //#define GRAPH_DEBUG
 
 
@@ -57,6 +58,7 @@ extern MenuEelsmodel* getmenuptr();
 //
 class QwtPlotCurveSpecial: public QwtPlotCurve
 {
+    //a special version of qwtplotcurve which allows to change the pen type for each point in the plot
 private:
     bool penvectorset;
     QVector<QPen> v_pen;
@@ -91,7 +93,12 @@ public:
 
 class Picker: public QwtPlotPicker
 {
+    //a specialised version of picker which allows a horizontal picker
+    //the rect is always scaled to top and bottom and the tracker shows only the x coordinate
+    //during selection delta E is shown
+    //selection is stopped by right clicking
 public:
+    QRect selectrect;
     Picker(int xAxis, int yAxis, RubberBand rubberBand, DisplayMode trackerMode, QWidget *w):
         QwtPlotPicker(xAxis,yAxis, rubberBand, trackerMode, w)
     {
@@ -99,27 +106,30 @@ public:
     virtual void append( const QPoint& pos )
     {
          int y;
-         if ( selection().isEmpty() ) // SVN trunk: pickedPoints().isEmpty()
-            //y = -100;
+         if ( selection().isEmpty() ){
             y=scaleRect().bottom();
-         else
-             //y = parentWidget()->height() ;
-         y = scaleRect().top();
-
+         }
+         else{
+            y = scaleRect().top();
+        }
 
          QwtPlotPicker::append( QPoint( pos.x(), y ) );
+    };
+    QRect getrect(){
+        return selectrect;
     };
     virtual void move(const QPoint & pos)
     {
         int y;
-        if ( selection().isEmpty() ) // SVN trunk: pickedPoints().isEmpty()
-            //y =-100;
+        if ( selection().isEmpty() ){
            y=scaleRect().bottom();
+        }
         else
-           // y = parentWidget()->height();
-        y = scaleRect().top();
-
-
+        {
+          y = scaleRect().top();
+          //keep the rubberband for later, need to keep it displayed after selection
+          selectrect=selection().boundingRect();
+        }
         QwtPlotPicker::move( QPoint( pos.x(), y ) );
     };
     QwtText trackerText	(	const QPoint & 	pos	)	 const{
@@ -144,21 +154,12 @@ public:
             text=(QString::number((plot())->invTransform(QwtPlot::xBottom,pos.x()))+ " eV"  );
 
         }
-        //QColor bgColor(Qt::black);
-        //bgColor.setAlpha(160);
-        //text.setBackgroundBrush(QBrush(bgColor));
         return text;
     };
-
-    /*
-    virtual bool accept(QPolygon & p) const{
-
-        drawRubberBand	(	QPainter * 	painter	)	 const
-        QwtPlotPicker::move(p);
-    };*/
 };
 
 class Zoomer: public QwtPlotZoomer
+        //a special version of qwtplotzoomer, which links the right button to going back in zoom history
 {
 public:
     Zoomer( int xAxis, int yAxis, QWidget *canvas ):
@@ -246,7 +247,7 @@ void Graph::Init(){
 
 
     getmainwindowptr(); //get a pointer to the main window
-    // setFrameStyle( QFrame::Raised);
+    //setFrameStyle( QFrame::Raised);
      setLineWidth( 2 );
      setMidLineWidth( 3 );
      npoints=spectrumptr->getnpoints();
@@ -324,9 +325,20 @@ void Graph::Init(){
 
     connect(d_picker[0], SIGNAL(selected(const QPolygon &)), SLOT(selectionmade(const QPolygon &)));
 
+    d_marker1 = new QwtPlotMarker();
+    d_marker1->setValue( 0.0, 0.0 );
+    d_marker1->setLineStyle( QwtPlotMarker::VLine );
+    d_marker1->setLabelAlignment( Qt::AlignRight | Qt::AlignBottom );
+    d_marker1->setLinePen( Qt::green, 0, Qt::DashDotLine );
+    d_marker1->attach( this );
+    d_marker2 = new QwtPlotMarker();
+    d_marker2->setValue( 0.0, 0.0 );
+    d_marker2->setLineStyle( QwtPlotMarker::VLine );
+    d_marker2->setLabelAlignment( Qt::AlignRight | Qt::AlignBottom );
+    d_marker2->setLinePen( Qt::green, 0, Qt::DashDotLine );
+    d_marker2->attach( this );
     show();
     d_zoomer[0]->setZoomBase(true);
-
     this->autoReplot();
 }
 
@@ -338,7 +350,9 @@ void Graph::selectionmade(const QPolygon & 	polygon){
     setstartindex(spectrumptr->getenergyindex(estart));
     setendindex(spectrumptr->getenergyindex(estop));
     setselection(true);
-
+     d_marker1->setValue(estart,0.0);
+     d_marker2->setValue(estop,0.0);
+     replot();
 }
 void Graph::setdefaults(){
       #ifdef GRAPH_DEBUG
@@ -468,7 +482,7 @@ void Graph::addgraph(Spectrum *spec)
   #endif
   //add the data in the new layer
    copydata(nplots-1,spec);
-      d_zoomer[0]->setZoomBase(true);
+      d_zoomer[0]->setZoomBase(true);//IMPORTANT, causes unexpected behaviour when reverting zoom if this is not present!
    this->replot();
 }
 void Graph::removelastgraph(){
@@ -506,14 +520,13 @@ void Graph::setylabel(const char* yl){ylabel=yl;setAxisTitle( QwtPlot::yLeft, yl
 
 void Graph::updateCaption(){}
 
-void Graph::paintEvent( QPaintEvent *event )
+void Graph::paintEvent( QPaintEvent * )
 {
-    replot();
-    //QPainter painter(this);
-    //drawRubberBand(&painter); //keep rubberband displayed for picker
+    replot();  
+
 }
 
-void Graph::mouseMoveEvent(QMouseEvent *evt)
+void Graph::mouseMoveEvent(QMouseEvent *)
         {
     //do nothing we don't want moves
 }
@@ -535,151 +548,16 @@ void Graph::mousePressEvent(QMouseEvent* e){
    // d_zoomer[1]->zoom( 0 );
     d_picker[0]->setEnabled( mainwindow->selectMode());
     d_picker[1]->setEnabled( mainwindow->selectMode());
-}
-/*
-void Graph::mousePressEvent(QMouseEvent* e){
-  //override the qwidget mousepressEvent
-  //if the left mouse button was pressed
-  if (e->button()==Qt::LeftButton){
-    startpos=e->pos();
-    //check if we are in Zoom mode
-    if ((mainwindow->zoomMode())||(mainwindow->selectMode())){
-      //see if mouse is really in the graph rectangle
-      if (r.contains ( startpos,FALSE )) {
-        grabbing=true;
-	rubberrect->show();
-        setselection(false);//we are making a new selection, the old one is obsolete
-        if (mainwindow->selectMode()){
-           QCursor crosshair(Qt::CrossCursor);
-          this->setCursor (crosshair);
-        }
-        if (mainwindow->zoomMode()){
-          QCursor crosshair(Qt::CrossCursor);
-          this->setCursor (crosshair);
-        }
-        }
-      }
-    }
-  if (e->button()==Qt::RightButton){
-    if (mainwindow->zoomMode()){
-      //right clicking in zoom mode returns to normal zoom state
-      setstartzoomindex(0);
-      setendzoomindex(npoints-1);
-      this->repaint();
-    }
-  }
 
+    if (e->button()==Qt::RightButton){
+        //abort selection
+        d_marker1->setValue( 0.0, 0.0 );
+        d_marker2->setValue( 0.0, 0.0 );
+        setselection(false);
+        replot();
+    }
 
 }
-
-void Graph::mouseMoveEvent(QMouseEvent* e){
-  //override the qwidget mouseMoveEvent
-  QPoint thispos=e->pos();
-  //check if we are in grabbing mode
-  if (grabbing){
-     setselection(false);//we are making a new selection, the old one is obsolete
-    //start dragging a rectangle
-    //see if mouse is in the graph rectangle
-   if (r.contains ( thispos,FALSE )) {
-    if ((mainwindow->zoomMode())){
-    //zooming in 1 degree of freedom (energy)
-      QPoint topleft(startpos.x(),r.top());
-      QPoint bottomright(thispos.x(),r.bottom());
-      //QPainter paint( this ); //not needed anymore and causes Qt runtime complaint that paint can only be done in paintevent
-      //paint.drawRect(grabrect);//overdraw the old one
-      grabrect=QRect(topleft,bottomright);
-      //paint.drawRect(grabrect);//draw the new one
-      rubberrect->setGeometry(grabrect); //update the rubberect
-      }
-
-    if ((mainwindow->selectMode())){
-      //selecting only 1 degree of freedom
-      QPoint topleft(startpos.x(),r.top());
-      QPoint bottomright(thispos.x(),r.bottom());
-      //QPainter paint( this );
-      //paint.drawRect(grabrect);//overdraw the old one
-      grabrect=QRect(topleft,bottomright);
-      //paint.drawRect(grabrect);//draw the new one
-      rubberrect->setGeometry(grabrect); //update the rubberect
-      }
-     }
-    }
-}
-
-void Graph::mouseReleaseEvent(QMouseEvent* e){
-  //override the qwidget mouseReleaseEvent
-  //check if we are in grabbing mode
-    if (mainwindow->selectMode()){
-     //   const QPolygon p1 =d_picker[0]->pickedPoints();
-      //  const QPolygon p2 =d_picker[1]->pickedPoints();
-        //and convert these to energies to select or deselect
-
-    }
-
-    /*
-  if (grabbing){
-     if ((mainwindow->zoomMode())){
-     //end of zoom mode
-      const int leftindex=convert_coords_to_index(grabrect.left());
-      int rightindex=convert_coords_to_index(grabrect.right());
-      if (rightindex==leftindex){
-	  grabbing=false;
-	  rubberrect->hide();
-	  //get the normal cursor again
-	  QCursor arrow(Qt::ArrowCursor);
-	  this->setCursor (arrow);
-	  this->repaint();
-       	  return;
-      }
-
-      //carefull, read out leftindex and rightindex before touching setstartzoomindex and setendzoomindex
-      //because they change the result you would get from convert_coords_to_index()
-      if (grabrect.left()<grabrect.right()){
-
-        setstartzoomindex(leftindex);
-        setendzoomindex(rightindex);
-        }
-      if (grabrect.left()>grabrect.right()){
-        setstartzoomindex(rightindex);
-        setendzoomindex(leftindex);
-        }
-      if (grabrect.left()==grabrect.right()){
-        setstartzoomindex(0);
-        setendzoomindex(npoints-1);
-        }
-     }
-
-     if ((mainwindow->selectMode())){
-     //end of selection
-     //get the grabrect coordinates
-     //and convert them to spectrum indices
-      setselection(true);
-      if (grabrect.left()<grabrect.right()){
-        setstartindex(convert_coords_to_index(grabrect.left()));
-        setendindex(convert_coords_to_index(grabrect.right()));
-        }
-      if (grabrect.left()>grabrect.right()){
-        setstartindex(convert_coords_to_index(grabrect.right()));
-        setendindex(convert_coords_to_index(grabrect.left()));
-        }
-      if (grabrect.left()==grabrect.right()){
-        setstartindex(0);
-        setendindex(0);
-        }
-      }
-    }
-  //grabbing mode ends here
-  grabbing=false;
-  rubberrect->hide();
-  //get the normal cursor again
-  QCursor arrow(Qt::ArrowCursor);
-  this->setCursor (arrow);
-  this->repaint();
-
-
-}
-
-*/
 
 void Graph::resetselection(){
   grabrect=QRect(0,0,0,0);

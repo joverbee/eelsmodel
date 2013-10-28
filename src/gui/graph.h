@@ -34,9 +34,10 @@ class Spectrum;
 class Multispectrum;
 class QWorkspace;
 class MenuEelsmodel;
-class QwtPlotZoomer;
-class QwtPlotPicker;
+class Zoomer;
+class Picker;
 class QwtPlotPanner;
+class QwtPlotMarker;
 class QPolygon;
 class QwtPlotCurveSpecial;
 
@@ -98,9 +99,11 @@ private:
     QVector<QwtPlotCurveSpecial*> d_curves;
     QVector<QVector< QPointF > >	qwtdata;
     QVector<QVector< QPen > >	penvector;
-    QwtPlotZoomer *d_zoomer[2];
-    QwtPlotPicker *d_picker[2];
+    Zoomer *d_zoomer[2];
+    Picker *d_picker[2];
     QwtPlotPanner *d_panner;
+    QwtPlotMarker* d_marker1;
+    QwtPlotMarker* d_marker2;
 
     double border;
     double xmax;
