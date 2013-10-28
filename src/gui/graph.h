@@ -72,7 +72,7 @@ protected:
     void paintEvent( QPaintEvent * );
     void mousePressEvent(QMouseEvent* e);//override the qwidget mousepressEvent
    // void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
-    void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
+    //void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
     void mouseMoveEvent(QMouseEvent *evt);
     void setselection(bool b){selection=b;}
     void setstartindex(int i);
@@ -97,7 +97,7 @@ private:
     int nplots;       //number of layers in the plot
     QVector<QwtPlotCurveSpecial*> d_curves;
     QVector<QVector< QPointF > >	qwtdata;
-    QVector< QPen >	penvector;
+    QVector<QVector< QPen > >	penvector;
     QwtPlotZoomer *d_zoomer[2];
     QwtPlotPicker *d_picker[2];
     QwtPlotPanner *d_panner;
