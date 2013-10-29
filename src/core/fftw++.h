@@ -488,7 +488,7 @@ public:
 //
 //
 class mfft1d : public fftw {
-  unsigned int nx;
+  int nx;
   unsigned int M;
   unsigned int stride;
   unsigned int dist;
@@ -500,7 +500,7 @@ public:
   {Setup(in,out);} 
   
   fftw_plan Plan(Complex *in, Complex *out) {
-    return fftw_plan_many_dft(1,&n,M,
+    return fftw_plan_many_dft(1,&nx,M,
                               (fftw_complex *) in,NULL,stride,dist,
                               (fftw_complex *) out,NULL,stride,dist,
                               sign,effort);
@@ -631,7 +631,7 @@ public:
 //   out contains the first n/2+1 Complex Fourier values.
 //
 class mrcfft1d : public fftw {
-  unsigned int nx;
+  int nx;
   unsigned int M;
   unsigned int stride;
   unsigned int dist;
@@ -686,7 +686,7 @@ public:
 //   out contains the n real values stored as a Complex array;
 //
 class mcrfft1d : public fftw {
-  unsigned int nx;
+  int nx;
   unsigned int M;
   unsigned int stride;
   unsigned int dist;
