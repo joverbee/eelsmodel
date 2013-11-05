@@ -1,33 +1,27 @@
-/***************************************************************************
-                          dos.cpp  -  description
-Density of states multiplier
-this component creates a density of states profile that
-will multiply a cross section to better mimic the real shape of an EELS
-excitation edge.
-This function is 0 before Estart
-and 1 after Estart
-in between the function is defined by n values
-which are linearly interpolated
-22-5-2008 changed linear interpolation to subsampling, this is now very close to a wiener filter since we clip those
-frequencies to zero which are below some noise treshold
-main difference with wiener is that we don't fit the region before the edge and after estop
-which is a form of prior knowledge.
-The subsampled dos function is mirrored to avoid edge artefacts at the edge where 1 would jump to 0 which is unphysical.
+/**
+ * This file is part of eelsmodel.
+ *
+ * eelsmodel is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * eelsmodel is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with eelsmodel.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Jo Verbeeck, Ruben Van Boxem
+ * Copyright: 2002-2013 Jo Verbeeck
+ *
+ **/
 
-                             -------------------
-    begin                : Sat Oct 26 2002
-    copyright            : (C) 2002 by Jo Verbeeck
-    email                : jo@localhost.localdomain
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+/**
+ * eelsmodel components/dos.cpp
+ **/
 
 //#define SUMRULE
 //#define LINEAR
