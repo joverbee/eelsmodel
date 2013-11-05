@@ -1,47 +1,27 @@
-/***************************************************************************
-                         spinsplitedgehyd.h  -  description
-A spin splitted edge with white lines, can be a L2,3 or M4,5 edge
-build from two hydrogenic L cross sections and two lorentzians
-07-01-2004: added adjustable energy gap to better simulate edges in insulators, the 3d levels remain at same position
-  but jumps to the continuum need to surpass the energy gap.
-08-01-2004: changed lorentzian to gaussians because they give generally a better fit
-08-01-2004 added an extra band gap to better simulate perovskites, they seem to have a bandgap in the continuum region
-18-10-2004 corrected an error in the continuum part: the total strength was off by a factor (1+ratio)
-11-11-2009 added t2g-eg splitting
+/**
+ * This file is part of eelsmodel.
+ *
+ * eelsmodel is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * eelsmodel is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with eelsmodel.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Jo Verbeeck, Ruben Van Boxem
+ * Copyright: 2002-2013 Jo Verbeeck
+ *
+ **/
 
-this edge models a spin split core state p or d with jumps to a partially occupied d or f state and
-jumps to the continuum spectrum
-
-e.g an L2,3 edge is created by
-jump from 2p3/2 to 3d requiring energy Ek
-jump from 2p1/2 to 3d requiring energy Ek+Esplit
-jump from 2p3/2 to continuum states requiring Ek
-jump from 2p1/2 to continuum states requiring Ek+Esplit
-a gap is created in the continuum bands from Ek+gapstart til EK+ gapend for the first part
-and Ek+Esplit+gapstart till Ek+Esplit+gapend for the second part
-
-the ratio in occupation of 3/2 and 1/2 is adjustable with the ratio parameter
-nominally this should be 0.5 for L2,3 and 4/6 for M4,5, in practice these ratios can deviate (anomalous white line ratios)
-because of many body effects
-the same ratio is taken for the jumps to the continuum
-
-
-
-
-                             -------------------
-    begin                : Sat Oct 26 2002
-    copyright            : (C) 2002 by Jo Verbeeck
-    email                : jo@localhost.localdomain
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+/**
+ * eelsmodel - components/spinsplitedgehyd.cpp
+ **/
 
 #include "src/components/spinsplitedgehyd.h"
 
