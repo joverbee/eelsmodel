@@ -490,7 +490,7 @@ int main(int argc, char *argv[])
     //second argument is *.mod filename which needs to be opened at startup
 
 
-    testmatrix();
+    //testmatrix();
 
     QApplication a( argc, argv );
     //a.QApplication::setGraphicsSystem("raster"); //important to fix a bug in QT with scaling of pen sizes
