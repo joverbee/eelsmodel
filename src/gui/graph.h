@@ -28,18 +28,25 @@
 #include <qpainter.h>
 #include <QRubberBand>
 #include <qwt_plot.h>
+#include <qwt_plot_curve.h>
 
 class Spectrum;
 class Multispectrum;
 class QWorkspace;
 class MenuEelsmodel;
+class Zoomer;
+class Picker;
+class QwtPlotPanner;
+class QwtPlotMarker;
+class QPolygon;
+class QwtPlotCurveSpecial;
 
-  class Graph : public QWidget
+  class Graph : public QwtPlot
 {
   Q_OBJECT
   public:
     Graph( QWorkspace *parent=0, const char *name=0,Spectrum *spec=0); //a graph of a normal spectrum
-    Graph( QWorkspace *parent, const char *name,Multispectrum *mspec); //a graph of a multispectrum
+    Graph( QWorkspace *parent=0, const char *name=0,Multispectrum *mspec=0); //a graph of a multispectrum
     ~Graph();
     void reinit();
     void Init();
@@ -47,7 +54,6 @@ class MenuEelsmodel;
     void removelastgraph();
     void setxlabel(const char* xl);
     void setylabel(const char* yl);
-    void updategraph(int layer,Spectrum* spec);
     bool validlayer(int layer)const;
     Spectrum* getspectrumptr();
     Multispectrum* getmultispectrumptr();
@@ -60,23 +66,21 @@ class MenuEelsmodel;
     size_t getendzoomindex(int layer=0)const;
     int getnplots()const{return nplots;}
     void resetselection();
-    void setstyle(int layer,size_t style);
+    void setstyle(size_t layer,size_t style);
     void setcaption(std::string name){this->setWindowTitle(name.c_str());} //change caption
+    void updategraph(int layer,Spectrum* spec);
 protected:
     void paintEvent( QPaintEvent * );
-    void scale();
     void mousePressEvent(QMouseEvent* e);//override the qwidget mousepressEvent
-    void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
-    void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
+   // void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
+    //void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
+    void mouseMoveEvent(QMouseEvent *evt);
     void setselection(bool b){selection=b;}
     void setstartindex(int i);
     void setendindex(int i);
     void setstartzoomindex(int i);
     void setendzoomindex(int i);
     void setzoom(bool b){zoomed=b;}
-
-    int convert_coords_to_index(int i);
-    int convert_index_to_coords(int i);
     void setexcludecolor(QColor c){excludecolor=c;}
     void setnormalcolor(QColor c){normalcolor=c;}
     void setaxiscolor(QColor c){axiscolor=c;}
@@ -87,16 +91,20 @@ protected:
 
 private slots:
     void        updateCaption();
-    void slot_graph_clicked();
+    void        selectionmade(const QPolygon & 	polygon);
+   //void slot_graph_clicked();
 private:
     int npoints;      //number of data points
     int nplots;       //number of layers in the plot
-    double scalefactor;
-    //    std::vector <QPoint> singledata; //contains one single graph of pixel points
-    std::vector < std::vector<QPoint> > data; //contains a set of graphs for a multi-graph plot
-   // QVector< QPointF >	qwtdata;
-   // QwtPlot * myPlot; //a pointer to the qwt plot window
-    QTransform myworld; //scale conversion matrix real positions- window positions
+    QVector<QwtPlotCurveSpecial*> d_curves;
+    QVector<QVector< QPointF > >	qwtdata;
+    QVector<QVector< QPen > >	penvector;
+    Zoomer *d_zoomer[2];
+    Picker *d_picker[2];
+    QwtPlotPanner *d_panner;
+    QwtPlotMarker* d_marker1;
+    QwtPlotMarker* d_marker2;
+
     double border;
     double xmax;
     double ymax;
@@ -127,7 +135,6 @@ private:
     int endzoomindex;
     bool zoomed;
     QColor excludecolor,normalcolor,axiscolor,bgcolor;
-    std::vector<size_t> stylelist; //a list with plot style code per layer
 };
 
 #endif

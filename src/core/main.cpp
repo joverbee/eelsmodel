@@ -522,7 +522,6 @@ int main(int argc, char *argv[])
     mymainwindow->show();
     mymainwindow->showMaximized();
 
-
     //make connections between menu and eelsmodel program
     QObject::connect(mymainwindow, SIGNAL(file_new()),myeelsmodel, SLOT(newspectrum()) );
     QObject::connect(mymainwindow, SIGNAL(model_componentmaintenance()),myeelsmodel, SLOT(componentmaintenance()) );

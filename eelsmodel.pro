@@ -45,6 +45,7 @@ QMAKE_CXXFLAGS+=-DGSL_DLL
 }
 else{
     LIBS+=-lfftw3
+    CONFIG+=qwt
 }
 
 LIBS+=-lgsl

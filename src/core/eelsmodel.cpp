@@ -392,7 +392,8 @@ if ((topgraph!=0)&&(topspectrum!=0)){
       //exclude this region
       topspectrum->setexcluderegion(topgraph->getstartindex(),topgraph->getendindex());
       //repaint the graph to show
-      topgraph->repaint();
+    //  topgraph->repaint();
+      topgraph->updategraph(0,topspectrum);
       }
     else{
       Saysomething mysay(0,"Info","Select a region first");
@@ -413,13 +414,15 @@ if ((topgraph!=0)&&(topspectrum!=0)){
       //reset exclude in this region
       topspectrum->resetexcluderegion(topgraph->getstartindex(),topgraph->getendindex());
       //repaint the graph to show
-      topgraph->repaint();
+      topgraph->updategraph(0,topspectrum);
+      //topgraph->repaint();
       }
     else{
       //reset all excludes
       topspectrum->resetexcluderegion(0,((topspectrum->getnpoints())-1));
       //repaint the graph to show
-      topgraph->repaint();
+       topgraph->updategraph(0,topspectrum);
+      //topgraph->repaint();
       }
   }
 else{
