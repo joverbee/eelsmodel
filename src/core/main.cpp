@@ -59,7 +59,7 @@
 Eelsmodel* global_eelsmodelptr=0;
 QWorkspace* global_workspaceptr=0;
 MenuEelsmodel* global_menueelsmodel=0;
-QString globaldirname=""; //global variable holding the current directory
+//QString globaldirname=""; //global variable holding the current directory
 
 Eelsmodel* geteelsmodelptr(){
 return global_eelsmodelptr;
