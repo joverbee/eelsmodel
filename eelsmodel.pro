@@ -15,6 +15,7 @@ INCLUDEPATH +=/usr/local/atlas/include \
 LIBS+=-L/usr/local/atlas/lib \
     -L/Developer/usr/lib \
     -L/Users/jv/tmp/fftw-3.3.3
+ICON=eelsmodel.icns
 }
 win32{
 LIBS+=-lfftw3-3
