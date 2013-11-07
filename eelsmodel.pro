@@ -15,7 +15,8 @@ INCLUDEPATH += /usr/local/atlas/include \
     /Users/jv/qwt-6.1.0/src
 LIBS+=-L/usr/local/atlas/lib \
     -L/Developer/usr/lib \
-    -L/Users/jv/tmp/fftw-3.3.3 \
+    -L/Users/jv/tmp/fftw-3.3.3
+ICON=eelsmodel.icns
 }
 win32{
 INCLUDEPATH+=c:\\gsl\\include \
