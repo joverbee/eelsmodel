@@ -45,6 +45,7 @@ QMAKE_CXXFLAGS+=-DGSL_DLL
     }
 }
 else{
+    INCLUDEPATH += /usr/include/eigen3
     LIBS+=-lfftw3
     CONFIG+=qwt
 }

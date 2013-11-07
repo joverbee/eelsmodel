@@ -34,7 +34,6 @@
 #include <QMouseEvent>
 #include <QWidget>
 
-#include "src/core/curvematrix.h"
 #include "src/core/multispectrum.h"
 
 class QWorkspace;
@@ -42,41 +41,49 @@ class QWorkspace;
 /* A class to draw images or multispectra in image format
    Is 2D equiv of Graph */
 
-class Imagedisplay : public QWidget  {
-   Q_OBJECT
-QImage image;
-unsigned int imwidth;
-unsigned int imheight;
-bool paintslice;
-Multispectrum* mspecptr;
-CurveMatrix* matrixptr;
-std::string imdisplayname;
-bool dragging;
-bool is2D;
-QWorkspace *parentptr;
+QImage convertmatrixtoimage(const Eigen::MatrixXd& matrix);
+QImage convertmspectoimage(const Multispectrum& mspec);
+
+class Imagedisplay : public QWidget
+{
+  Q_OBJECT
+
 public:
-Imagedisplay(QWorkspace *parent=0, const char *name=0,Multispectrum* mspec=0);
-Imagedisplay(QWorkspace *parent=0, const char *name=0,CurveMatrix *matrix=0);
-Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2);
-~Imagedisplay();
-std::string getname()const;
-void update();
-void setname(std::string name);
-void updatereloadmspec();
-void updatereloadmatrix();
-Multispectrum* getmultispectrumptr(){return mspecptr;};
-CurveMatrix* getmatrix(){return matrixptr;};
+  Imagedisplay(QWorkspace *parent, const std::string& name, Multispectrum* mspec);
+  Imagedisplay(QWorkspace *parent, const std::string& name, Eigen::MatrixXd* matrix);
+  Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2);
+  ~Imagedisplay();
+  std::string getname()const;
+  void update();
+  void setname(std::string name);
+  void updatereloadmspec();
+  void updatereloadmatrix();
+
+private:
+  QImage image;
+  unsigned int imwidth;
+  unsigned int imheight;
+  bool paintslice;
+  Multispectrum* mspecptr;
+  Eigen::MatrixXd* matrixptr;
+  std::string imdisplayname;
+  bool dragging;
+  bool is2D;
+  QWorkspace *parentptr;
+
+  Multispectrum* getmultispectrumptr(){return mspecptr;};
+  Eigen::MatrixXd* getmatrix(){return matrixptr;};
+
 protected:
-void paintEvent( QPaintEvent * );
-bool reconvertImage();
-void mousePressEvent(QMouseEvent* e);
-void mouseMoveEvent(QMouseEvent* e);
-void mouseReleaseEvent(QMouseEvent* e);
-virtual void keyPressEvent( QKeyEvent *event );
-void convertmatrixtoimage(CurveMatrix * matrix);
-void convertmspectoimage(Multispectrum * mspec);
+  void paintEvent(QPaintEvent* event);
+  bool reconvertImage();
+  void mousePressEvent(QMouseEvent* event);
+  void mouseMoveEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event);
+  virtual void keyPressEvent(QKeyEvent *event);
+
 signals:
-void curr_spec_update();
+  void curr_spec_update();
 };
 
 #endif

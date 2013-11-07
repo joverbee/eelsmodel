@@ -30,10 +30,9 @@
 
 #include "src/fitters/fitter.h"
 #include "src/core/model.h"
-#include "src/core/curvematrix.h"
 
 /* Maximum Likelihood fitter for Poisson Statistics. */
-#define N 100
+const int N = 100;
 
 class LevenbergMarquardt : public Fitter  {
     size_t lambdaiter; //number of iterations for lambda

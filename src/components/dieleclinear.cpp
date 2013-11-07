@@ -40,7 +40,6 @@
 
 #include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
-#include "src/core/curvematrix.h"
 
 #include "src/gui/Drudeoptions.h"
 #include "src/gui/imagedisplay.h"

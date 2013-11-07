@@ -33,7 +33,6 @@
 
 #include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
-#include "src/core/curvematrix.h"
 
 #include "src/gui/Drudeoptions.h"
 #include "src/gui/integerinput.h"
@@ -384,7 +383,7 @@ void DrudeLorentz::addlorentzparams(size_t i){
 void DrudeLorentz::displayKroeger(){
     //make a plot of the Kroeger result
     if (kroegerim==0){
-        kroegerim=new Imagedisplay(getworkspaceptr(),"kroeger test",&kroegermatrix);
+        kroegerim=new Imagedisplay(getworkspaceptr(),"kroeger test",kroegermatrix);
     }
     kroegerim->updatereloadmatrix();
 }
