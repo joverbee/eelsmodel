@@ -33,37 +33,39 @@
 
 #include <fstream>
 
+#include <Eigen/Dense>
+
 #include "src/core/component.h"
 #include "src/core/curvematrix.h"
 
-class HSedge : public Component  {
-Spectrum tempspectrum; //temporary storage of the spectrum shape
-std::string filename; //the HS-GOS table filename
-float info1_1,info1_2,info1_3,info2_1,info2_2; //info numbers determining the energy and q scale
-int ncol,nrow;
-CurveMatrix* GOSmatrix; //HS gos table matrix
-
+class HSedge : public Component
+{
 public:
-//constructors
-HSedge();
-HSedge(int,double,double,std::vector<Parameter*>* parameterlistptr=0);
-~HSedge();
+  HSedge();
+  HSedge(int,double,double,std::vector<Parameter*>* parameterlistptr=0);
 
-//modifiers
-void calculate();
-Spectrum* getgradient(size_t j);
-void readGOSfile(std::string filename);
-std::string getmultiplatformline(std::ifstream*,int);//help function to read lines from unix,win or mac files
+  //modifiers
+  void calculate();
+  Spectrum* getgradient(size_t j);
+  void readGOSfile(std::string filename);
+  std::string getmultiplatformline(std::ifstream*,int);//help function to read lines from unix,win or mac files
 
-//inspectors
-double getgosenergy(int i)const;
-double getcorrfactor(double E,double alpha,double beta,double E0); //correction factor for alpha due to Isaacson and Scheinfein
-double getcorrfactorKohl(double alpha,double beta,double theta);
-double getgosq(int j)const;
-double getinterpolatedgos(double energy,double q)const;
-int filetype(std::string filename)const;
-HSedge* clone()const;
-HSedge* new_component(int,double,double,std::vector<Parameter*>* parameterlistptr=0)const;
+  //inspectors
+  double getgosenergy(int i)const;
+  double getcorrfactor(double E,double alpha,double beta,double E0); //correction factor for alpha due to Isaacson and Scheinfein
+  double getcorrfactorKohl(double alpha,double beta,double theta);
+  double getgosq(int j)const;
+  double getinterpolatedgos(double energy,double q)const;
+  int filetype(std::string filename)const;
+  HSedge* clone()const;
+  HSedge* new_component(int,double,double,std::vector<Parameter*>* parameterlistptr=0)const;
+
+private:
+  Spectrum tempspectrum; //temporary storage of the spectrum shape
+  std::string filename; //the HS-GOS table filename
+  float info1_1,info1_2,info1_3,info2_1,info2_2; //info numbers determining the energy and q scale
+  int ncol,nrow;
+  Eigen::MatrixXd GOSmatrix; //HS gos table matrix
 };
 
 #endif

@@ -33,7 +33,6 @@
 #include <Eigen/Dense>
 
 #include "src/core/component.h"
-#include "src/core/curvematrix.h"
 
 class Imagedisplay;
 
