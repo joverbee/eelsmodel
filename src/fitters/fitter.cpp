@@ -29,64 +29,58 @@
 #include <cmath>
 #include <cstdio>
 #include <iostream>
+#include <limits>
 #include <valarray>
 #include <vector>
 
+#include <Eigen/Dense>
+
 #include "src/core/component.h"
-#include "src/core/curvematrix.h"
 #include "src/core/parameter.h"
 #include "src/core/multispectrum.h"
 
 QWorkspace* getworkspaceptr();
 
+const double Fitter::eps = std::numeric_limits<double>::epsilon();
+
 Fitter::Fitter(Model* m)
-:beta(),goodnessqueue()
+: tempspectrumptr(new Spectrum(m->getnpoints())), //make a temporary spectrum storage of the same size as model
+  modelptr(m),
+  deriv(modelptr->getnroffreeparameters(), modelptr->getnpoints()),
+  alpha(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters()),
+  modcurve(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters()),
+  information_matrix(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters()),
+  beta(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters()),
+  residualspec(0),
+  mresidualspec(0),
+  curvaturematrix(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters()),
+  fraction(0.001),
+  minstep(1.0e-99),
+  maxstep(1.0e99),
+  tolerance(1.0e-10),
+  nmax(100),
+  usegradients(true),
+  dolin(false), // force the linear trick to be on by default
+  residual(false),
+  domulti(false),
+  status("Fitter options"),
+  constructed(false),
+  goodnessqueue(),
+  fittertype(),
+  candolin(false) //a derived fitter has to declare that he can do this speed-up trick
 {
-  dolin=false; //force the linear trick to be on by default
-  candolin=false; //a derived fitter has to declare that he can do this speed-up trick
-  tempspectrumptr=new Spectrum(m->getnpoints()); //make a temporary spectrum storage of the same size as model
-  dolin=false;
-  constructed=false;
-  usegradients=true;
-  domulti=false;
   std::cout <<"making fitter\n";
-  residual=false;
-  //put all unitialised pointer to 0!
-  curvaturematrixptr=0;
-  derivptr=0;
-  alphaptr=0;
-  modcurveptr=0;
-  information_matrix=0;
-  modelptr=m;
-  residualspec=0;
-  mresidualspec=0;
-  this->setfraction(0.001);
-  this->settolerance(1.0e-10);
-  this->setnmax(100);
-  //eps=numeric_limits<double>::epsilon; //doesn't work limits is not part of this distribution
-  eps=1.0e-99;
-  this->setminstep(1.0e-99);
-  this->setmaxstep(1.0e99);
+
   //create vector with changeable parameters and all other matrices that depend on the number of parameters
   createmodelinfo();
   // calculate the standard deviation of the experimental datapoints, needed for some fitters to estimate the error
   // on a certain experimental value
   calculate_sigma();
-  this->setstatus("Fitter options");
+
   constructed=true;
 }
 
-Fitter::~Fitter(){
-  //clean up
-  if (curvaturematrixptr!=0) delete curvaturematrixptr;
-  if (derivptr!=0) delete derivptr;
-  if (alphaptr!=0) delete alphaptr;
-  if (modcurveptr!=0) delete modcurveptr;
- if (tempspectrumptr!=0) delete tempspectrumptr;
-}
-
-
-
+Fitter::~Fitter() {}
 
 double Fitter::degreesoffreedom()const{
   //calculate the degree of freedom
@@ -113,26 +107,16 @@ void Fitter::createmodelinfo()
   //modelptr->init(); //update all info related to the free parameters
   //resize or create all matrices
 
+  // if current values need to be preserved, use conservativeResize
+  curvaturematrix.resize(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters());
+  beta.resize(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters());
+  deriv.resize(modelptr->getnroffreeparameters(), modelptr->getnpoints());
+  alpha.resize(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters());
+  modcurve.resize(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters());
+  information_matrix.resize(modelptr->getnroffreeparameters(), modelptr->getnroffreeparameters());
 
-  if (curvaturematrixptr==0) curvaturematrixptr=new CurveMatrix(modelptr->getnroffreeparameters());
-  else curvaturematrixptr->resize(modelptr->getnroffreeparameters());
-
-  beta.resize(modelptr->getnroffreeparameters());
-
-  if (derivptr==0) derivptr=new CurveMatrix(modelptr->getnroffreeparameters(),modelptr->getnpoints());
-  else derivptr->resize(modelptr->getnroffreeparameters(),modelptr->getnpoints());
-
-
-  if (alphaptr==0) alphaptr=new CurveMatrix(modelptr->getnroffreeparameters());
-  else alphaptr->resize(modelptr->getnroffreeparameters());
-
-  if (modcurveptr==0) modcurveptr=new CurveMatrix(modelptr->getnroffreeparameters());
-  else modcurveptr->resize(modelptr->getnroffreeparameters());
-
-  if (information_matrix==0) information_matrix=new CurveMatrix(modelptr->getnroffreeparameters());
-  else information_matrix->resize(modelptr->getnroffreeparameters());
-
-  if (constructed) {
+  if(constructed)
+  {
     created_modelinfo(); //perform other tasks if necessery, user suplies these in derived classes
     //do this only when not called from the constructor, otherwise the derived classes are not properly constructed yet
   }
@@ -147,57 +131,59 @@ void Fitter::createmodelinfo()
   //modelptr->setchanged(true);
 }
 
-void Fitter::partial_derivative(size_t j,const Spectrum* currentspectrum){
-// create partial derivative for the model spectrum wrt a parameter Pj
-// use either the analytical expression in the component or
-// a numerical derivative
-// depends on usegradients and on the fact that the component has a getgradient
+void Fitter::partial_derivative(size_t j,const Spectrum* currentspectrum)
+{
+  // create partial derivative for the model spectrum wrt a parameter Pj
+  // use either the analytical expression in the component or
+  // a numerical derivative
+  // depends on usegradients and on the fact that the component has a getgradient
 
-
-
-if ((usegradients)&&((modelptr->getcomponentforfreeparam(j))->get_has_gradient(modelptr->getfreeparamindex(j)))) {
+  if(usegradients && modelptr->getcomponentforfreeparam(j)->get_has_gradient(modelptr->getfreeparamindex(j)))
+  {
     Spectrum* gradient=modelptr->getgradientptr(modelptr->getcomponentfreeparamindex(j),modelptr->getfreeparamindex(j));
-    if (gradient==0){
-        usegradients=false;
-        return;
+    if(gradient == 0)
+    {
+      usegradients=false;
+      return;
     }
     //copy it in the Xprime matrix
-    for (unsigned int i=0;i<modelptr->getnpoints();i++){
-    	if (modelptr->isexcluded(i)){
-    		(*derivptr)(j,i)=0.0; //no derivative in excluded regions
-    	}
-    	else{
-    		(*derivptr)(j,i)=(gradient->getcounts(i));
-    	}
-        }
+    for(unsigned int i=0;i<modelptr->getnpoints();i++)
+    {
+      if(modelptr->isexcluded(i))
+        deriv(j,i) = 0.0; //no derivative in excluded regions
+      else
+        deriv(j,i) = gradient->getcounts(i);
+    }
     return;
   }
   //numerical partial derivative to a parameter p store in row j of derivative matrix
   // deriv=(f[i](p+delta)-currentspectrum[i])/delta
-  Parameter* p=modelptr->getfreeparam(j);
-  const double originalvalue=p->getvalue(); //make sure originalvalue can not be changed
-  double delt=fabs(originalvalue*fraction);
-   if (delt<minstep) delt=minstep;
-   if (delt>maxstep) delt=maxstep;
-  const double delta=delt;//make sure delta can not be changed
+  Parameter* p = modelptr->getfreeparam(j);
+  const double originalvalue = p->getvalue(); //make sure originalvalue can not be changed
+  double delt = fabs(originalvalue*fraction);
+  if(delt < minstep)
+    delt=minstep;
+  if(delt > maxstep)
+    delt=maxstep;
+  const double delta = delt;//make sure delta can not be changed
 
   //add delta
   p->setvalue(originalvalue+delta);
   modelptr->calculate();
-  for (unsigned int i=0;i<modelptr->getnpoints();i++){
-     ((*derivptr)(j,i))=modelptr->getcounts(i);
-      }
+  for(int i = 0; i<modelptr->getnpoints(); ++i)
+  {
+    deriv(j,i) = modelptr->getcounts(i);
+  }
   //reset to original, BIG advantage, the model is already calculated now, this saves time
   p->setvalue(originalvalue);
-  for (unsigned int i=0;i<modelptr->getnpoints();i++){
-        ((*derivptr)(j,i))-=currentspectrum->getcounts(i);
-        ((*derivptr)(j,i))/=(delta);
-        if (modelptr->isexcluded(i)){
-        	(*derivptr)(j,i)=0.0; //no derivative in excluded regions
-        }
-      }
+  for(int i = 0; i<modelptr->getnpoints(); ++i)
+  {
+    deriv(j,i) -= currentspectrum->getcounts(i);
+    deriv(j,i) /= delta;
+    if(modelptr->isexcluded(i))
+      deriv(j,i) = 0.0; //no derivative in excluded regions
+  }
 }
-
 
 void Fitter::calculate_derivmatrix(){
   //calculate derivative matrix
@@ -212,24 +198,28 @@ void Fitter::calculate_derivmatrix(){
   //parameters: this saves time in the optimisation
 }
 
-void Fitter::modifiedcurve(double flambda){
-//create the modified curvature matrix
- //the diagonal elements get larger depending on flambda
-    for (size_t j=0; j<(alphaptr->dim1()); j++){
-      for (size_t  k=0; k<(alphaptr->dim1()); k++){
-        (*modcurveptr)(j,k) = ((*alphaptr)(j,k)) / (sqrt(fabs( ((*alphaptr)(j,j))*((*alphaptr)(k,k))))+eps );//abs and eps to prevent division by zero and sqrt of negative value
-      }
-      (*modcurveptr)(j,j) = 1.0 + flambda;
+void Fitter::modifiedcurve(double flambda)
+{
+  //create the modified curvature matrix
+  //the diagonal elements get larger depending on flambda
+  for(int j = 0; j<alpha.rows(); ++j)
+  {
+    for(int k = 0; k<alpha.cols(); ++k)
+    {
+      modcurve(j,k) = (alpha(j,k)) / (std::sqrt(std::abs(alpha(j,j) * alpha(k,k))) + eps);//abs and eps to prevent division by zero and sqrt of negative value
     }
+    modcurve(j,j) = 1.0 + flambda;
+  }
 }
 
-void Fitter::newparameters(){
+void Fitter::newparameters()
+{
   //calculate new parameters which will give a better fit
   for (size_t j=0; j<modelptr->getnroffreeparameters(); j++ ){
     double oldvalue=(modelptr->getfreeparam(j))->getvalue();
     double delta=0.0;
     for (size_t k=0; k<modelptr->getnroffreeparameters(); k++ ){
-      delta += beta[k]*((*modcurveptr)(j,k))/(sqrt(fabs(((*alphaptr)(j,j))*((*alphaptr)(k,k))))+eps);//abs and eps to prevent sqrt of negative and division by zero
+      delta += beta[k]*modcurve(j,k) / (std::sqrt(std::abs(alpha(j,j)*alpha(k,k))) + eps);//abs and eps to prevent sqrt of negative and division by zero
       }
     const double newvalue=oldvalue+delta;
 
@@ -237,11 +227,13 @@ void Fitter::newparameters(){
   }
 }
 
-double Fitter::estimatesigma(int j)const{
-    return sqrt ( ((*modcurveptr)(j,j)) / (((*alphaptr)(j,j))+eps) );
-  }
+double Fitter::estimatesigma(int j) const
+{
+  return std::sqrt( modcurve(j,j) / (alpha(j,j)+eps) );
+}
 
-double Fitter::iteration(){
+double Fitter::iteration()
+{
   //do one itteration
   //lock the model so user can not add or remove components during itteration
   modelptr->setlocked(true);
@@ -266,7 +258,7 @@ double Fitter::iteration(){
   do{
     modifiedcurve(flambda);
     //invert this matrix
-    modcurveptr->inv_inplace();
+    modcurve = modcurve.inverse();
     //calculate new parameters to improve the fit
     newparameters();
     modelptr->calculate();

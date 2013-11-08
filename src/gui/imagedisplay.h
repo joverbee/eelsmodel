@@ -35,7 +35,7 @@
 #include <QString>
 #include <QWidget>
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 
 #include "src/core/multispectrum.h"
 

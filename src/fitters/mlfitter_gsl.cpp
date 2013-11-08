@@ -74,41 +74,41 @@ MLFitterGSL::~MLFitterGSL(){
   if (covar!=0) gsl_matrix_free (covar);
 }
 double MLFitterGSL::goodness_of_fit()const{
-  const double chisq=likelyhoodfunction();
+  const double chisq=likelihoodfunction();
   #ifdef FITTER_DEBUG
-  std::cout <<"likelyhood goodness of fit: "<<chisq<<"\n";
+  std::cout <<"likelihood goodness of fit: "<<chisq<<"\n";
   #endif
   return chisq;
 }
-double MLFitterGSL::likelyhoodfunction()const{
-  //return the likelyhood according to the solver
+double MLFitterGSL::likelihoodfunction()const{
+  //return the likelihood according to the solver
   return pow(GSL::gsl_blas_dnrm2(solver->f),2.0);
   //the excluded points have f=0.0 anyway so they don't play a role here.   
 }
 
-double MLFitterGSL::likelyhoodfunctionML()const{
-  //calculate the real likelyhood
+double MLFitterGSL::likelihoodfunctionML()const{
+  //calculate the real likelihood
   //the probability that this experiment was created by this model with these parameters
-  double likelyhood=0.0;
+  double likelihood=0.0;
   for (unsigned int i=0;i<modelptr->getnpoints();i++){
     if (!(modelptr->isexcluded(i))){//only take the non-excluded points
       const double exper=((modelptr->getHLptr())->getcounts(i));
       const double fit=(modelptr->getcounts(i));
       if ((fit>1.0)&&(exper>1.0)) {
-        likelyhood+=2.0*(exper*log(fit/exper)-fit+exper); //numerically better to do ln(fit/exper) because fit~=exper
+        likelihood+=2.0*(exper*log(fit/exper)-fit+exper); //numerically better to do ln(fit/exper) because fit~=exper
        }
        if (fit<0.0){
-                       likelyhood=-(std::numeric_limits<double>::max)(); //a model that goes negative is not possible for Poisson, return -infty
+                       likelihood=-(std::numeric_limits<double>::max)(); //a model that goes negative is not possible for Poisson, return -infty
        }
       }
     }
-  return likelyhood;
+  return likelihood;
 }
 
 std::string MLFitterGSL::goodness_of_fit_string()const{
   //returns a string which says how good the fit is
   char s[256];
-  sprintf(s,"Likelihood merrit function: %e",-likelyhoodfunctionML()/degreesoffreedom());
+  sprintf(s,"Likelihood merrit function: %e",-likelihoodfunctionML()/degreesoffreedom());
   std::string f=s;
   return f;
 }
@@ -155,7 +155,7 @@ void MLFitterGSL::preparecovariance(){
 }
 
 double MLFitterGSL::likelihoodratio(){
-  //calculate the likelyhood ratio (LR)
+  //calculate the likelihood ratio (LR)
   //this number should be compared to the chi square distribution with
   //n-k degrees of freedom (n=number of points to be fitted, k number of parameters)
   double LR=0.0;
@@ -171,7 +171,7 @@ double MLFitterGSL::likelihoodratio(){
       }
     }
   #ifdef FITTER_DEBUG
-  std::cout <<"likelyhood ratio is: "<<LR<<"\n";
+  std::cout <<"likelihood ratio is: "<<LR<<"\n";
   #endif
   return LR;
 }
@@ -360,13 +360,15 @@ int model_df (const gsl_vector * x, void *params,gsl_matrix * J)
   pointertothis->calculate_derivmatrix();
 
   //copy this in J
-  for (size_t i = 0; i < (pointertothis->modelptr)->getnpoints(); i++){
-    for (size_t j=0;j<pointertothis->modelptr->getnroffreeparameters();j++){
-      const double d=(*(pointertothis->derivptr))(j,i);
-        //#ifdef FITTER_DEBUG
-        //std::cout <<"J["<<i<<"]["<<j<<"]= "<<d<<"\n";
-        //#endif
-       gsl_matrix_set(J,i,j,d);
+  for(size_t i = 0; i<pointertothis->modelptr->getnpoints(); ++i)
+  {
+    for(size_t j = 0; j<pointertothis->modelptr->getnroffreeparameters(); ++j)
+    {
+      const double d=pointertothis->deriv(j,i);
+      //#ifdef FITTER_DEBUG
+      //std::cout <<"J["<<i<<"]["<<j<<"]= "<<d<<"\n";
+      //#endif
+      gsl_matrix_set(J,i,j,d);
     }
   }
 

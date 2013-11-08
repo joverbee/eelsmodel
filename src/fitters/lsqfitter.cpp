@@ -49,49 +49,59 @@ double LSQFitter::goodness_of_fit()const{
   #endif
   return chisq;
 }
-std::string LSQFitter::goodness_of_fit_string()const{
-  //returns a string which says how good the fit is
-  char s[256];
-  double chisq=goodness_of_fit();
-  sprintf(s,"Chisq/dof: %e",chisq/(this->degreesoffreedom()));
-  std::string f=s;
-  return f;
+
+std::string LSQFitter::goodness_of_fit_string() const
+{
+  std::ostringstream buffer;
+  buffer << "Chisq/dof: " << goodness_of_fit()/degreesoffreedom();
+  return buffer.str();
 }
+
 void LSQFitter::calculate_beta_and_alpha(){
   //calculate beta and alpha matrix
-  alphaptr->clearlower();  //clear lower left corner including diagonal
+  //clear lower left corner of alpha including diagonal
+  for(int i = 0; i<alpha.rows(); ++i)
+  {
+    for(int j = 0; j<=i; ++j)
+    {
+      alpha(i,j)=0;
+    }
+  }
   //clear beta
-  for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-    beta[j]=0.0;
-    }
+  beta = 0;
 
-  for (unsigned int i=0;i<(modelptr->getnpoints());i++){
-    double expdata=(modelptr->getHLptr())->getcounts(i);
-    double modeldata=modelptr->getcounts(i);
-    if (!(modelptr->isexcluded(i))){ //don't count points that are excluded
-      for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-            beta[j] += (expdata-modeldata)*((*derivptr)(j,i));
-        for (size_t k=0; k<=j; k++){
-         (*alphaptr)(j,k) += ((*derivptr)(j,i))*((*derivptr)(k,i));
-         }
+  for(int i = 0; i<modelptr->getnpoints(); ++i)
+  {
+    double expdata = modelptr->getHLptr()->getcounts(i);
+    double modeldata = modelptr->getcounts(i);
+    if(!modelptr->isexcluded(i)) //don't count points that are excluded
+    {
+      for(int j = 0; j<modelptr->getnroffreeparameters(); ++j)
+      {
+        beta[j] += (expdata-modeldata) * deriv(j,i);
+        for(int k = 0; k<=j; ++k)
+        {
+          alpha(j,k) += deriv(j,i) * deriv(k,i);
         }
       }
     }
+  }
+  //TODO use alpha.selfadjointView<Lower>()!!!
   //copy the one triangle to the other side because of symmetry
-  for (size_t j=1; j<modelptr->getnroffreeparameters(); j++){
-  //was j=0 but first row needs not to be copied because is already full
-      for (size_t k=0; k<j; k++){
-        //was k<=j but you don't need to copy the diagonal terms
-        ((*alphaptr)(k,j)) = ((*alphaptr)(j,k));
-        }
-      }
+  for(int j = 1; j<modelptr->getnroffreeparameters(); ++j) //was j=0 but first row needs not to be copied because is already full
+  {
+    for(int k = 0; k<j; ++k) //was k<=j but you don't need to copy the diagonal terms
+    {
+      alpha(k,j) = alpha(j,k);
+    }
+  }
 }
 
 double LSQFitter::likelihoodratio(){
-  //calculate the likelyhood ratio (LR)
+  //calculate the likelihood ratio (LR)
   //this number should be compared to the chi square distribution with
   //n-k degrees of freedom (n=number of points to be fitted, k number of parameters)
-  //the model is a good approximation of the experiment if the likelyhood-ratio is to be compared
+  //the model is a good approximation of the experiment if the likelihood-ratio is to be compared
   //with the chi square cumulative distribution for a given confidence level
   double LR=0.0;
   for (size_t i=0;i<(modelptr->getnpoints());i++){

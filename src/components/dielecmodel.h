@@ -30,7 +30,7 @@
 
 #include <complex>
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 
 #include "src/core/component.h"
 

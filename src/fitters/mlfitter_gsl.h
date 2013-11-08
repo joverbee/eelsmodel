@@ -51,8 +51,8 @@ MLFitterGSL(Model* m);
 double goodness_of_fit()const;
 double iteration();               //redefinition of itteration function, calls itteration of the GSL fitter
 std::string goodness_of_fit_string()const;
-double likelyhoodfunction()const; //Chi square
-double likelyhoodfunctionML()const; //real likelyhood
+double likelihoodfunction()const; //Chi square
+double likelihoodfunctionML()const; //real likelihood
 void calculate_beta_and_alpha();  //empty since not needed
 void CRLB();                      //calculate with Cramer Rao Lower Bound the sigmas of the parameters
 double getcovariance(const int i,const int j);//get values from the covariance matrix, set it up first with preparecovariance

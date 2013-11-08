@@ -39,7 +39,7 @@ MLFitter(Model* m);
 ~MLFitter();
 double goodness_of_fit()const;
 std::string goodness_of_fit_string()const;
-double likelyhoodfunction()const; //the real likelyhood function
+double likelihoodfunction()const; //the real likelihood function
 void calculate_beta_and_alpha();
 void CRLB(); //calculate with Cramer Rao Lower Bound the sigmas of the parameters
 double getcovariance(int i,int j); //get values from the covariance matrix, set it up first with preparecovariance

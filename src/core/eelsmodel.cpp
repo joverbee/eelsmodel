@@ -320,7 +320,7 @@ void Eelsmodel::iterativefit(){
       break;
     case 2:
       if (myfitter!=0) delete(myfitter);
-      myfitter=new MLFitter(mymodel);//maximum likelyhood
+      myfitter=new MLFitter(mymodel);//maximum likelihood
       break;
       //disable GSL fitter for non linux
 

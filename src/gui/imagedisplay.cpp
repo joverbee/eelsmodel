@@ -40,7 +40,7 @@
 #include <QPaintEvent>
 #include <QWorkspace>
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 
 //#ifdef DEBUG
 //    #include "debug_new.h" //memory leak checker

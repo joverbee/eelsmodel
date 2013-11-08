@@ -37,7 +37,7 @@ QString s1="Least Squares Fitter";
 list.append( s1 );
 QString s2= "Weighted Least Squares Fitter (ML for normal distribution)";
 list.append( s2 );
-QString s3= "Maximum Likelyhood Fitter for Poisson Statistics";
+QString s3= "Maximum likelihood Fitter for Poisson Statistics";
 list.append( s3 );
 
 QString s4= "GSL: Least Squares";

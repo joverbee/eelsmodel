@@ -28,66 +28,70 @@
 
 //#define FITTER_DEBUG //print some debug info
 
+#include <cstdlib>
+
+#include <Eigen/Core>
+
 #include "src/fitters/fitter.h"
 #include "src/core/model.h"
 
 /* Maximum Likelihood fitter for Poisson Statistics. */
 const int N = 100;
 
-class LevenbergMarquardt : public Fitter  {
-    size_t lambdaiter; //number of iterations for lambda
-    double lambdac; //alpha starting step
-    double nu; //factor with which to reduce lambda during itterations
-    bool dolin;
-    CurveMatrix Xprime;
-    CurveMatrix XprimeT;
-    CurveMatrix XTX;
-    CurveMatrix XTXcopy;
-    CurveMatrix Q;
-    CurveMatrix R;
-    CurveMatrix Work;
-    CurveMatrix Step;
-    CurveMatrix dtprime;
-    CurveMatrix Ga;
-    CurveMatrix GaT;
-    CurveMatrix GaTGa;
-    CurveMatrix Work2;
-    CurveMatrix Y;
-    CurveMatrix B;
-
-
-    std::vector<double> x0;
-    std::vector<double> x0nonlin;
-    std::vector<double> d0;
-    enum method_enum{QR,inversion};
-
+class LevenbergMarquardt : public Fitter
+{
 public:
-LevenbergMarquardt(Model* m);
-~LevenbergMarquardt();
-double goodness_of_fit()const;
-std::string goodness_of_fit_string()const;
-double likelyhoodfunction()const; //the real likelyhood function
+  LevenbergMarquardt(Model* m);
 
-void CRLB(); //calculate with Cramer Rao Lower Bound the sigmas of the parameters
-double getcovariance(int i,int j); //get values from the covariance matrix, set it up first with preparecovariance
-void preparecovariance(); //calculate the covariance matrix from the fischer information matrix
-double likelihoodratio();
-void updatemonitors(); //update the covariances for each parameter that has a monitor
+  double goodness_of_fit()const;
+  std::string goodness_of_fit_string()const;
+  double likelihoodfunction()const; //the real likelihood function
 
-//overloaded functions
-void createmodelinfo();
-void modified_partial_derivative(size_t j,const Spectrum* currentspectrum);
-void calculate_ModifiedJacobian();
-double calcstep(double lambda,method_enum method);
-void preparestep(method_enum method);
-double iteration();
-void prepareforiteration();
-void lin_from_nonlin();
-void storecurrentparams();
-void restorecurrentparams();
-void calcscaling();
-void calculate_dtprime();
-void calculate_Y();
+  void CRLB(); //calculate with Cramer Rao Lower Bound the sigmas of the parameters
+  double getcovariance(int i, int j); //get values from the covariance matrix, set it up first with preparecovariance
+  void preparecovariance(); //calculate the covariance matrix from the fischer information matrix
+  double likelihoodratio();
+  void updatemonitors(); //update the covariances for each parameter that has a monitor
+
+  enum method_enum{QR,inversion};
+
+  //overloaded functions
+  void createmodelinfo();
+  void modified_partial_derivative(size_t j,const Spectrum* currentspectrum);
+  void calculate_ModifiedJacobian();
+  double calcstep(double lambda,method_enum method);
+  void preparestep(method_enum method);
+  double iteration();
+  void prepareforiteration();
+  void lin_from_nonlin();
+  void storecurrentparams();
+  void restorecurrentparams();
+  void calcscaling();
+  void calculate_dtprime();
+  void calculate_Y();
+
+private:
+  std::size_t lambdaiter; //number of iterations for lambda
+  double lambdac; //alpha starting step
+  double nu; //factor with which to reduce lambda during itterations
+  bool dolin;
+  Eigen::MatrixXd Xprime;
+  Eigen::MatrixXd XTX;
+  Eigen::MatrixXd XTXcopy;
+  Eigen::MatrixXd Q;
+  Eigen::MatrixXd R;
+  Eigen::MatrixXd Work;
+  Eigen::MatrixXd Step;
+  Eigen::MatrixXd dtprime;
+  Eigen::MatrixXd Ga;
+  Eigen::MatrixXd GaTGa;
+  Eigen::MatrixXd Work2;
+  Eigen::MatrixXd Y;
+  Eigen::MatrixXd B;
+
+  std::vector<double> x0;
+  std::vector<double> x0nonlin;
+  std::vector<double> d0;
 };
 
 #endif

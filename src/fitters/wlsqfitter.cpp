@@ -63,33 +63,45 @@ std::string WLSQFitter::goodness_of_fit_string()const{
 }
 void WLSQFitter::calculate_beta_and_alpha(){
   //calculate beta and alpha matrix
-  alphaptr->clearlower();  //clear lower left corner including diagonal
+  //clear lower left corner of alpha including diagonal
+  for(int i = 0; i<alpha.rows(); ++i)
+  {
+    for(int j = 0; j<=i; ++j)
+    {
+      alpha(i,j)=0;
+    }
+  }
   //clear beta
-  for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-    beta[j]=0.0;
-    }
+  beta = 0;
 
-  for (size_t i=0;i<(modelptr->getnpoints());i++){
-    double expdata=(modelptr->getHLptr())->getcounts(i);
-    double modeldata=modelptr->getcounts(i);
-    if (!(modelptr->isexcluded(i))){ //don't count points that are excluded
-      double weight=getweight(i);
-      for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-            beta[j] += weight*(expdata-modeldata)*((*derivptr)(j,i));
-        for (size_t k=0; k<=j; k++){
-         (*alphaptr)(j,k) += weight*((*derivptr)(j,i))*((*derivptr)(k,i));
-          }
+  for(size_t i = 0; i<modelptr->getnpoints(); ++i)
+  {
+    double expdata = modelptr->getHLptr()->getcounts(i);
+    double modeldata = modelptr->getcounts(i);
+    if(!(modelptr->isexcluded(i))) //don't count points that are excluded
+    {
+      double weight = getweight(i);
+      for(size_t j = 0; j<modelptr->getnroffreeparameters(); ++j)
+      {
+        beta[j] += weight * (expdata-modeldata) * deriv(j,i);
+        for(size_t k = 0; k<=j; ++k)
+        {
+          alpha(j,k) += weight * deriv(j,i) * deriv(k,i);
         }
       }
     }
+  }
+  //TODO use alpha.triangularView<Lower>() instead
   //copy the one triangle to the other side because of symmetry
-  for (size_t j=1; j<modelptr->getnroffreeparameters(); j++){
-  //was j=0 but first row needs not to be copied because is already full
-      for (size_t k=0; k<j; k++){
-        //was k<=j but you don't need to copy the diagonal terms
-        ((*alphaptr)(k,j)) = ((*alphaptr)(j,k));
-        }
-      }
+  for(size_t j = 1; j<modelptr->getnroffreeparameters(); j++)
+  {
+    //was j=0 but first row needs not to be copied because is already full
+    for(size_t k = 0; k<j; ++k)
+    {
+      //was k<=j but you don't need to copy the diagonal terms
+      alpha(k,j) = alpha(j,k);
+    }
+  }
 }
 
 double WLSQFitter::getweight(int index)const{

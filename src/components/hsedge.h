@@ -33,10 +33,9 @@
 
 #include <fstream>
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 
 #include "src/core/component.h"
-#include "src/core/curvematrix.h"
 
 class HSedge : public Component
 {

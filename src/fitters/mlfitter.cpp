@@ -30,6 +30,8 @@
 #include <cstdio>
 #include <cmath>
 
+#include <Eigen/Dense>
+
 #include "src/core/model.h"
 #include "src/core/monitor.h"
 
@@ -41,36 +43,36 @@ settype("MLFitter");
 MLFitter::~MLFitter(){
 }
 double MLFitter::goodness_of_fit()const{
-  return -likelyhoodfunction();
+  return -likelihoodfunction();
 }
-double MLFitter::likelyhoodfunction()const{
-  //calculate the real likelyhood
+double MLFitter::likelihoodfunction()const{
+  //calculate the real likelihood
   //the probability that this experiment was created by this model with these parameters
-  double likelyhood=0.0;
+  double likelihood=0.0;
   for (unsigned int i=0;i<modelptr->getnpoints();i++){
     if (!(modelptr->isexcluded(i))){//only take the non-excluded points
       const double exper=((modelptr->getHLptr())->getcounts(i));
       const double fit=(modelptr->getcounts(i));
       //made use of stirling formula
       //log(n!)~nlog(n)-n for large n
-      //if ((fit>0.0)&&(exper>0.0)) likelyhood+=(exper*log(fit)-fit-(exper*log(exper)-exper));
+      //if ((fit>0.0)&&(exper>0.0)) likelihood+=(exper*log(fit)-fit-(exper*log(exper)-exper));
       if ((fit>1.0)&&(exper>1.0)) {
 
-        //likelyhood+=(exper*log(fit)-fit-(exper*log(exper)-exper));
+        //likelihood+=(exper*log(fit)-fit-(exper*log(exper)-exper));
 
         //like it was up till 8-3-2007
-        likelyhood+=2.0*(exper*log(fit/exper)-fit+exper); //numerically better to do ln(fit/exper) because fit~=exper
+        likelihood+=2.0*(exper*log(fit/exper)-fit+exper); //numerically better to do ln(fit/exper) because fit~=exper
 
          //better approx in Stirling ln(n!)=nlnn-n+0.5*ln(2 pi n)
          //gives wrong result in LR since formula there assumes old Stirling formula
-        //likelyhood+=2.0*(exper*log(fit/exper)-fit+exper-0.5*log(6.2832*exper)); //numerically better to do ln(fit/exper) because fit~=exper
+        //likelihood+=2.0*(exper*log(fit/exper)-fit+exper-0.5*log(6.2832*exper)); //numerically better to do ln(fit/exper) because fit~=exper
 
         //factor of 2 is to have a good comparison with chisquare values
         //and this is same as the likelihood ratio this number should be roughly equal to degrees of freedom
         //for more accurate statement see LR comments
        }
       if (fit<0.0){
-                 likelyhood=-(std::numeric_limits<double>::max)(); //a model that goes negative is not possible for Poisson, return -infty
+                 likelihood=-(std::numeric_limits<double>::max)(); //a model that goes negative is not possible for Poisson, return -infty
       }
       }
     }
@@ -79,65 +81,72 @@ double MLFitter::likelyhoodfunction()const{
   //otherwise the precisions are wrong
   //EXPERIMENTAL!!!!!!!!!!!!!!!!!!!!!
   #ifdef FITTER_DEBUG
-  std::cout <<"real likelyhood before correction corrfactor: "<<likelyhood<<" the corrfactor="<<(modelptr->getdetectorcorrfactor())<<"\n";
+  std::cout <<"real likelihood before correction corrfactor: "<<likelihood<<" the corrfactor="<<(modelptr->getdetectorcorrfactor())<<"\n";
   #endif
-  //likelyhood=likelyhood*modelptr->getdetectorcorrfactor();
-  likelyhood=likelyhood; //adjust the dof formula instead, this scales also the chisq distribution
+  //likelihood=likelihood*modelptr->getdetectorcorrfactor();
+  likelihood=likelihood; //adjust the dof formula instead, this scales also the chisq distribution
 
 
 //EXPERIMENTAL!!!!!!!!!!!!!!!!!
   #ifdef FITTER_DEBUG
-  std::cout <<"real likelyhood: "<<likelyhood<<"\n";
+  std::cout <<"real likelihood: "<<likelihood<<"\n";
   #endif
-  return likelyhood;
+  return likelihood;
 }
-std::string MLFitter::goodness_of_fit_string()const{
-  //returns a string which says how good the fit is
-  char s[256];
+
+std::string MLFitter::goodness_of_fit_string() const
+{
+  std::ostringstream buffer;
   //divide by number of points...TO DO
-  double likelyhood=-likelyhoodfunction();
-  const double n=this->degreesoffreedom();
-  likelyhood=likelyhood/n;
-  sprintf(s,"Likelihood merrit function (similar to chisq/dof): %e",likelyhood);
-  std::string f=s;
-  return f;
+  buffer << "Likelihood merrit function (similar to chisq/dof): " << -likelihoodfunction() / degreesoffreedom();
+  return buffer.str();
 }
+
 void MLFitter::calculate_beta_and_alpha(){
   //calculate beta and alpha matrix
-  alphaptr->clearlower();  //clear lower left corner including diagonal
+  //clear lower left corner of alpha including diagonal
+  for(int i = 0; i<alpha.rows(); ++i)
+  {
+    for(int j = 0; j<=i; ++j)
+    {
+      alpha(i,j)=0;
+    }
+  }
   //clear beta
-  for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-    beta[j]=0.0;
-    }
+  beta = 0;
 
-  for (unsigned int i=0;i<(modelptr->getnpoints());i++){
-    if (!(modelptr->isexcluded(i))){ //don't count points that are excluded
-      double expdata=fabs((modelptr->getHLptr())->getcounts(i));
-      double modeldata=fabs(modelptr->getcounts(i)); //make sure modeldata is realy positive
-        for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-           //adapted version of beta for ML
-           beta[j] += 0.5*((expdata-modeldata)/(modeldata+eps))*((*derivptr)(j,i));
-           //original for lsq
-           //beta[j] +=      (expdata-modeldata)                 *((*derivptr)[j][i]);
-           for (size_t k=0; k<=j; k++){
-              //adapted version of alpha matrix for ML
-              (*alphaptr)(j,k) += 0.5*(expdata/(pow(modeldata,2.0)+eps))*((*derivptr)(j,i))*((*derivptr)(k,i));
-              //original for lsq
-              //(*alphaptr)[j][k] +=                                        ((*derivptr)[j][i]*(*derivptr)[k][i]);
-              }
-           }
-      }
-
-    }
-
-  //copy the one triangle to the other side because of symmetry
-  for (size_t j=1; j<modelptr->getnroffreeparameters(); j++){
-  //was j=0 but first row needs not to be copied because is already full
-      for (size_t k=0; k<j; k++){
-        //was k<=j but you don't need to copy the diagonal terms
-        ((*alphaptr)(k,j)) = ((*alphaptr)(j,k));
+  for(unsigned int i = 0; i<modelptr->getnpoints(); ++i)
+  {
+    if(!modelptr->isexcluded(i)) //don't count points that are excluded
+    {
+      double expdata = std::abs(modelptr->getHLptr()->getcounts(i));
+      double modeldata = std::abs(modelptr->getcounts(i)); //make sure modeldata is really positive
+      for(unsigned int j = 0; j<modelptr->getnroffreeparameters(); ++j)
+      {
+        //adapted version of beta for ML
+        beta[j] += 0.5 * (expdata-modeldata) / (modeldata+eps) * deriv(j,i);
+        //original for lsq
+        //beta[j] +=      (expdata-modeldata)                 *((*derivptr)[j][i]);
+        for(unsigned int k = 0; k<=j; ++k)
+        {
+          //adapted version of alpha matrix for ML
+          alpha(j,k) += 0.5 * expdata / (std::pow(modeldata,2.0)+eps) * deriv(j,i) * deriv(k,i);
+          //original for lsq
+          //(*alphaptr)[j][k] +=                                        ((*derivptr)[j][i]*(*derivptr)[k][i]);
         }
       }
+    }
+  }
+  //TODO use alpha.triangularView<Lower>()
+  //copy the one triangle to the other side because of symmetry
+  for(unsigned int j = 1; j<modelptr->getnroffreeparameters(); ++j) //was j=0 but first row needs not to be copied because is already full
+  {
+    for(unsigned int k = 0; k<j; ++k)
+    {
+      //was k<=j but you don't need to copy the diagonal terms
+      alpha(k,j) = alpha(j,k);
+    }
+  }
 }
 
 void MLFitter::CRLB(){
@@ -163,7 +172,7 @@ double MLFitter::getcovariance(int i,int j){
   double result=0.0;
   try{
     //be carefull...
-    result=(*information_matrix)(i,j);
+    result = information_matrix(i,j);
   }
   catch(...){
     return 0.0;
@@ -174,37 +183,41 @@ double MLFitter::getcovariance(int i,int j){
 void MLFitter::preparecovariance(){
   //prepare covariance matrix by inverting the Fischer Information Matrix
 
- //calculate the Fischer information matrix
- for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-    for (size_t k=0;k<modelptr->getnroffreeparameters();k++){
-       (*information_matrix)(j,k)=0.0;
-        for (unsigned int i=0;i<modelptr->getnpoints();i++){
-          //only take non-excluded points
-          if (!modelptr->isexcluded(i)){
-            double modeldata=fabs(modelptr->getcounts(i)); //make sure modeldata is realy positive
-            (*information_matrix)(j,k)+=(1.0/(modeldata+eps))*((*derivptr)(j,i))*((*derivptr)(k,i));
-          }
-        }
-    }
+  //calculate the Fischer information matrix
+  for(unsigned int j = 0; j<modelptr->getnroffreeparameters(); ++j)
+  {
+   for(unsigned int k = 0; k<modelptr->getnroffreeparameters(); ++k)
+   {
+     information_matrix(j,k) = 0.0;
+     for(unsigned int i = 0; i<modelptr->getnpoints(); ++i)
+     {
+       //only take non-excluded points
+       if(!modelptr->isexcluded(i))
+       {
+         double modeldata=fabs(modelptr->getcounts(i)); //make sure modeldata is realy positive
+         information_matrix(j,k) += 1.0/(modeldata+eps) * deriv(j,i) * deriv(k,i);
+       }
+     }
+   }
   }
-  #ifdef FITTER_DEBUG
+#ifdef FITTER_DEBUG
   std::cout <<"The Fischer information matrix:\n";
   information_matrix->debugdisplay();
-  #endif
+#endif
   //invert the Fischer matrix to get the lower bound for the variance
-  information_matrix->inv_inplace();
+  information_matrix = information_matrix.inverse();
 
-  #ifdef FITTER_DEBUG
+#ifdef FITTER_DEBUG
   std::cout <<"The inverted Fischer information matrix:\n";
   information_matrix->debugdisplay();
-  #endif
+#endif
 }
 
 double MLFitter::likelihoodratio(){
-  //calculate the likelyhood ratio (LR)
+  //calculate the likelihood ratio (LR)
   //this number should be compared to the chi square distribution with
   //n-k degrees of freedom (n=number of points to be fitted, k number of parameters)
-  double LR=-likelyhoodfunction(); //formula's are the same
+  double LR=-likelihoodfunction(); //formula's are the same
 
   /*
   for (unsigned int i=0;i<(modelptr->getnpoints());i++){
@@ -222,7 +235,7 @@ double MLFitter::likelihoodratio(){
     }
     */
   #ifdef FITTER_DEBUG
-  std::cout <<"likelyhood ratio is: "<<LR<<"\n";
+  std::cout <<"likelihood ratio is: "<<LR<<"\n";
   std::cout <<"the degrees of freedom: "<<this->degreesoffreedom()<<"\n";
   #endif
   return LR;
