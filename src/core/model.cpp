@@ -341,10 +341,10 @@ if (ismulti()){
     		   if (imdisplayptr==0) {
     			   size_t imheight=Multiptr->getstride();
     			   size_t imwidth=Multiptr->getsize()/Multiptr->getstride();
-    			   imdisplayptr=new Imagedisplay(getworkspaceptr(),myparameter->getname(),imheight,imwidth);       			   
+             imdisplayptr=new Imagedisplay(getworkspaceptr(),myparameter->getname().c_str(),imheight,imwidth);
     			   imdisplayvector[i]=imdisplayptr; //store for later use
     		    }
-    		   	CurveMatrix* matrix=imdisplayptr->getmatrix();
+            Eigen::MatrixXd* matrix=imdisplayptr->getmatrix();
     		   	const size_t id1=this->getcurrspecnr()%Multiptr->getstride();
     		    const size_t id2=this->getcurrspecnr()/Multiptr->getstride(); //modulus
     		   	(*matrix)(id1,id2)=val;    		   	

@@ -72,9 +72,9 @@ public:
   void setcurrentslicenoupdate(unsigned int index);
   const Imagedisplay* getimageptr()const{return imdisplayptr;};
   void savedat(std::string filename); //save the whole multispectrum as a binary dat file
-  bool is2D(){return b2D;}
+  bool is2D() const { return b2D; }
   void set2D(bool b){b2D=b;}
-  size_t getstride(){return stride;}
+  size_t getstride() const { return stride; }
   void setstride(size_t s){stride=s;}
 
 };

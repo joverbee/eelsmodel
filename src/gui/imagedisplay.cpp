@@ -25,6 +25,9 @@
 
 #include "src/gui/imagedisplay.h"
 
+#include <string>
+  using std::string;
+
 #include <QApplication>
 #include <QColor>
 #include <QCursor>
@@ -43,84 +46,95 @@
 //    #include "debug_new.h" //memory leak checker
 //#endif
 
-Imagedisplay::Imagedisplay(QWorkspace *parent, const char *name, Multispectrum* mspec)
-: QWidget(parent),image()
+Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Multispectrum* mspec)
+: QWidget(parent),
+  image(convertmspectoimage(*mspec)),
+  imwidth(image.width()),
+  imheight(image.height()),
+  paintslice(true),
+  mspecptr(mspec),
+  matrixptr(0),
+  imdisplayname(name),
+  is2D(mspec->is2D())
 {
-
-    //QWidget(parent,name,Qt::WDestructiveClose)
-    #ifdef DEBUG_IMDISPLAY
-      std::cout << "creating image from multispectrum\n";
+#ifdef DEBUG_IMDISPLAY
+  std::cout << "creating image from multispectrum\n";
 #endif
-this->setFocusPolicy(Qt::StrongFocus ); //needed for key input
-parent->addWindow(this); //add it explicitly to the workspace
-paintslice=true;
-mspecptr=mspec;
-matrixptr=0;
-dragging=false;
-parentptr=parent;
-setname(mspec->getname());
-is2D=false;
-//create the image
-if (mspec->is2D()){
-   is2D=true;
-   imheight=mspec->getsize()/mspec->getstride();
-   imwidth=mspec->getstride();
-}else
-{
-   imwidth=mspec->getnpoints();
-   imheight=mspec->getsize();
-}
-image=QImage(imwidth,imheight,QImage::Format_RGB32);
-convertmspectoimage(mspec);
-setname(name);
-this->setMinimumSize(imwidth,imheight);
-
-}
-Imagedisplay::Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2)
-: QWidget(parent),image()
-{
-  Eigen::MatrixXd matrix(dim1, dim2);
-
-	is2D=false;
-	parent->addWindow(this); //add it explicitly to the workspace
-	this->setFocusPolicy(Qt::StrongFocus ); //needed for key input
-	mspecptr=0;
-	paintslice=false;
-	dragging=false;
-	parentptr=parent;
-	setname(name);
-	this->setWindowTitle(name.c_str());
-	//create the image
-  image = convertmatrixtoimage(matrix);
-	
-  this->setMinimumSize(image.width(),image.height());
-}
-
-Imagedisplay::Imagedisplay(QWorkspace *parent, const string& name, const Eigen::MatrixXd& matrix)
-: QWidget(parent),name(name),image()
-{
-  is2D=false;
+  setFocusPolicy(Qt::StrongFocus ); //needed for key input
   parent->addWindow(this); //add it explicitly to the workspace
-  this->setFocusPolicy(Qt::StrongFocus ); //needed for key input
-  mspecptr=0;
-  paintslice=false;
-  dragging=false;
-  parentptr=parent;
-  this->setWindowTitle(name);
 
-  //create the image
-  image=QImage(imwidth,imheight,QImage::Format_RGB32);
+  setname(mspec->getname().c_str());
 
+  setMinimumSize(imwidth,imheight);
 
-  //fit the data in a grayscale image
-  convertmatrixtoimage(matrix);
-  this->setMinimumSize(imwidth,imheight);
+  setWindowTitle(getname());
+
+  //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
+  if(is2D)
+    setCursor(Qt::CrossCursor);
+  else
+    setCursor(Qt::SplitVCursor);
+  //draw the image
+  show();
 }
 
+Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name,size_t dim1,size_t dim2)
+: QWidget(parent),
+  image(convertmatrixtoimage(Eigen::MatrixXd(dim1,dim2))),
+  imwidth(image.width()),
+  imheight(image.height()),
+  paintslice(false),
+  mspecptr(0),
+  matrixptr(0),
+  imdisplayname(name),
+  dragging(false),
+  is2D(false)
+{
+	parent->addWindow(this); //add it explicitly to the workspace
 
+  setFocusPolicy(Qt::StrongFocus ); //needed for key input
+  setWindowTitle(name);
+  setMinimumSize(image.width(),image.height());
+  //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
+  setCursor(Qt::SplitHCursor);
 
+  //adapt the size of this widget to fit around the image
+  //this->setFixedSize (image.width(),image.height()); //was setFixedSize
+  //convert image to pixmap
+  //this->reconvertImage();
+  //set the caption
 
+  //draw the image
+  show();
+}
 
+Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Eigen::MatrixXd* matrix)
+: QWidget(parent),
+  image(convertmatrixtoimage(*matrix)),
+  paintslice(false),
+  mspecptr(0),
+  matrixptr(matrix),
+  imdisplayname(name),
+  dragging(false),
+  is2D(false)
+{
+  parent->addWindow(this); //add it explicitly to the workspace
+
+  setFocusPolicy(Qt::StrongFocus ); //needed for key input
+  setWindowTitle(name);
+  setMinimumSize(image.width(),image.height());
+  //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
+  setCursor(Qt::SplitHCursor);
+
+  //adapt the size of this widget to fit around the image
+  //this->setFixedSize (image.width(),image.height()); //was setFixedSize
+  //convert image to pixmap
+  //this->reconvertImage();
+  //set the caption
+
+  //draw the image
+  show();
+}
 
 Imagedisplay::~Imagedisplay(){
     //if the imagedisplay closes, also kill the multispectrum that is attached to it
@@ -136,13 +150,13 @@ QImage convertmatrixtoimage(const Eigen::MatrixXd& matrix)
   std::cout<<"min: "<<min<<"  max: "<<max<<"\n";
 #endif
 
-  imwidth=matrix.rows();
-  imheight=matrix.cols();
+  int imwidth=matrix.rows();
+  int imheight=matrix.cols();
   QImage image = QImage(imwidth, imheight, QImage::Format_RGB32);
 
-  for(unsigned int x=0; x<imwidth; ++x)
-    {
-    for(unsigned int y=0; y<imheight; ++y)
+  for(int x=0; x<imwidth; ++x)
+  {
+    for(int y=0; y<imheight; ++y)
     {
       //adjust the display value to fit into the range 0-255 in BW mode
       double color=matrix(x,y);
@@ -152,69 +166,64 @@ QImage convertmatrixtoimage(const Eigen::MatrixXd& matrix)
       image.setPixel(x,y,rgbcolor.rgb());
     }
   }
-  //adapt the size of this widget to fit around the image
-  //this->setFixedSize (image.width(),image.height()); //was setFixedSize
-  //convert image to pixmap
-  //this->reconvertImage();
-  //set the caption
-
-
-  //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
-  this->setCursor(Qt::SplitHCursor);
-
-  //draw the image
-  this->show();
+  return image;
 }
 
 QImage convertmspectoimage(const Multispectrum& mspec)
 {
+  int imheight;
+  int imwidth;
+  if(mspec.is2D())
+  {
+    imheight=mspec.getsize()/mspec.getstride();
+    imwidth=mspec.getstride();
+  }
+  else
+  {
+    imwidth=mspec.getnpoints();
+    imheight=mspec.getsize();
+  }
+  QImage image(imwidth, imheight, QImage::Format_RGB32);
   //copy and scale contents from the mspectrum in image
-  const int min=int(mspec->getmin());
-  const int max=int(mspec->getmax());
+  const int min=int(mspec.getmin());
+  const int max=int(mspec.getmax());
 #ifdef DEBUG_IMDISPLAY
   std::cout<<"min: "<<min<<"  max: "<<max<<"\n";
 #endif
 
-  for (unsigned int x=0;x<imwidth;x++){
-    for (unsigned int y=0;y<imheight;y++){
+  for(int x=0;x<imwidth;x++)
+  {
+    for(int y=0;y<imheight;y++)
+    {
       //adjust the display value to fit into the range 0-255 in BW mode
       size_t id=0;
       size_t eid=0;
-      if (is2D){
+      if(mspec.is2D())
+      {
         id=x+y*imwidth;
         eid=0; //take first pixel of the 2D SI as display of grayscale
       }
-      else{
+      else
+      {
         id=y;
         eid=x;
       }
-      double color=(mspec->getspectrum(id))->getcounts(eid);
+      double color=(mspec.getspectrum(id))->getcounts(eid);
       color=((color-min)/(max-min))*255.0;
       int icolor=int(color);
       QColor rgbcolor=QColor(icolor,icolor,icolor);
       image.setPixel(x,y,rgbcolor.rgb());
     }
   }
-  this->setWindowTitle(getname().c_str());
-
-  //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
-  if (is2D){
-    this->setCursor(Qt::CrossCursor);
-  }
-  else
-  {
-    this->setCursor(Qt::SplitVCursor);
-  }
-  //draw the image
-  this->show();
+  return image;
 }
 
-void ImageDisplay::paintEvent(QPaintEvent* e)
+void Imagedisplay::paintEvent(QPaintEvent* e)
 {
   QPainter painter(this);
   painter.setViewport(0,0,width(),height()); //defines the range of the real coordinates
   painter.setWindow(0,0,image.width(),image.height()); //defines the range of logical coordinates (used for drawing, in pixels of the image
-  setWindowTitle(getname().c_str());
+  setWindowTitle(getname());
 
         painter.setClipRect(e->rect());
         //painter.drawPixmap(0,0,pm);
@@ -249,37 +258,36 @@ void ImageDisplay::paintEvent(QPaintEvent* e)
           }
           }
 }
-void Imagedisplay::update(){
-
-  this->repaint();
+void Imagedisplay::update()
+{
+  repaint();
 }
 
 void Imagedisplay::updatereloadmspec()
 {
   //reconvert the image from the matrix and repaint
   image = convertmspectoimage(*mspecptr);
-  this->repaint();
+  repaint();
 }
 
 void Imagedisplay::updatereloadmatrix()
 {
   //reconvert the image from the matrix and repaint
   image = convertmatrixtoimage(*matrixptr);
-  this->repaint();
+  repaint();
 }
 
-void Imagedisplay::setname(std::string name){
+void Imagedisplay::setname(const QString& name)
+{
   imdisplayname=name;
 }
 
-std::string Imagedisplay::getname()const{
-  std::string result="";
-  if (mspecptr!=0){
-     result=(mspecptr->getcurrentspectrum())->getname();
-  }
-
-
-  return result;
+QString Imagedisplay::getname() const
+{
+  if(mspecptr!=0)
+    return mspecptr->getcurrentspectrum()->getname();
+  else
+    return "";
 }
 
 void Imagedisplay::mousePressEvent(QMouseEvent* e){
