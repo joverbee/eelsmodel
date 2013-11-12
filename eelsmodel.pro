@@ -52,10 +52,6 @@ else{
 
 LIBS+=-lgsl
 LIBS+=-lgslcblas
-LIBS+=-llapack
-LIBS+=-lcblas
-LIBS+=-lf77blas
-LIBS+=-latlas
 TEMPLATE = app
 DEPENDPATH += . \
               src/components \
@@ -105,7 +101,6 @@ HEADERS += src/components/dieleclinear.h \
            src/core/chisquare.h \
            src/core/component.h \
            src/core/cslice_iter.h \
-           src/core/curvematrix.h \
            src/core/debug_new.h \
            src/core/eelsmodel.h \
            src/core/fftw++.h \          
@@ -201,7 +196,6 @@ SOURCES += src/components/dieleclinear.cpp \
            src/core/chisquare.cpp \
            src/core/component.cpp \
            src/core/cslice_iter.cpp \
-           src/core/curvematrix.cpp \
            src/core/debug_new.cpp \
            src/core/eelsmodel.cpp \
            src/core/fftw++.cpp \

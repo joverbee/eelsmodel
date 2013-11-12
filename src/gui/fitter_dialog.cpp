@@ -476,7 +476,7 @@ if (mptr->getnroffreeparameters()==0){
       //ask the user if he wants to start from current or from zero
       if (startfromcurrent) startindex=currentindex;
       
-      for (size_t j=startindex;j<nspec;j++){
+      for (int j=startindex;j<nspec;j++){
         if (previous) {
           //change current spec nr to the new spectrum, but don't change anything else
           (mptr->getmultispectrumptr())->setcurrentslice(j);

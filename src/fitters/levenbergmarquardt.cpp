@@ -68,7 +68,7 @@ double LevenbergMarquardt::likelihoodfunction() const
   //calculate the real log likelihood
   //the probability that this experiment was created by this model with these parameters
   double likelihood=0.0;
-  for(int i = 0; i<modelptr->getnpoints(); ++i)
+  for(unsigned int i = 0; i<modelptr->getnpoints(); ++i)
   {
     if(!modelptr->isexcluded(i)) //only take the non-excluded points
     {
@@ -422,7 +422,7 @@ void LevenbergMarquardt::preparestep(method_enum method)
       std::cout<<"\n";
       #endif
 */
-      Xprime = Xprime.transpose() * Xprime;
+      XTX = Xprime.transpose() * Xprime;
 
       //calculate scaling
       calcscaling();
@@ -479,7 +479,7 @@ switch (method){
     XTXcopy=XTX;
     //add lambda to diagonal
 
-    for (size_t i=0;i<XTXcopy.rows();i++){
+    for (int i=0;i<XTXcopy.rows();i++){
         XTXcopy(i,i)+=lambda*d0[i]; //apply scaling
     }
 #ifdef FITTER_DEBUG_DETAIL
@@ -509,7 +509,7 @@ std::cout<<"\n";
     Step = Work * dtprime;
 
     //add Step to freeparameters vector
-    for (size_t i=0;i<XTX.rows();i++){
+    for (int i=0;i<XTX.rows();i++){
         Parameter* p=0;
         double currval=0.0;
         if (getdolintrick()){
@@ -625,7 +625,7 @@ std::cout<<"\n";
     //}
 
     //apply the step
-    for (size_t i=0;i<GaTGa.rows();i++){
+    for (int i=0;i<GaTGa.rows();i++){
         Parameter* p=modelptr->getfreelinparam(i);
         updateparam(p,B(i,0)); //update only the nonlinear parameters
         #ifdef FITTER_DEBUG_LIN
@@ -774,7 +774,7 @@ void LevenbergMarquardt::restorecurrentparams(){
 void LevenbergMarquardt::calcscaling()
 {
   d0.resize(Xprime.cols()); //make sure it fits
-  for(size_t i=0;i<Xprime.cols();i++)
+  for(int i=0;i<Xprime.cols();i++)
   {
     d0[i]=0.0;
     for(size_t j=0;j<modelptr->getnpoints();j++)

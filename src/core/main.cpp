@@ -34,26 +34,10 @@
 #include <QTextCodec>
 #include <QTranslator>
 
-//for the boost part in testmatrix
-#include <boost/numeric/bindings/traits/ublas_matrix.hpp>
-#include <boost/numeric/ublas/io.hpp>
-#include <boost/numeric/bindings/lapack/geqrf.hpp>
-#include <boost/numeric/bindings/lapack/ormqr.hpp>
-#include <boost/numeric/bindings/lapack/lapack.hpp>
-#include <boost/numeric/bindings/atlas/clapack.hpp>
-#include <boost/numeric/bindings/blas/blas.hpp>
-
-//#include <gsl/gsl_linalg.h> //for matrixtest to compare with gsl
-//#include <gsl/gsl_blas.h> //for matrixtest
-
-#include "src/core/curvematrix.h"
 #include "src/core/eelsmodel.h"
 
 #include "src/gui/hello.h"
 #include "src/gui/menu.h"
-
-//TEST TEST TEST
-//#include  <mpatrol.h>
 
 //global vars keeping a pointer to eelsmodel and to the qt workspace
 Eelsmodel* global_eelsmodelptr=0;
@@ -72,7 +56,7 @@ return global_workspaceptr;
 MenuEelsmodel* getmenuptr(){
 return global_menueelsmodel;
 }
-
+/*
 //Test code for CurveMatrix class
 void testmatrix(){
     //Conclusion
@@ -199,7 +183,7 @@ if (dim<5){
 }
 
 
-/*
+
 
 
 
@@ -369,7 +353,7 @@ if (dim<5){
 
 */
 
-}
+//}
 
 /*
 void spectrumtest(){

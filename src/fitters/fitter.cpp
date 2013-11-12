@@ -170,13 +170,13 @@ void Fitter::partial_derivative(size_t j,const Spectrum* currentspectrum)
   //add delta
   p->setvalue(originalvalue+delta);
   modelptr->calculate();
-  for(int i = 0; i<modelptr->getnpoints(); ++i)
+  for(unsigned int i = 0; i<modelptr->getnpoints(); ++i)
   {
     deriv(j,i) = modelptr->getcounts(i);
   }
   //reset to original, BIG advantage, the model is already calculated now, this saves time
   p->setvalue(originalvalue);
-  for(int i = 0; i<modelptr->getnpoints(); ++i)
+  for(unsigned int i = 0; i<modelptr->getnpoints(); ++i)
   {
     deriv(j,i) -= currentspectrum->getcounts(i);
     deriv(j,i) /= delta;
