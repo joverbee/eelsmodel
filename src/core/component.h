@@ -36,7 +36,6 @@
 #include <vector>
 
 #include "src/core/parameter.h"
-#include "src/core/slice_iter.h"
 #include "src/core/spectrum.h"
 
 class Equalizer;

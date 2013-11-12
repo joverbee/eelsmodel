@@ -31,7 +31,6 @@
 #include "src/core/eelsmodel.h"
 #include "src/core/model.h"
 #include "src/core/parameter.h"
-#include "src/core/slice_iter.h"
 
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"

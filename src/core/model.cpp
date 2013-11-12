@@ -39,7 +39,6 @@
 #include "src/core/eelsmodel.h"
 #include "src/core/monitor.h"
 #include "src/core/multispectrum.h"
-#include "src/core/slice_iter.h"
 
 #include "src/fitters/fitter.h"
 
@@ -502,7 +501,7 @@ Spectrum* Model::getgradientptr(size_t compindex, size_t parameterindex){
   }
 }
 
-void Model::getgradient(size_t compindex, size_t parameterindex,Slice_iter<double> array){
+/*void Model::getgradient(size_t compindex, size_t parameterindex,Slice_iter<double> array){
   //get the analytical gradient of a component
   //but apply convolution and eshift if needed
   //store it in the array that fitter supplies
@@ -540,7 +539,7 @@ void Model::getgradient(size_t compindex, size_t parameterindex,Slice_iter<doubl
   }
 
   return;
-}
+}*/
 void Model::setdetectorname(std::string name){
      detectorname=name;
      }

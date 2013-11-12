@@ -97,21 +97,17 @@ HEADERS += src/components/dieleclinear.h \
            src/components/spinsplitedge.h \
            src/components/spinsplitedgegap.h \
            src/components/spinsplitedgehyd.h \
-           src/core/bandedmatrix.h \
            src/core/chisquare.h \
            src/core/component.h \
-           src/core/cslice_iter.h \
            src/core/debug_new.h \
            src/core/eelsmodel.h \
            src/core/fftw++.h \          
            src/core/image.h \
-           src/core/invert_matrix.hpp \
            src/core/model.h \
            src/core/monitor.h \
            src/core/multibyte.h \
            src/core/multispectrum.h \
            src/core/parameter.h \
-           src/core/slice_iter.h \
            src/core/spectrum.h \
            src/core/tag.h \
            src/fitters/fitter.h \
@@ -195,7 +191,6 @@ SOURCES += src/components/dieleclinear.cpp \
            src/components/spinsplitedgehyd.cpp \
            src/core/chisquare.cpp \
            src/core/component.cpp \
-           src/core/cslice_iter.cpp \
            src/core/debug_new.cpp \
            src/core/eelsmodel.cpp \
            src/core/fftw++.cpp \
@@ -206,7 +201,6 @@ SOURCES += src/components/dieleclinear.cpp \
            src/core/multibyte.cpp \
            src/core/multispectrum.cpp \
            src/core/parameter.cpp \
-           src/core/slice_iter.cpp \
            src/core/spectrum.cpp \
            src/core/tag.cpp \
            src/fitters/fitter.cpp \

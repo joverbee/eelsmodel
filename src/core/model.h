@@ -34,7 +34,6 @@
 #include <vector>
 
 #include "src/core/spectrum.h"
-#include "src/core/slice_iter.h"
 
 class Component;
 class Fitter;
@@ -139,7 +138,7 @@ std::string getdetectorname()const;
 bool ismulti()const;
 void updateHL();
 void updateHLnodraw();
-void getgradient(size_t compindex, size_t parameterindex,Slice_iter<double> array);
+//void getgradient(size_t compindex, size_t parameterindex,Slice_iter<double> array);
 //functions for storing and recalling old parameter settings
 //there are 2 storage spaces, one called origparams to be able to come back after a diverged fit
 //the other called userparams to store the current user parameters
