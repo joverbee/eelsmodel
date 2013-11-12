@@ -48,12 +48,12 @@
 
 Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Multispectrum* mspec)
 : QWidget(parent),
+  mspecptr(mspec),
+  matrixptr(0),
   image(convertmspectoimage(*mspec)),
   imwidth(image.width()),
   imheight(image.height()),
   paintslice(true),
-  mspecptr(mspec),
-  matrixptr(0),
   imdisplayname(name),
   is2D(mspec->is2D())
 {
@@ -80,12 +80,12 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Multispectru
 
 Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name,size_t dim1,size_t dim2)
 : QWidget(parent),
-  image(convertmatrixtoimage(Eigen::MatrixXd(dim1,dim2))),
+  mspecptr(0),
+  matrixptr(new Eigen::MatrixXd(dim1,dim2)),
+  image(convertmatrixtoimage(*matrixptr)),
   imwidth(image.width()),
   imheight(image.height()),
   paintslice(false),
-  mspecptr(0),
-  matrixptr(0),
   imdisplayname(name),
   dragging(false),
   is2D(false)
@@ -110,10 +110,10 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name,size_t dim1,s
 
 Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Eigen::MatrixXd* matrix)
 : QWidget(parent),
-  image(convertmatrixtoimage(*matrix)),
-  paintslice(false),
   mspecptr(0),
   matrixptr(matrix),
+  image(convertmatrixtoimage(*matrix)),
+  paintslice(false),
   imdisplayname(name),
   dragging(false),
   is2D(false)

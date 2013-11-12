@@ -66,12 +66,12 @@ public:
   Eigen::MatrixXd* getmatrix() { return matrixptr; }
 
 private:
+  Multispectrum* mspecptr;
+  Eigen::MatrixXd* matrixptr;
   QImage image;
   unsigned int imwidth;
   unsigned int imheight;
   bool paintslice;
-  Multispectrum* mspecptr;
-  Eigen::MatrixXd* matrixptr;
   QString imdisplayname;
   bool dragging;
   bool is2D;
