@@ -32,10 +32,11 @@
 #include <QApplication>
 
 #include "src/core/component.h"
-#include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
 
-Eelsmodel* geteelsmodelptr();
+#include "src/gui/eelsmodel.h"
+
+EELSModel* geteelsmodelptr();
 
 Equalizer::Equalizer(QWorkspace *parent, const char *name,Component* cp)
 : QWidget(parent),sliderlist() {

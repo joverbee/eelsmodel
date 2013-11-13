@@ -36,7 +36,7 @@
 PseudoVoigt::PseudoVoigt()
 :Component()
 {
-  this->setname("Pseudo-Voigt");
+  name = "Pseudo-Voigt";
   this->setdescription("Pseudo-Voigt peak with given height,position and FWHM");
   setshifter(false);
   Lorentzptr=0;
@@ -83,7 +83,7 @@ PseudoVoigt::PseudoVoigt(int n,double estart,double dispersion,std::vector<Param
   this->addparameter(p4);
   this->addparameter(p5);
   //give a name and description
-  this->setname("Pseudo-Voigt");
+  name = "Pseudo-Voigt";
   this->setdescription("Pseudo-Voigt peak with given height,position and FWHM");
   this->setcanconvolute(true);
   //all three parameters have an analytical gradient

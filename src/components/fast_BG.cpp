@@ -29,20 +29,20 @@
 #include "src/components/fast_BG.h"
 #include "src/components/powerlaw.h"
 
-#include "src/core/eelsmodel.h"
 #include "src/core/model.h"
 #include "src/core/parameter.h"
 
+#include "src/gui/eelsmodel.h"
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
 
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 QWorkspace* getworkspaceptr();
 
 fast_BG::fast_BG() //create a dummy version
 :Component()
 {
-setname("Fast background");
+name = "Fast background";
 setdescription("y=A[x(E/E0)^-r+(1-x)(E/E0)^-r'] with A,x,r and r' the two parameters. r and r' are constant so this is a linear function (therefore fast)");
 setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
 setshifter(false);
@@ -88,7 +88,7 @@ fast_BG::fast_BG(int n,double estart,double dispersion,std::vector<Parameter*>* 
     this->addparameter(p4);
 
     //give a name and description
-    setname("Fast background");
+    name = "Fast background";
     setdescription("y=A[x(E/E0)^-r+(1-x)(E/E0)^-r'] with A,x,r and r' the two parameters. r and r' are constant so this is a linear function (therefore fast)");
     setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
     setshifter(false);

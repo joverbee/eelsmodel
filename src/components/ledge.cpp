@@ -28,15 +28,16 @@
 #include <cmath>
 #include <iostream>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
 
-Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+#include "src/gui/eelsmodel.h"
+
+EELSModel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
 
 Ledge::Ledge() //create a dummy version
 :Component(),tempspectrum()
 {
-this->setname("Hydrogenic L-edge");
+name = "Hydrogenic L-edge";
 this->setdescription("Hydrogenic L-edge based on SigmaL2 by R.F. Egerton");
 }
 Ledge::Ledge(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -116,7 +117,7 @@ Ledge::Ledge(int n,double estart,double dispersion,std::vector<Parameter*>* para
   this->addparameter(p7);
 
   //give a name and description
-  this->setname("Hydrogenic L-edge");
+  name = "Hydrogenic L-edge";
   this->setdescription("Hydrogenic L-edge based on SigmaL3 by R.F. Egerton");
   this->setcanconvolute(true);
   //we have a gradient wrt strength parameter

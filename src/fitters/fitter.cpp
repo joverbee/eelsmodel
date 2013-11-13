@@ -312,7 +312,7 @@ void Fitter::updateresidual(){
            //add same amount of spectra to it as the HLptr
            for (unsigned int i=0;i<(modelptr->getmultispectrumptr())->getsize();i++){
                Spectrum * dummy=new Spectrum((modelptr->getHLptr())->getnpoints(),(modelptr->getHLptr())->getenergy(0),(modelptr->getHLptr())->getdispersion());
-               dummy->setname("Residuals");
+               dummy->name = "Residuals";
                dummy->clear(); //fill with zero's
                mresidualspec->addspectrum(dummy);
            }
@@ -323,7 +323,7 @@ void Fitter::updateresidual(){
         }
         else{
              residualspec=new Spectrum((modelptr->getHLptr())->getnpoints(),(modelptr->getHLptr())->getenergy(0),(modelptr->getHLptr())->getdispersion());
-             residualspec->setname("Residual");
+             residualspec->name = "Residual";
              residualspec->display(getworkspaceptr());
         }
 
@@ -334,8 +334,7 @@ void Fitter::updateresidual(){
      }
      //try carefully to get its name to see if it really still exists
      try{
-     std::string name;
-     name=residualspec->getname();
+     std::string name = residualspec->name;
      }
      catch(...){
                 residualspec=0;

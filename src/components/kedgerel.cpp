@@ -33,7 +33,7 @@
 Kedgerel::Kedgerel() //create a dummy version
 :Component(),tempspectrum()
 {
-this->setname("Relativistic H K-edge");
+name = "Relativistic H K-edge";
 this->setdescription("Relativistic H K-edge based on \n Relativistic ionisation cross sections for use in microanalysisi\nRainer Knippelmeier, Petra Wahlbring, Helmut Kohl\n Ultramicroscopy 68 (1997) 25-41");
 }
 Kedgerel::Kedgerel(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -86,7 +86,7 @@ this->addparameter(p5);
 this->addparameter(p6);
 
 //give a name and description
-this->setname("Relativistic H K-edge");
+name = "Relativistic H K-edge";
 this->setdescription("Relativistic H K-edge based on \n Relativistic ionisation cross sections for use in microanalysisi\nRainer Knippelmeier, Petra Wahlbring, Helmut Kohl\n Ultramicroscopy 68 (1997) 25-41");
 this->setcanconvolute(true);
 //we have a gradient wrt strength param

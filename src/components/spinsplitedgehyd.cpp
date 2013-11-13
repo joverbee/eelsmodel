@@ -43,7 +43,7 @@
 
 SpinsplitEdgeHyd::SpinsplitEdgeHyd() //create a dummy version
 :Component(),tempspectrum(){
-  this->setname("Hydrogenic Spin split edge section");
+  name = "Hydrogenic Spin split edge section";
   this->setdescription("An edge consisting of two hydrogenic cross sections and two lorentzian white lines to simulate L23 edges");
   //init the pointers
   continuum1=0;
@@ -332,7 +332,7 @@ SpinsplitEdgeHyd::SpinsplitEdgeHyd(int n,double estart,double dispersion,std::ve
       
       
   //give a name and description
-  this->setname("Hydrogenic Spin split edge section");
+  name = "Hydrogenic Spin split edge section";
   this->setdescription("An edge consisting of two hydrogenic cross sections and two lorentzian white lines to model an L23 edge");
    this->setcanconvolute(true);
    this->setshifter(false);

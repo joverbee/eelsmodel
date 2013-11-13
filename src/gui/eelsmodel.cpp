@@ -23,6 +23,8 @@
  * eelsmodel - core/eelsmodel.cpp
  **/
 
+#include "src/gui/eelsmodel.h"
+
 //#define DEBUG_EELSMODEL
 #define GSLFITTER
 
@@ -31,15 +33,18 @@
 #include <iostream>
 #include <sstream>
 
+#include <QAction>
+#include <QApplication>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QWorkspace>
-#include <QApplication>
 #include <QDateTime>
+#include <QMenuBar>
+#include <QStatusBar>
 
 #include "src/components/powerlaw.h"
 
 #include "src/core/component.h"
-#include "src/core/eelsmodel.h"
 #include "src/core/image.h"
 #include "src/core/model.h"
 #include "src/core/monitor.h"
@@ -53,6 +58,8 @@
 #include "src/fitters/mlfitter_gsl.h"
 #include "src/fitters/wlsqfitter.h"
 
+#include "src/gui/eelsmodeltab.h"
+#include "src/gui/hello.h"
 #include "src/gui/componentmaintenance.h"
 #include "src/gui/detectorchooser.h"
 #include "src/gui/fitterchooser.h"
@@ -65,39 +72,416 @@
 
 QWorkspace* getworkspaceptr();
 
-Eelsmodel::Eelsmodel(QWidget* parent, const char *name) : QWidget(0)
+EELSModel::EELSModel(QWidget* parent)
+: QMainWindow(parent),
+  tabs(new QMdiArea(this))
 {
-getworkspaceptr()->show();
-myfitter=0;
-mymodel=0;
-mymaintain=0;
-mydialog=0;
-projectfilename="";
+  setWindowTitle("Eelsmodel 3.3");
+
+  createActions();
+  createMenuBar();
+
+/* These need to be removed, and the relevant code in eelsmodel needs to be called
+  //make connections between menu and eelsmodel program
+  QObject::connect(mymainwindow, SIGNAL(file_new()),myeelsmodel, SLOT(newspectrum()) );
+  QObject::connect(mymainwindow, SIGNAL(model_componentmaintenance()),myeelsmodel, SLOT(componentmaintenance()) );
+  QObject::connect(mymainwindow, SIGNAL(model_newmodel()),myeelsmodel, SLOT(newmodel()) );
+  QObject::connect(mymainwindow, SIGNAL(model_detector()),myeelsmodel, SLOT(slot_model_detector()) );
+
+  QObject::connect(mymainwindow, SIGNAL(file_open_msa()),myeelsmodel, SLOT(openmsa()) );
+  QObject::connect(mymainwindow, SIGNAL(file_open_DM()),myeelsmodel, SLOT(openDM()) );
+
+  QObject::connect(mymainwindow, SIGNAL(model_iterativefit()),myeelsmodel, SLOT(iterativefit()) );
+  QObject::connect(mymainwindow, SIGNAL(edit_undoselection()),myeelsmodel, SLOT(undoselection()) );
+  QObject::connect(mymainwindow, SIGNAL(edit_exclude()),myeelsmodel, SLOT(exclude()) );
+  QObject::connect(mymainwindow, SIGNAL(edit_resetexclude()),myeelsmodel, SLOT(resetexclude()) );
+
+  QObject::connect(mymainwindow, SIGNAL(file_project_open()),myeelsmodel, SLOT(slot_open_project()) );
+  QObject::connect(mymainwindow, SIGNAL(file_project_save()),myeelsmodel, SLOT(slot_save_project()) );
+  QObject::connect(mymainwindow, SIGNAL(file_model_save()),myeelsmodel, SLOT(slot_save_model()) );
+  QObject::connect(mymainwindow, SIGNAL(file_report_save()),myeelsmodel, SLOT(slot_save_report()) );
+  QObject::connect(mymainwindow, SIGNAL(file_save_as()),myeelsmodel, SLOT(slot_save_as()) );
+  QObject::connect(myeelsmodel, SIGNAL(enablemodel(bool)),mymainwindow, SLOT(slot_enable_model(bool)));
+*/
+
+  tabs->setViewMode(QMdiArea::TabbedView);
+  setCentralWidget(tabs);
+
+  showMaximized();
 }
 
-Eelsmodel::~Eelsmodel()
+void EELSModel::createActions()
 {
-if (myfitter!=0) delete myfitter;
-if (mymodel!=0) delete mymodel;
-if (mymaintain!=0) delete mymaintain;
-if (mydialog!=0) delete mydialog;
+  // File menu
+  //QAction* fileNew = new QAction(tr("New File"), newIcon, tr("&New"), QAccel::stringToKey(tr("Ctrl+N")), this);
+  //fileNew->setStatusTip(tr("Creates a new document"));
+  //fileNew->setWhatsThis(tr("New File\n\nCreates a new document"));
+  //connect(fileNew, SIGNAL(triggered()), this, SLOT(newFile()));
+
+  fileOpenMSA = new QAction(QIcon(":/icons/fileopen.png"), tr("Open Spectrum"), this);
+  fileOpenMSA->setStatusTip(tr("Opens an existing spectrum"));
+  fileOpenMSA->setWhatsThis(tr("Open Spectrum\n\nOpens an existing spectrum"));
+  connect(fileOpenMSA, SIGNAL(triggered()), this, SLOT(openMSA()));
+
+  fileOpenProject = new QAction(QIcon(":/icons/fileopen.png"), tr("Open Project"), this);
+  fileOpenProject->setStatusTip(tr("Opens an existing project"));
+  fileOpenProject->setWhatsThis(tr("Open Project\n\nOpens an existing project"));
+  connect(fileOpenProject, SIGNAL(triggered()), this, SLOT(openProject()));
+
+  fileOpenDM3 = new QAction(QIcon(":/icons/fileopen.png"), tr("Open DM3"), this);
+  fileOpenDM3->setStatusTip(tr("Opens a Digital Micrograph 3 image"));
+  fileOpenDM3->setWhatsThis(tr("Open DM3\n\nOpens a Digital Micrograph 3 image"));
+  connect(fileOpenDM3, SIGNAL(triggered()), this, SLOT(openDM3()));
+
+  fileSave = new QAction(QIcon(":/icons/filesave.png"), tr("Save Model as txt"), this);
+  fileSave->setStatusTip(tr("Saves the model as a tab delimited text file"));
+  fileSave->setWhatsThis(tr("Save Model as txt.\n\nSaves model and its components as a tab delimitted text file"));
+  connect(fileSave, SIGNAL(triggered()), this, SLOT(save()));
+
+  fileSaveProject = new QAction(QIcon(":/icons/filesave.png"), tr("Save Project"), this);
+  fileSaveProject->setStatusTip(tr("Saves the actual project"));
+  fileSaveProject->setWhatsThis(tr("Save Project.\n\nSaves the actual project"));
+  connect(fileSaveProject, SIGNAL(triggered()), this, SLOT(saveProject()));
+
+  fileSaveReport = new QAction(QIcon(":/icons/filesave.png"), tr("Save Report"), this);
+  fileSaveReport->setStatusTip(tr("Saves a report"));
+  fileSaveReport->setWhatsThis(tr("Save report.\n\nSaves the parameter values to a file\n for easy reading in a spreadsheet"));
+  connect(fileSaveReport, SIGNAL(triggered()), this, SLOT(saveReport()));
+
+  fileSaveAs = new QAction(QIcon(":/icons/filesave.png"), tr("Save Spectrum as"), this);
+  fileSaveAs->setStatusTip(tr("Saves the spectrum as a dat file"));
+  fileSaveAs->setWhatsThis(tr("Save As\n\nSaves the spectrum as a dat file"));
+  connect(fileSaveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
+
+  fileQuit = new QAction(tr("Exit"), this);
+  fileQuit->setStatusTip(tr("Quits the application"));
+  fileQuit->setWhatsThis(tr("Exit\n\nQuits the application"));
+  connect(fileQuit, SIGNAL(triggered()), this, SLOT(quit()));
+
+/*
+  // Edit menu - belongs inside tabbed view
+  editUndoSelection = new QAction(tr("&Undo selection"), this);
+  editUndoSelection->setStatusTip(tr("Undo selection"));
+  editUndoSelection->setWhatsThis(tr("Undo selection"));
+  connect(editUndoSelection, SIGNAL(triggered()), this, SLOT(undoSelection()));
+
+  editExclude = new QAction(tr("Exclude points"), this);
+  editExclude->setStatusTip(tr("Exlude selected points from fitting"));
+  editExclude->setWhatsThis(tr("Exlude selected points from fitting"));
+  connect(editExclude, SIGNAL(triggered()), this, SLOT(exclude()));
+
+  editResetExclude = new QAction(tr("Reset Exclude points"), this);
+  editResetExclude->setStatusTip(tr("Reset exclude region, \n either on a selection or on the\n whole spectrum"));
+  editResetExclude->setWhatsThis(tr("Reset exclude region, \n either on a selection or on the\n whole spectrum"));
+  connect(editResetExclude, SIGNAL(triggered()), this, SLOT(resetExclude()));
+*/
+/*
+  //view actions - half belongs in tabbed view
+  viewToggleToolBar = new QAction(tr("Toolbar"), this);
+  viewToggleToolBar->setStatusTip(tr("Enables/disables the toolbar"));
+  viewToggleToolBar->setWhatsThis(tr("Toolbar\n\nEnables/disables the toolbar"));
+  viewToggleToolBar->setCheckable(true);
+  connect(viewToggleToolBar, SIGNAL(toggled(bool)), this, SLOT(toggleToolBar(bool)));
+
+  viewToggleStatusBar = new QAction(tr("Statusbar"), this);
+  viewToggleStatusBar->setStatusTip(tr("Enables/disables the statusbar"));
+  viewToggleStatusBar->setWhatsThis(tr("Statusbar\n\nEnables/disables the statusbar"));
+  viewToggleStatusBar->setCheckable(true);
+  connect(viewToggleStatusBar, SIGNAL(toggled(bool)), this, SLOT(toggleStatusBar(bool)));
+*/
+  // Help menu
+  helpAbout = new QAction(tr("About"), this);
+  helpAbout->setStatusTip(tr("About the application"));
+  helpAbout->setWhatsThis(tr("About\n\nAbout the application"));
+  connect(helpAbout, SIGNAL(triggered()), this, SLOT(about()));
+
+  helpAboutQt = new QAction(tr("About Qt"), this);
+  helpAboutQt->setStatusTip(tr("About Qt"));
+  helpAboutQt->setWhatsThis(tr("About Qt\n\nAbout Qt"));
+  connect(helpAboutQt, SIGNAL(triggered()), this, SLOT(aboutQt()));
+
+  //model actions
+/*  modelNew = new QAction(tr("New Model"), this);
+  modelNew->setStatusTip(tr("New Model"));
+  modelNew->setWhatsThis(tr("New Model\n\nCreate a new model"));
+  connect(modelNew, SIGNAL(triggered()), this, SLOT(slotModelNew()));
+
+  modelComponent = new QAction(tr("Component"), this);
+  modelComponent->setStatusTip(tr("Component maintenance"));
+  modelComponent->setWhatsThis(tr("Component\n\nMaintain components in the model"));
+  connect(modelComponent, SIGNAL(triggered()), this, SLOT(slotModelComponent()));
+  modelComponent->setEnabled(false);
+
+  modelFit = new QAction(tr("Fit"), this);
+  modelFit->setStatusTip(tr("Fit the model"));
+  modelFit->setWhatsThis(tr("Fit\n\nFit the model"));
+  connect(modelFit, SIGNAL(triggered()), this, SLOT(slotModelFit()));
+  modelFit->setEnabled(false);
+
+  modelDETECTOR = new QAction(tr("choose detector"), this);
+  modelDETECTOR->setStatusTip(tr("set the detector properties"));
+  modelDETECTOR->setWhatsThis(tr("set the detector properties"));
+  connect(modelDETECTOR, SIGNAL(triggered()), this, SLOT(slotModelDETECTOR()));
+  modelDETECTOR->setEnabled(false);
+
+  //toolbar actions put them in an exclusive group
+
+  QActionGroup *toolbargrp = new QActionGroup( this );
+  toolbargrp->setExclusive( TRUE );
+  //the normal mouse button
+  QPixmap normalIcon(previous_xpm);
+  toolbarNormal = new QAction(normalIcon, tr("Normal"), toolbargrp);
+  toolbarNormal->setStatusTip(tr("Normal mode"));
+  toolbarNormal->setWhatsThis(tr("Normal\n\nSets the cursor in the normal mode"));
+  connect(toolbarNormal, SIGNAL(triggered()), this, SIGNAL(toolbar_normal()));
+  toolbarNormal->setCheckable( TRUE );
+  toolbarNormal->setChecked( TRUE ); //the default
+
+  //the selection button
+  QPixmap selectionIcon(rectangle_xpm);
+  toolbarSelection = new QAction(selectionIcon, tr("Region Select"), toolbargrp);
+  toolbarSelection->setStatusTip(tr("Select a region in a graph"));
+  toolbarSelection->setWhatsThis(tr("Region Select\n\nSelect a region in a graph"));
+  connect(toolbarSelection, SIGNAL(triggered()), this, SIGNAL(toolbar_selection()));
+  toolbarSelection->setCheckable( TRUE );
+
+  //the zoom button
+  QPixmap zoomIcon(zoom_xpm);
+  toolbarZoom = new QAction(zoomIcon, tr("&Zoom"), toolbargrp);
+  toolbarZoom->setStatusTip(tr("Zoom in on a graph"));
+  toolbarZoom->setWhatsThis(tr("Zoom\n\nZooms in on a graph"));
+  connect(toolbarZoom, SIGNAL(triggered()), this, SIGNAL(toolbar_zoom()));
+  toolbarZoom->setCheckable( TRUE );
+
+  //the display home button
+  QPixmap homeIcon(gohome_xpm);
+  toolbarHome = new QAction(homeIcon, tr("Home display"), this);
+  toolbarHome->setStatusTip(tr("Home display"));
+  toolbarHome->setWhatsThis(tr("Home display\n\nResets the graph arrea to show/n the original size"));
+  connect(toolbarHome, SIGNAL(triggered()), this, SIGNAL(toolbar_home()));
+  toolbarHome->setCheckable( false );
+
+  //the link button
+  QPixmap linkIcon(connect_established_xpm);
+  toolbarLink = new QAction(linkIcon, tr("Link"), this);
+  toolbarLink->setStatusTip(tr("Link parameters"));
+  toolbarLink->setWhatsThis(tr("Link\n\nLinks parameters together"));
+  connect(toolbarLink, SIGNAL(triggered()), this, SIGNAL(toolbar_link()));
+  toolbarLink->setCheckable( false );
+*/
 }
 
-void Eelsmodel::newgraph(){
+void EELSModel::createMenuBar()
+{
+  QMenu* fileMenu = menuBar()->addMenu("File");
+  //fileMenu->addAction(fileNew);
+  fileMenu->addAction(fileOpenMSA);
+  fileMenu->addAction(fileOpenProject);
+  fileMenu->addAction(fileOpenDM3);
+  fileMenu->insertSeparator(fileSave);
+  fileMenu->addAction(fileSave);
+  fileMenu->addAction(fileSaveAs);
+  fileMenu->addAction(fileSaveProject);
+  //fileMenu->addAction(fileSaveProjectAs);
+  fileMenu->addAction(fileSaveReport);
+  fileMenu->insertSeparator(fileQuit);
+  fileMenu->addAction(fileQuit);
+
+/*
+  // menuBar entry editMenu
+  editMenu=new QMenu("Edit");
+  //editCut->addAction(editMenu);
+  //editCopy->addAction(editMenu);
+  //editPaste->addAction(editMenu);
+  editMenu->addAction(editUndoSelection);
+  editMenu->addAction(editExclude);
+  editMenu->addAction(editResetExclude);
+
+  //not implemented yet
+  //editCut->setEnabled(FALSE );
+  //editCopy->setEnabled(FALSE );
+  //editPaste->setEnabled(FALSE );
+
+  ///////////////////////////////////////////////////////////////////
+  // menuBar entry viewMenu
+  viewMenu=new QMenu("View");
+  //viewMenu->setCheckable(true);
+  viewMenu->addAction(viewToolBar);
+  viewMenu->addAction(viewStatusBar);
+
+  ///////////////////////////////////////////////////////////////////
+  // menuBar entry modelMenu
+  modelMenu=new QMenu("Model");
+  //modelMenu->setCheckable(true);
+  modelMenu->addAction(modelNew);
+  modelMenu->addAction(modelComponent);
+  modelMenu->addAction(modelFit);
+  modelMenu->addAction(modelDETECTOR);
+
+  slot_enable_model(false);
+*/
+
+  menuBar()->addSeparator();
+
+  QMenu* helpMenu = menuBar()->addMenu("Help");
+  helpMenu->addAction(helpAbout);
+  helpMenu->addAction(helpAboutQt);
+}
+/* unused
+void EELSModel::newFile()
+{
+  statusBar()->showMessage(tr("Creating new spectrum..."));
+  emit file_new();
+  statusBar()->showMessage(tr("Ready."));
+}
+*/
+
+void EELSModel::openMSA()
+{
+  statusBar()->showMessage(tr("Opening file..."));
+
+  QString filename = QFileDialog::getOpenFileName(this, tr("Open MSA"), "", tr("MSA File (*.msa)"));
+  if(filename.isEmpty())
+    return; // user cancelled
+
+  // Try to open spectrum file
+  try
+  {
+    tabs->addSubWindow(new EELSModelTab(new Spectrum(filename.toStdString())));
+    //s1->display(getworkspaceptr());
+    //s1->display(0);
+
+    statusBar()->showMessage(tr("Ready."));
+  }
+  catch(const Spectrum::Spectrumerr::load_error& e)
+  {
+    setCursor(Qt::ArrowCursor); //set to normal cursor
+    Saysomething mysay(0,"Error",e.msgptr,true);
+    return;
+  }
+  catch(const Spectrum::Spectrumerr::load_cancelled&)
+  {
+    setCursor(Qt::ArrowCursor); //set to normal cursor
+    return;
+  }
+  catch(...)
+  {
+    this->setCursor(Qt::ArrowCursor); //set to normal cursor
+    Saysomething mysay(0,"Error","An unexpected error has occured during emsa load",true);
+    return;
+  }
+
+  //reset the mouse pointer in case we had an exception
+  QApplication::restoreOverrideCursor(); // we're done
+}
+
+//TODO
+void EELSModel::openDM3() {}
+void EELSModel::openProject() {}
+void EELSModel::save() {}
+void EELSModel::saveAs() {}
+void EELSModel::saveProject() {}
+void EELSModel::saveReport() {}
+void EELSModel::close() {}
+void EELSModel::print() {}
+void EELSModel::quit()
+{
+  //TODO should check all open tabs and ask to save them or close all
+  qApp->quit();
+}
+void EELSModel::toggleStatusBar(bool toggle) {}
+void EELSModel::toggleToolBar(bool toggle) {}
+void EELSModel::about()
+{
+  Hello hello;
+  hello.show();
+}
+void EELSModel::aboutQt()
+{
+  QMessageBox::aboutQt(this,tr("Eelsmodel\nVersion VERSION") );
+}
+void EELSModel::openmsa() {}
+void EELSModel::undoselection() {}
+void EELSModel::resetexclude() {}
+
+/* need to modify
+void MenuEelsmodel::slotFileProjectOpen()
+{
+  statusBar()->showMessage(tr("Opening project..."));
+  emit file_project_open();
+  statusBar()->showMessage(tr("Ready."));
+}
+
+void MenuEelsmodel::slotFileOpenDM()
+{
+  statusBar()->showMessage(tr("Opening DM image..."));
+  emit file_open_DM();
+  statusBar()->showMessage(tr("Ready."));
+}
+
+void MenuEelsmodel::slotFileSave()
+{
+  statusBar()->showMessage(tr("Saving file..."));
+  emit file_model_save();
+  statusBar()->showMessage(tr("Ready."));
+}
+
+void MenuEelsmodel::slotFileProjectSave()
+{
+  statusBar()->showMessage(tr("Saving project..."));
+  emit file_project_save();
+  statusBar()->showMessage(tr("Ready."));
+}
+
+void MenuEelsmodel::slotFileReportSave()
+{
+  statusBar()->showMessage(tr("Saving report..."));
+  emit file_report_save();
+  statusBar()->showMessage(tr("Ready."));
+}
+void MenuEelsmodel::slotFileSaveAs()
+{
+  statusBar()->showMessage(tr("Saving spectrum as dat..."));
+  emit file_save_as();
+  statusBar()->showMessage(tr("Ready."));
+}
+
+
+
+void MenuEelsmodel::slotFileProjectSaveAs()
+{
+  statusBar()->showMessage(tr("Saving project under new filename..."));
+  emit file_project_save();
+  statusBar()->showMessage(tr("Ready."));
+}
+
+void MenuEelsmodel::slotFileClose()
+{
+  statusBar()->showMessage(tr("Closing file..."));
+   emit file_close();
+  statusBar()->showMessage(tr("Ready."));
+}
+*/
+
+
+
+
+
+
+void EELSModel::newgraph(){
   //  Graph* mygraph =new Graph(0,"Graph",1024);                             // create widget
    // mygraph->show();
   //  QMessageBox::about( this,"info","Graph added\n" );
 }
-void Eelsmodel::newspectrum(){
+void EELSModel::newspectrum(){
     Spectrum* s1 =new Spectrum(1024);                             // create spectrum
     s1->display(getworkspaceptr());
 }
 
-
-//opens a file in emsa/mas format if cancelled or a load error occurs, no spectrum is created
-void Eelsmodel::openmsa(){
-    loadmsa l;
-    Spectrum* s1=0;
+/*void EELSModel::openMSA()
+{
+  loadmsa l;
+  Spectrum* s1= new Spectrum(l, "");
     try{
     s1 =new Spectrum(l,"");                             // create spectrum from disc
     }
@@ -120,9 +504,9 @@ void Eelsmodel::openmsa(){
       s1->display(getworkspaceptr());
       //s1->display(0);
 
-}
+}*/
 
-Multispectrum* Eelsmodel::openDM(std::string filename,bool silent)const{
+Multispectrum* EELSModel::openDM3(std::string filename,bool silent)const{
    //open the image and convert to mspec
    Image* myimage=0;
    Multispectrum* mymspec=0;
@@ -143,7 +527,7 @@ Multispectrum* Eelsmodel::openDM(std::string filename,bool silent)const{
    return mymspec;
 }
 
-void Eelsmodel::componentmaintenance(){
+void EELSModel::componentmaintenance(){
 
 
     //Model* mymodel=gettopmodel();
@@ -169,8 +553,8 @@ void Eelsmodel::componentmaintenance(){
 }
 
 
-void Eelsmodel::newmodel(){
-    Multispectrum* m1=gettopmultispectrum();
+void EELSModel::newmodel(){
+/*    Multispectrum* m1=gettopmultispectrum();
     if (m1==0){
       Spectrum* s1 =gettopspectrum();
       if (s1==0) {
@@ -226,23 +610,23 @@ void Eelsmodel::newmodel(){
     if (m1!=0){
       const Imagedisplay* myimdisplay=m1->getimageptr();
       connect( myimdisplay, SIGNAL(curr_spec_update() ),this, SLOT( slot_model_update() ) );
-    }
+    }*/
 }
 
-void Eelsmodel::slot_model_update(){
+void EELSModel::slot_model_update(){
   if (mymodel!=0) {
       mymodel->retrieveuserparams(); //make sure the model is calculated and we have the right parameters
       mymodel->updateHL(); //no need for init here
   }
 }
 
-void Eelsmodel::slot_componentmaintenance_updatemonitors(){
+void EELSModel::slot_componentmaintenance_updatemonitors(){
      if (mymaintain!=0){
         mymaintain->slot_update_monitors();
     }
 }
 
-void Eelsmodel::componentmaintenance_remove_components(int index){
+void EELSModel::componentmaintenance_remove_components(int index){
     #ifdef DEBUG_EELSMODEL
     std::cout <<"Eelsmodel::componentmaintenance_remove_component(" << index << ")\n";
     #endif
@@ -260,7 +644,7 @@ void Eelsmodel::componentmaintenance_remove_components(int index){
       }
 
 }
-void Eelsmodel::componentmaintenance_add_components(int index){
+void EELSModel::componentmaintenance_add_components(int index){
     #ifdef DEBUG_EELSMODEL
     std::cout <<"Eelsmodel::componentmaintenance_add_component(" << index << ")\n";
     #endif
@@ -273,11 +657,11 @@ void Eelsmodel::componentmaintenance_add_components(int index){
       }
 }
 
-void Eelsmodel::componentmaintenance_doupdate(){
+void EELSModel::componentmaintenance_doupdate(){
     emit componentmaintenance_update();
 }
 
-void Eelsmodel::componentmaintenance_updatescreen(){
+void EELSModel::componentmaintenance_updatescreen(){
      #ifdef DEBUG_EELSMODEL
      std::cout <<"Eelsmodel::componentmaintenance_updatescreen\n";
      #endif
@@ -298,7 +682,7 @@ void Eelsmodel::componentmaintenance_updatescreen(){
 }
 
 
-void Eelsmodel::iterativefit(){
+void EELSModel::iterativefit(){
   //ask user for a type of fitter
   if (mymodel!=0){
     int result;
@@ -352,7 +736,7 @@ void Eelsmodel::iterativefit(){
   }
 }
 
-void Eelsmodel::fitter_dialog(){
+void EELSModel::fitter_dialog(){
   //causes a segmentation fault, because signalling that fitter_dialog died doesn't work
   //so fitter dialog is already gone but the pointer!=0, deleting it twice...
   //if (mydialog!=0){
@@ -368,7 +752,7 @@ void Eelsmodel::fitter_dialog(){
   connect( mydialog, SIGNAL(signal_fitterdialog_died() ),this, SLOT( slot_fitterdialog_died() ) );
 }
 
-void Eelsmodel::fitter_updatescreen(){
+void EELSModel::fitter_updatescreen(){
   if (mymodel!=0){
     mymodel->display(getworkspaceptr());
     }
@@ -377,8 +761,8 @@ void Eelsmodel::fitter_updatescreen(){
     mymaintain->slot_update_monitors();
     }
 }
-
-void Eelsmodel::undoselection(){
+/*
+void EELSModel::undoselection(){
 //remove selection from the top graph spectrum
 Graph* topgraph=gettopgraph();
 if (topgraph!=0){
@@ -390,7 +774,7 @@ else{
   }
 }
 
-void Eelsmodel::exclude(){
+void EELSModel::exclude(){
 Graph* topgraph=gettopgraph();
 Spectrum* topspectrum=gettopspectrum();
 if ((topgraph!=0)&&(topspectrum!=0)){
@@ -412,7 +796,7 @@ else{
   }
 }
 
-void Eelsmodel::resetexclude(){
+void EELSModel::resetexclude(){
 Graph* topgraph=gettopgraph();
 Spectrum* topspectrum=gettopspectrum();
 if ((topgraph!=0)&&(topspectrum!=0)){
@@ -436,10 +820,10 @@ else{
    return;
   }
 }
+*/
 
 
-
-Spectrum* Eelsmodel::gettopspectrum(){
+/*Spectrum* EELSModel::gettopspectrum(){
   Graph* topgraph=gettopgraph();
   if (topgraph!=0){
   //ask the graph for a pointer to its spectrum
@@ -448,9 +832,9 @@ Spectrum* Eelsmodel::gettopspectrum(){
   else{
     return 0;
   }
-}
+}*/
 
-Multispectrum* Eelsmodel::gettopmultispectrum(){
+Multispectrum* EELSModel::gettopmultispectrum(){
   Graph* topgraph=gettopgraph();
   if (topgraph!=0){
     //ask the graph for a pointer to its spectrum
@@ -461,7 +845,7 @@ Multispectrum* Eelsmodel::gettopmultispectrum(){
   }
 }
 
-Multispectrum* Eelsmodel::gettopmultispectrumfromimdisplay(){
+Multispectrum* EELSModel::gettopmultispectrumfromimdisplay(){
   Imagedisplay* topim=gettopimdisplay();
   if (topim!=0){
     //ask the graph for a pointer to its spectrum
@@ -472,31 +856,31 @@ Multispectrum* Eelsmodel::gettopmultispectrumfromimdisplay(){
   }
 }
 
-Model* Eelsmodel::gettopmodel(){
+/*Model* EELSModel::gettopmodel(){
 	Model* topmodel=dynamic_cast<Model*>(gettopspectrum());
 	return topmodel;
-}
+}*/
 
-Graph* Eelsmodel::gettopgraph(){
+Graph* EELSModel::gettopgraph(){
    //get a pointer to the active window
    QWidget* topw=getworkspaceptr()->activeWindow();
    Graph*  topgraph=dynamic_cast<Graph*>(topw); //make sure to enable rtti in BCC32 , otherwise an error about polymorphism is generated
    return topgraph;
 }
 
-Imagedisplay* Eelsmodel::gettopimdisplay(){
+Imagedisplay* EELSModel::gettopimdisplay(){
    //get a pointer to the active window
    QWidget* topw=getworkspaceptr()->activeWindow();
    Imagedisplay*  topdisplay=dynamic_cast<Imagedisplay*>(topw); //make sure to enable rtti in BCC32 , otherwise an error about polymorphism is generated
    return topdisplay;
 }
 
-void Eelsmodel::slot_componentmaintenance_died(){
+void EELSModel::slot_componentmaintenance_died(){
   //reset the pointer since apparently the componentmaintenance window has gone
   mymaintain=0;
 }
 
-void Eelsmodel::slot_fitterdialog_died(){
+void EELSModel::slot_fitterdialog_died(){
   //reset the pointer since apparently the fitterdialog window has gone
   mydialog=0;
   //also kill the fitter with it
@@ -504,7 +888,7 @@ void Eelsmodel::slot_fitterdialog_died(){
   myfitter=0;
 }
 
-void Eelsmodel::slot_save_project(){
+void EELSModel::slot_save_project(){
   try{
   save_project(mymodel,myfitter);
   }
@@ -522,8 +906,8 @@ void Eelsmodel::slot_save_project(){
       return;}
 }
 
-void Eelsmodel::slot_save_as(){
-     //save the frontmost spectrum or multispectrum in dat format
+void EELSModel::slot_save_as(){
+/*     //save the frontmost spectrum or multispectrum in dat format
 
      //get the frontmost window and check if it is a spectrum or multispectrum
      Multispectrum* m1=gettopmultispectrumfromimdisplay();
@@ -568,11 +952,11 @@ void Eelsmodel::slot_save_as(){
            s1->savedat(filename);
 
 
-      }
+      }*/
 }
 
 
-void Eelsmodel::slot_open_project(){
+void EELSModel::slot_open_project(){
 try{
   load_project(mymodel,myfitter,"");
   }
@@ -590,7 +974,7 @@ try{
       Saysomething mysay(0,"Error","An unexpected error has occured during project load",true);
       return;}
 }
-void Eelsmodel::slot_open_project_from_filename(std::string filename){
+void EELSModel::slot_open_project_from_filename(std::string filename){
 try{
   load_project(mymodel,myfitter,filename);
   }
@@ -608,7 +992,7 @@ try{
       return;}
 }
 
-void Eelsmodel::slot_model_detector(){
+void EELSModel::slot_model_detector(){
   //launches a window that lets the user choose between different detectors
   //it then fills in these data in the model
     DetectorChooser * mychooser=new DetectorChooser(0,"Monitor Chooser",mymodel);
@@ -617,7 +1001,7 @@ void Eelsmodel::slot_model_detector(){
 }
 
 
-void Eelsmodel::save_project(Model* mymodel,Fitter* myfitter){
+void EELSModel::save_project(Model* mymodel,Fitter* myfitter){
 //***************************************
 //*      save the whole project
 //***************************************
@@ -809,7 +1193,7 @@ this->setCursor(Qt::WaitCursor); //set to wait cursor
 this->setCursor(Qt::ArrowCursor); //set to normal cursor
 }
 
-void Eelsmodel::load_project(Model*& mymodel,Fitter*& myfitter,std::string filename){
+void EELSModel::load_project(Model*& mymodel,Fitter*& myfitter,std::string filename){
 //***************************************
 //*      load the whole project
 //***************************************
@@ -905,8 +1289,7 @@ this->setCursor(Qt::WaitCursor); //set to wait cursor
              try{
               if (type=="MSA") {
                 //load MSA file
-                loadmsa l;
-                HLspectrum=new Spectrum(l,HLfilename);
+                HLspectrum=new Spectrum(HLfilename);
                 }
               else if (type=="MULTI") {
                   //load a multispectrum in DM3 format
@@ -1103,7 +1486,7 @@ this->setCursor(Qt::WaitCursor); //set to wait cursor
                     if (newnr>oldnr){
                       //only us it when it was really created
                       Component* mycomponent=mymodel->getlastcomponent();
-                      mycomponent->setdisplayname(displayname);
+                      mycomponent->name = displayname;
                     }
                     parameterlist.clear(); //make clean for next component
                     this->componentmaintenance_updatescreen();
@@ -1483,7 +1866,7 @@ this->setCursor(Qt::WaitCursor); //set to wait cursor
  #endif
   this->setCursor(Qt::ArrowCursor); //set to normal cursor
 }
-void Eelsmodel::slot_save_model(){
+void EELSModel::slot_save_model(){
 //***************************************
 //*      saves the model and its components as a tab delimitted file
 //*      easily readable in a spreadsheet
@@ -1529,7 +1912,7 @@ this->setCursor(Qt::WaitCursor); //set to wait cursor
   QDateTime now=QDateTime::currentDateTime();
   projectfile <<now.toString().toStdString()<<"\n";
   projectfile <<"FILENAME of HL spectrum:"<< (mymodel->getHLptr())->getfilename() <<"\n";
-  projectfile <<"NAME of HL spectrum:"<< (mymodel->getHLptr())->getname() <<"\n";
+  projectfile <<"NAME of HL spectrum:"<< (mymodel->getHLptr())->name <<"\n";
 
 
 

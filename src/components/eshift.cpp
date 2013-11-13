@@ -29,22 +29,22 @@
 #include <iostream>
 #include <vector>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/multispectrum.h"
 #include "src/core/model.h"
 #include "src/core/parameter.h"
 
+#include "src/gui/eelsmodel.h"
 #include "src/gui/getgraphptr.h"
 #include "src/gui/gettopspectrum.h"
 #include "src/gui/saysomething.h"
 
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 QWorkspace* getworkspaceptr();
 
 Eshift::Eshift()
 :Component()
 {
-this->setname("Eshift");
+name = "Eshift";
 this->setdescription("energy shift by linear interpolation of model");
 }
 Eshift::Eshift(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -62,7 +62,7 @@ else{
 this->addparameter(p1);
 
 //give a name and description
-this->setname("Eshift");
+name = "Eshift";
 this->setdescription("energy shift by linear interpolation of model");
 this->setcanconvolute(false); //convoluting this has no meaning
 this->setconvolutor(false);

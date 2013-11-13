@@ -46,14 +46,14 @@
 #include <QVBoxLayout>
 #include <QWorkspace>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/multispectrum.h"
 
 #include "src/fitters/fitter.h"
 
+#include "src/gui/eelsmodel.h"
 #include "src/gui/getfilename.h"
 
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 
 Fitter_dialog::Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitter)
 : QWidget(parent)

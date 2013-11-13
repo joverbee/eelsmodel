@@ -33,11 +33,10 @@
 #include <QFileInfo>
 #include <QString>
 
-#include "src/core/eelsmodel.h"
-
+#include "src/gui/eelsmodel.h"
 #include "src/gui/getfilename.h"
 
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 QWorkspace* getworkspaceptr();
 
 Fileopener::Fileopener(QWidget *parent, const char *name ,std::string fname) : QWidget(parent)

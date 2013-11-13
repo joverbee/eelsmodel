@@ -21,6 +21,7 @@
 
 /**
  * eelsmodel - core/eelsmodel.h
+ * Main window of the program.
  **/
 
 #ifndef EELSMODEL_H
@@ -30,8 +31,8 @@
 
 #include <vector>
 
-//#include <kapp.h>
-#include <QWidget>
+#include <QMainWindow>
+#include <QMdiArea>
 
 #include "src/core/model.h"
 
@@ -48,9 +49,85 @@ class Imagedisplay;
 class QWorkspace;
 
 /* Eelsmodel is the base class of the project */
-class Eelsmodel : public QWidget
+class EELSModel : public QMainWindow
 {
   Q_OBJECT
+
+public:
+  EELSModel(QWidget* parent = 0);
+
+public slots:
+  //void newFile();
+  void openMSA();
+  void openDM3();
+  void openProject();
+  void save();
+  void saveAs();
+  void saveProject();
+  //void saveProjectAs();
+  void saveReport();
+
+  void close(); // not right in new design
+  void print(); // what is this?
+  void quit();
+
+
+  void toggleToolBar(bool toggle);
+  void toggleStatusBar(bool toggle);
+
+  void about();
+  void aboutQt();
+
+private:
+  void createActions();
+  void createMenuBar();
+
+  // tabbed interface
+  QMdiArea* tabs;
+
+  //TODO remove these members if unneeded, instead keep them local to the constructor/init functions
+  // File menu actions
+  QAction* fileNew;
+  QAction* fileOpenMSA; // opens a file in emsa/mas format
+  QAction* fileOpenDM3;
+  QAction* fileOpenProject;
+  QAction* fileClose;
+  QAction* fileSave;
+  QAction* fileSaveAs;
+  QAction* fileSaveProject;
+  //QAction* fileSaveProjectAs;
+  QAction* fileSaveReport;
+  QAction* fileQuit;
+
+  // Help menu actions
+  QAction* helpAbout;
+  QAction* helpAboutQt;
+
+  // Edit menu actions
+  QAction* editCut;
+  QAction* editCopy;
+  QAction* editPaste;
+  QAction* editUndoSelection;
+  QAction* editExclude;
+  QAction* editResetExclude;
+
+  // View menu actions
+  QAction* viewToggleToolBar;
+  QAction* viewToggleStatusBar;
+
+  // Model actions
+  QAction* modelNew;
+  QAction* modelFit;
+  QAction* modelComponent;
+  QAction* modelDETECTOR;
+
+  //toolbar actions
+  QAction* toolbarSelection;
+  QAction* toolbarZoom;
+  QAction* toolbarLink;
+  QAction* toolbarHome;
+  QAction* toolbarNormal;
+
 
   Model* mymodel;
   Image* myimage;
@@ -70,16 +147,18 @@ class Eelsmodel : public QWidget
 
   public:
     /** construtor */
-    Eelsmodel(QWidget* parent=0, const char *name=0);
+    //EELSModel(QWidget* parent=0, const char *name=0);
     /** destructor */
-    ~Eelsmodel();
+    //~EELSModel();
     const Model* getmodel()const{return mymodel;}
     Model* getmodel_nonconst()const{return mymodel;}
     std::string getprojectfilename()const{return projectfilename;};
+    Multispectrum* openDM3(std::string filename="",bool silent=false)const;
+
   private:
-  Spectrum* gettopspectrum();
+  //Spectrum* gettopspectrum();
   Multispectrum* gettopmultispectrum();
-  Model* gettopmodel();
+  //Model* gettopmodel();
   Graph* gettopgraph();
   Imagedisplay* gettopimdisplay();
   Multispectrum* gettopmultispectrumfromimdisplay();
@@ -87,11 +166,10 @@ class Eelsmodel : public QWidget
   std::string save_report(Model* mymodel,Fitter* myfitter,std::string filename,bool append);
   void load_project(Model*& mymodel,Fitter*& myfitter,std::string filename);
   void fitter_dialog();
-
   public slots:
     void newgraph();
     void openmsa();
-    Multispectrum* openDM(std::string filename="",bool silent=false)const;
+
     void newspectrum();
     void componentmaintenance();
     void componentmaintenance_remove_components(int);
@@ -102,7 +180,7 @@ class Eelsmodel : public QWidget
     void iterativefit();
     void fitter_updatescreen();
     void undoselection();
-    void exclude();
+    //void exclude();
     void resetexclude();
     void slot_save_project();
     void slot_save_model();

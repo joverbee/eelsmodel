@@ -74,7 +74,7 @@ use bi-cubic interpolation
 
 HSedge::HSedge() //create a dummy version
 :Component(),tempspectrum(){
-  this->setname("Hartree Slater cross section");
+  name = "Hartree Slater cross section";
   this->setdescription("Hartree Slater cross section from tabulated GOS tables by P. Rez");
 
 }
@@ -179,7 +179,7 @@ HSedge::HSedge(int n,double estart,double dispersion,std::vector<Parameter*>* pa
 
 
   //give a name and description
-  this->setname("Hartree Slater cross section");
+  name = "Hartree Slater cross section";
   this->setdescription("Hartree Slater cross section from tabulated GOS tables by P. Rez");
   this->setcanconvolute(true);
   setshifter(false);

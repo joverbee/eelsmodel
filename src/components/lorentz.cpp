@@ -33,7 +33,7 @@
 Lorentz::Lorentz()
 :Component()
 {
-  this->setname("Lorentz");
+  name = "Lorentz";
   this->setdescription("Lorentz peak with given height,position and FWHM");
   setshifter(false);
 }
@@ -66,7 +66,7 @@ Lorentz::Lorentz(int n,double estart,double dispersion,std::vector<Parameter*>* 
   this->addparameter(p2);
   this->addparameter(p3);
   //give a name and description
-  this->setname("Lorentz");
+  name = "Lorentz";
   this->setdescription("Lorentz peak with given height,position and FWHM");
   this->setcanconvolute(true);
   //all three parameters have an analytical gradient
@@ -91,7 +91,7 @@ Lorentz::Lorentz(int n,double estart,double dispersion,double epeak,double fwhm,
   this->addparameter(p2);
   this->addparameter(p3);
   //give a name and description
-  this->setname("Lorentz");
+  name = "Lorentz";
   this->setdescription("Lorentz peak with given height,position and FWHM");
   this->setcanconvolute(true);
   //all three parameters have an analytical gradient

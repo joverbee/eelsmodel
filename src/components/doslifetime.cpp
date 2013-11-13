@@ -39,10 +39,10 @@
 #include "src/components/gaussian.h"
 #include "src/components/lorentz.h"
 
-#include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
 
 #include "src/gui/componentselector.h"
+#include "src/gui/eelsmodel.h"
 #include "src/gui/graph.h"
 #include "src/gui/integerinput.h"
 #include "src/gui/saysomething.h"
@@ -50,13 +50,13 @@
 class QWorkspace;
 
 QWorkspace* getworkspaceptr();
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 
 DosLifetime::DosLifetime() //create a dummy version
 :Component(),peaklist()
 {
   compptr=0;
-  this->setname("Fine Structure (DOS) with lifetime");
+  name = "Fine Structure (DOS) with lifetime";
   this->setdescription("Fine Structure used in combination with a normal cross-section using Lifetime broadening as an extra prior knowledge");
   degree=0;
   setcanconvolute(true);
@@ -207,7 +207,7 @@ DosLifetime::DosLifetime(int n,double estart,double dispersion,std::vector<Param
       std::cout <<"Setting the names etc\n";
 #endif
   //give a name and description
-  setname("Fine Structure (DOS) with lifetime");
+  name = "Fine Structure (DOS) with lifetime";
   setdescription("Fine Structure used in combination with a normal cross-section using Lifetime broadening as an extra prior knowledge");
   setcanconvolute(true);
   setshifter(false);
@@ -221,7 +221,7 @@ DosLifetime::DosLifetime(int n,double estart,double dispersion,std::vector<Param
 
 //#ifdef COMPONENT_DEBUG
     dummy=new Spectrum(n,estart,dispersion);
-     dummy->setname("warped energy scale");
+     dummy->name = "warped energy scale";
      std::cout <<"created dummy="<<dummy<<" \n"  ;
 //#endif
   InitLorentzians(); //do energy warping, and calculate the basis set of warped lorentzians or gaussians

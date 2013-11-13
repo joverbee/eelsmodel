@@ -40,10 +40,10 @@
 #endif
 
 #include "src/core/fftw++.h"
-#include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
 
 #include "src/gui/componentselector.h"
+#include "src/gui/eelsmodel.h"
 #include "src/gui/graph.h"
 #include "src/gui/integerinput.h"
 #include "src/gui/saysomething.h"
@@ -53,13 +53,13 @@ using namespace fftwpp;
 class QWorkspace;
 
 QWorkspace* getworkspaceptr();
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 
 Dos::Dos() //create a dummy version
 :Component()
 {
   compptr=0;
-  this->setname("Fine Structure (DOS)");
+  name = "Fine Structure (DOS)";
   this->setdescription("Fine Structure used in combination with a normal cross-section");
   degree=0;
   setcanconvolute(true);
@@ -163,7 +163,7 @@ Dos::Dos(int n,double estart,double dispersion,std::vector<Parameter*>* paramete
 
 
   //give a name and description
-  setname("Fine Structure (DOS)");
+  name = "Fine Structure (DOS)";
   setdescription("Fine Structure function used in combination with a normal cross-section");
   setcanconvolute(true);
   setshifter(false);

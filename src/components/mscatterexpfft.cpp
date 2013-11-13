@@ -29,25 +29,25 @@
 #include <iostream>
 #include <vector>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/fftw++.h"
 #include "src/core/multispectrum.h"
 #include "src/core/parameter.h"
 
 #include "src/gui/componentselector.h"
+#include "src/gui/eelsmodel.h"
 #include "src/gui/getgraphptr.h"
 #include "src/gui/gettopspectrum.h"
 #include "src/gui/saysomething.h"
 
 using namespace fftwpp;
 
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 QWorkspace* getworkspaceptr();
 
 MscatterExpfft::MscatterExpfft()
 :Component()
 {
-this->setname("Fourier Log Multiple scattering (use for low loss)");
+name = "Fourier Log Multiple scattering (use for low loss)";
 this->setdescription("Self Convolution of a LL spectrum as used in fourier log deconvolution");
 this->setcanconvolute(false); //meaningless in this case
 this->setconvolutor(true); //makes this a special component!
@@ -61,7 +61,7 @@ Parameter* p2;
 compptr=0;
  //give a name and description
  this->setpppc(1.0); //test
- this->setname("Fourier Log Multiple scattering (use for low loss)");
+ name = "Fourier Log Multiple scattering (use for low loss)";
  this->setcanconvolute(false); //meaningless in this case
  this->setconvolutor(true); //makes this a special component!
  setshifter(false);

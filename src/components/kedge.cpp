@@ -30,15 +30,16 @@
 #include <cmath>
 #include <iostream>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
 
-Eelsmodel* geteelsmodelptr();
+#include "src/gui/eelsmodel.h"
+
+EELSModel* geteelsmodelptr();
 
 Kedge::Kedge() //create a dummy version
 :Component(),tempspectrum()
 {
-this->setname("Hydrogenic K-edge");
+name = "Hydrogenic K-edge";
 this->setdescription("Hydrogenic K-edge based on SigmaK by R.F. Egerton");
 }
 Kedge::Kedge(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -110,7 +111,7 @@ Kedge::Kedge(int n,double estart,double dispersion,std::vector<Parameter*>* para
   this->addparameter(p6);
   this->addparameter(p7);
   //give a name and description
-  this->setname("Hydrogenic K-edge");
+  name = "Hydrogenic K-edge";
   this->setdescription("Hydrogenic K-edge based on SigmaK by R.F. Egerton");
   this->setcanconvolute(true);
   //we have gradient wrt the strength param

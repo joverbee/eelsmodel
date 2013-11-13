@@ -28,20 +28,20 @@
 #include <cmath>
 #include <iostream>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/model.h"
 #include "src/core/parameter.h"
 
+#include "src/gui/eelsmodel.h"
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
 
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 QWorkspace* getworkspaceptr();
 
 Powerlaw::Powerlaw() //create a dummy version
 :Component()
 {
-setname("Power law background");
+name = "Power law background";
 setdescription("y=A(E/E0)^-r with A and r the two parameters");
 setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
 setshifter(false);
@@ -69,7 +69,7 @@ Powerlaw::Powerlaw(int n,double estart,double dispersion,std::vector<Parameter*>
   this->addparameter(p1);
   this->addparameter(p2);
   //give a name and description
-  setname("Power law background");
+  name = "Power law background";
   setdescription("y=A(E/E0)^-r with A and r the two parameters");
   setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
   setshifter(false);

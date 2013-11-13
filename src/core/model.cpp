@@ -36,13 +36,13 @@
 
 #include "src/components/mycomponents.h"
 
-#include "src/core/eelsmodel.h"
 #include "src/core/monitor.h"
 #include "src/core/multispectrum.h"
 
 #include "src/fitters/fitter.h"
 
 #include "src/gui/componentmaintenance.h"
+#include "src/gui/eelsmodel.h"
 #include "src/gui/graph.h"
 #include "src/gui/imagedisplay.h"
 #include "src/gui/saysomething.h"
@@ -53,7 +53,7 @@
 class Parameter;
 class QWorkspace;
 extern QWorkspace* getworkspaceptr();
-extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
+extern EELSModel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
 
 Model::Model(Spectrum* HL)
 :Spectrum(HL->getnpoints(),
@@ -286,9 +286,9 @@ void Model::calculate(){
      }
    }
 
-void Model::display(QWorkspace* parent){
+/*void Model::display(QWorkspace* parent){
     if (graphptr==0) {
-      graphptr =new Graph(parent,"model",this); //draw the model
+      graphptr =new Graph(this,"model"); //draw the model
       graphptr->setcaption("model");
       graphptr->addgraph(HLptr); //show the HL in the background
       graphptr->show();
@@ -298,7 +298,7 @@ void Model::display(QWorkspace* parent){
     }
     //tell components to show their content if they have something to show
     componentshow();
-}
+}*/
 
 void Model::componentshow(){
   //show contents of all component in a separate graph if they are visible
@@ -340,7 +340,7 @@ if (ismulti()){
     		   if (imdisplayptr==0) {
     			   size_t imheight=Multiptr->getstride();
     			   size_t imwidth=Multiptr->getsize()/Multiptr->getstride();
-             imdisplayptr=new Imagedisplay(getworkspaceptr(),myparameter->getname().c_str(),imheight,imwidth);
+             imdisplayptr=new Imagedisplay(myparameter->getname().c_str(),imheight,imwidth);
     			   imdisplayvector[i]=imdisplayptr; //store for later use
     		    }
             Eigen::MatrixXd* matrix=imdisplayptr->getmatrix();
@@ -355,9 +355,9 @@ if (ismulti()){
     		   if (plotspec==0) {
     			   plotspec=new Spectrum(this->getnrofspectra());
     			   plotspec->clear();//set all to zero
-    			   plotspec->setname(myparameter->getname());
-    			   plotspec->setxunits("nr.");
-    			   plotspec->setyunits("value");
+             plotspec->name = myparameter->getname();
+             plotspec->xunits = "nr.";
+             plotspec->yunits = "value";
     			   plotspecvector[i]=plotspec; //store for later use
     		   }
     		   plotspec->setdatapoint (this->getcurrspecnr(),double(this->getcurrspecnr()),val,0.0);
@@ -527,7 +527,7 @@ Spectrum* Model::getgradientptr(size_t compindex, size_t parameterindex){
        }
      }
   }
-  //*gradient=*this;
+  // *gradient=*this;
   //gradient->display(getworkspaceptr());
 
   //Saysomething mysay(0,"Error","the component didn't appear to be valid");
@@ -956,7 +956,7 @@ void Model::save_fitter_details(std::ofstream &projectfile,Fitter* myfitter){
 		QDateTime now=QDateTime::currentDateTime();
 		projectfile <<now.toString().toStdString()<<"\n";
 		projectfile <<"FILENAME of HL spectrum:"<< (this->getHLptr())->getfilename() <<"\n";
-		projectfile <<"NAME of HL spectrum:"<< (this->getHLptr())->getname() <<"\n";
+    projectfile <<"NAME of HL spectrum:"<< (this->getHLptr())->name <<"\n";
 		//set the precision of numbers
 		//8 digits in engineering format
 		projectfile.setf(std::ofstream::scientific);

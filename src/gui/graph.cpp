@@ -191,13 +191,15 @@ public:
 // Constructs a Graph widget.
 //
 
-Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
-    :QwtPlot(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints()))
+Graph::Graph(Spectrum* spectrum, QWidget* parent)
+: QwtPlot(parent),
+  qwtdata(1, QVector<QPointF>(spectrum->getnpoints()))
 {
+  setWindowTitle(spectrum->name.c_str());
+setMinimumSize(300,150);
     multispectrum=false;
-    spectrumptr=spec;
-    this->setWindowTitle(name);
-    parent->addWindow(this); //add it explicitly to the workspace (important in QT4)
+    spectrumptr=spectrum;
+    //parent->addWindow(this); //add it explicitly to the workspace (important in QT4)
     #ifdef GRAPH_DEBUG
     std::cout << "Constructor of graph\n";
     std::cout << "parent adres is "<<parent<<"\n";

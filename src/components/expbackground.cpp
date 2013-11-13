@@ -33,7 +33,7 @@
 Expbackground::Expbackground() //create a dummy version
 :Component()
 {
-this->setname("Exponential background");
+name = "Exponential background";
 this->setdescription("Exponential background");
 }
 Expbackground::Expbackground(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -56,7 +56,7 @@ else{
   this->addparameter(p1);
   this->addparameter(p2);
 //give a name and description
-this->setname("Exponential background");
+name = "Exponential background";
 this->setdescription("Exponential background");
 this->setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
 setshifter(false);

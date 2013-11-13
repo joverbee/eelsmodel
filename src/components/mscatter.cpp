@@ -32,19 +32,20 @@
 #include <QWorkspace>
 
 #include "src/core/parameter.h"
-#include "src/core/eelsmodel.h"
 #include "src/core/multispectrum.h"
+
+#include "src/gui/eelsmodel.h"
 #include "src/gui/getgraphptr.h"
 #include "src/gui/gettopspectrum.h"
 #include "src/gui/saysomething.h"
 
 QWorkspace* getworkspaceptr();
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 
 Mscatter::Mscatter()
 :Component(),LLspectrum()
 {
-this->setname("Multiple scattering (matrix convolution)");
+name = "Multiple scattering (matrix convolution)";
 this->setdescription("Convolution of the HL spectrum with LL using matrix convolution.\nThis simulates the effect of multiple scattering\nwhich is an important effect in experimental spectra ");
 this->setcanconvolute(false); //meaningless in this case
 this->setconvolutor(true); //makes this a special component!
@@ -56,7 +57,7 @@ Mscatter::Mscatter(int n,double estart,double dispersion,std::vector<Parameter*>
 Parameter* p;
  //give a name and description
  this->setpppc(1.0); //test
- this->setname("Multiple scattering (matrix convolution)");
+ name = "Multiple scattering (matrix convolution)";
  this->setdescription("Convolution of the HL spectrum with LL using matrix convolution.\nThis simulates the effect of multiple scattering\nwhich is an important effect in experimental spectra ");
  this->setcanconvolute(false); //meaningless in this case
  this->setconvolutor(true); //makes this a special component!
@@ -135,17 +136,15 @@ Parameter* p;
 
   //assume that if model is multispectrum also LL will be a multispectrum
   if (!mymodel->ismulti()){
-    loadmsa l;
-    LLptr = new Spectrum(l,p->getname()); //the filename is stored in the name of p
+    LLptr = new Spectrum(p->getname()); //the filename is stored in the name of p
     if (LLptr==0) throw Componenterr::unable_to_create();
     }
   else{
     //ask eelsmodel to load a multispectrum
-    multiLLptr=(geteelsmodelptr())->openDM(p->getname(),true); //open but silent
+    multiLLptr=(geteelsmodelptr())->openDM3(p->getname(),true); //open but silent
     if (multiLLptr==0) {
       //maybe it was a single spectrum after all...
-      loadmsa l;
-      LLptr = new Spectrum(l,p->getname()); //the filename is stored in the name of p
+      LLptr = new Spectrum(p->getname()); //the filename is stored in the name of p
       if (LLptr==0) throw Componenterr::unable_to_create();}
     }
  }

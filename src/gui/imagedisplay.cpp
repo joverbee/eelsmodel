@@ -46,7 +46,7 @@
 //    #include "debug_new.h" //memory leak checker
 //#endif
 
-Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Multispectrum* mspec)
+Imagedisplay::Imagedisplay(const QString& name, Multispectrum* mspec, QWidget* parent)
 : QWidget(parent),
   mspecptr(mspec),
   matrixptr(0),
@@ -61,7 +61,7 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Multispectru
   std::cout << "creating image from multispectrum\n";
 #endif
   setFocusPolicy(Qt::StrongFocus ); //needed for key input
-  parent->addWindow(this); //add it explicitly to the workspace
+  //parent->addWindow(this); //add it explicitly to the workspace
 
   setname(mspec->getname().c_str());
 
@@ -78,7 +78,7 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Multispectru
   show();
 }
 
-Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name,size_t dim1,size_t dim2)
+Imagedisplay::Imagedisplay(const QString& name,size_t dim1,size_t dim2, QWidget* parent)
 : QWidget(parent),
   mspecptr(0),
   matrixptr(new Eigen::MatrixXd(dim1,dim2)),
@@ -90,7 +90,7 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name,size_t dim1,s
   dragging(false),
   is2D(false)
 {
-	parent->addWindow(this); //add it explicitly to the workspace
+//	parent->addWindow(this); //add it explicitly to the workspace
 
   setFocusPolicy(Qt::StrongFocus ); //needed for key input
   setWindowTitle(name);
@@ -108,7 +108,7 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name,size_t dim1,s
   show();
 }
 
-Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Eigen::MatrixXd* matrix)
+Imagedisplay::Imagedisplay(const QString& name, Eigen::MatrixXd* matrix, QWidget* parent)
 : QWidget(parent),
   mspecptr(0),
   matrixptr(matrix),
@@ -118,7 +118,7 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, const QString& name, Eigen::Matri
   dragging(false),
   is2D(false)
 {
-  parent->addWindow(this); //add it explicitly to the workspace
+//  parent->addWindow(this); //add it explicitly to the workspace
 
   setFocusPolicy(Qt::StrongFocus ); //needed for key input
   setWindowTitle(name);
@@ -285,7 +285,7 @@ void Imagedisplay::setname(const QString& name)
 QString Imagedisplay::getname() const
 {
   if(mspecptr!=0)
-    return mspecptr->getcurrentspectrum()->getname();
+    return mspecptr->getcurrentspectrum()->name.c_str();
   else
     return "";
 }

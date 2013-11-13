@@ -33,22 +33,22 @@
 #ifdef DEBUG
     #include "debug_new.h" //memory leak checker
 #endif
-#include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
 
+#include "src/gui/Drudeoptions.h"
+#include "src/gui/eelsmodel.h"
 #include "src/gui/integerinput.h"
 #include "src/gui/imagedisplay.h"
-#include "src/gui/Drudeoptions.h"
 
 class QWorkspace;
 
 QWorkspace* getworkspaceptr();
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 
 DielecModel::DielecModel()
 :Component()
 {
-  this->setname("Dielectric Model");
+  name = "Dielectric Model";
   this->setdescription("Model for the dielectric function in low loss EELS");
   setshifter(false);
 }
@@ -112,7 +112,7 @@ nrofextraparams=6; //extra params outside of the lorentz functions
   }
 
   //give a name and description
-  this->setname("Dielectric Model");
+  name = "Dielectric Model";
   this->setdescription("Model for the dielectric function in low loss EELS");
 
   this->setcanconvolute(true);
@@ -122,8 +122,8 @@ nrofextraparams=6; //extra params outside of the lorentz functions
   //create eps1 and eps2 spectrum
   eps1spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
   eps2spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
-  eps1spectrum->setname("Epsilon1");
-  eps2spectrum->setname("Epsilon2");
+  eps1spectrum->name = "Epsilon1";
+  eps2spectrum->name = "Epsilon2";
   eps1spectrum->display(getworkspaceptr());
   eps2spectrum->display(getworkspaceptr());
 
@@ -384,7 +384,7 @@ void DielecModel::addlorentzparams(size_t i){
 void DielecModel::displayKroeger(){
     //make a plot of the Kroeger result
     if (kroegerim==0){
-        kroegerim=new Imagedisplay(getworkspaceptr(),"kroeger test",&kroegermatrix);
+        kroegerim=new Imagedisplay("kroeger test",&kroegermatrix);
     }
     kroegerim->updatereloadmatrix();
 }
@@ -512,7 +512,7 @@ double DielecModel::Pefl(double theta,double thetaE,double v,double beta,std::co
     std::complex<double> cyefl=term1+prefact2*(A+B+C);
 
     if (std::isnan(cyefl.imag())){
-        cyefl.imag()=0.0;
+        cyefl.imag(0.0);
     }
 
     //return fabs(pow(e/(Pi*h*v),2.0)*(e/(4.0*Pi*e0))*cyefl.imag()); //make sure to return no neg values with abs

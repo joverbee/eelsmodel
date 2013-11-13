@@ -42,12 +42,12 @@
 #include "src/components/gdos.h"
 
 #include "src/core/fftw++.h"
-#include "src/core/eelsmodel.h"
 #include "src/core/monitor.h"
 #include "src/core/parameter.h"
 
 #include "src/gui/integerinput.h"
 #include "src/gui/componentselector.h"
+#include "src/gui/eelsmodel.h"
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
 #include "src/gui/GDOSoptions.h"
@@ -57,7 +57,7 @@ using namespace fftwpp;
 class QWorkspace;
 
 QWorkspace* getworkspaceptr();
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 
 GDos::GDos() //create a dummy version
 :Component(),Evector(),Yvector(),b(),c(),d()
@@ -66,7 +66,7 @@ GDos::GDos() //create a dummy version
   mptr2=0;
   compptr=0;
   cumsumrule=0;
-  this->setname("Generic Fine Structure (DOS)");
+  name = "Generic Fine Structure (DOS)";
   this->setdescription("Fine Structure used in combination with a normal cross-section");
   degree=0;
   setcanconvolute(true);
@@ -219,7 +219,7 @@ GDos::GDos(int n,double estart,double dispersion,std::vector<Parameter*>* parame
 
 
   //give a name and description
-  setname("Generic Fine Structure (DOS)");
+  name = "Generic Fine Structure (DOS)";
   setdescription("Fine Structure function used in combination with a normal cross-section");
   setcanconvolute(true);
   setshifter(false);
@@ -729,7 +729,7 @@ void GDos::initDOS(){
     }
     if (dosumrule){
         cumsumrule=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
-        cumsumrule->setname("cumulative Bethe sum rule difference");
+        cumsumrule->name = "cumulative Bethe sum rule difference";
         cumsumrule->display(getworkspaceptr());
     }
 

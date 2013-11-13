@@ -33,7 +33,7 @@
 Line::Line()
 :Component()
 {
-this->setname("Line");
+name = "Line";
 this->setdescription("y=A+BE with A and B the two parameters");
 }
 Line::Line(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -60,7 +60,7 @@ p2->setlinear(true);
 this->addparameter(p1);
 this->addparameter(p2);
 //give a name and description
-this->setname("Line");
+name = "Line";
 this->setdescription("y=A+BE with A and B the two parameters");
 this->setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
 }

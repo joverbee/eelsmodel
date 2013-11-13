@@ -39,7 +39,7 @@ QWorkspace* getworkspaceptr();
 EdgeFile::EdgeFile()
 :Component(),tempspectrum()
 {
-  this->setname("EdgeFile");
+  name = "EdgeFile";
   this->setdescription("y=spectrum loaded from file, can be shifted and scaled\nMake sure the edge file is calibrated to 0eV at the edge onset");
 }
 
@@ -79,8 +79,7 @@ EdgeFile::EdgeFile(int n,double estart,double dispersion,std::vector<Parameter*>
     Parameter* p3=(*parameterlistptr)[2];
     Parameter* p4=(*parameterlistptr)[3];
     //get the edge file via the filename
-    loadmsa l;
-    edgeptr = new Spectrum(l,p4->getname()); //the filename is stored in the name of p4
+    edgeptr = new Spectrum(p4->getname()); //the filename is stored in the name of p4
     if (edgeptr==0) throw Componenterr::unable_to_create();
     p4->setname(edgeptr->getfilename()); //update p4 in case the filename was not found and the user directed us to a new filename and/or path
     this->addparameter(p1);
@@ -90,7 +89,7 @@ EdgeFile::EdgeFile(int n,double estart,double dispersion,std::vector<Parameter*>
   }
 
   //give a name and description
-  this->setname("EdgeFile");
+  name = "EdgeFile";
   this->setdescription("y=spectrum loaded from file, can be shifted and scaled");
   this->setcanconvolute(true);
   setshifter(false);

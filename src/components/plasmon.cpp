@@ -39,7 +39,7 @@
 Plasmon::Plasmon() //create a dummy version
 :Component()
 {
-  this->setname("Plasmon model");
+  name = "Plasmon model";
   this->setdescription("A model of a lorentzian ZL peak and a set of lorentzian plasmon peaks");
   nrofplasmons=0;
   setcanconvolute(true);
@@ -131,7 +131,7 @@ Plasmon::Plasmon(int n,double estart,double dispersion,std::vector<Parameter*>* 
 
 
   //give a name and description
-  setname("Plasmon model");
+  name = "Plasmon model";
   setdescription("A model of a lorentzian ZL peak and a set of lorentzian plasmon peaks");
   setcanconvolute(true);
   setshifter(false);

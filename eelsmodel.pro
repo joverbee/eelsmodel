@@ -6,7 +6,7 @@ CONFIG+=exceptions
 CONFIG+=rtti
 QMAKE_CXXFLAGS_RELEASE+=-O3
 QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions
-
+*g++*:QMAKE_CXXFLAGS+=-std=c++11
 macx{
 INCLUDEPATH += /usr/local/atlas/include \
     /Users/jv/boost/boost_1_34_1 \
@@ -100,7 +100,6 @@ HEADERS += src/components/dieleclinear.h \
            src/core/chisquare.h \
            src/core/component.h \
            src/core/debug_new.h \
-           src/core/eelsmodel.h \
            src/core/fftw++.h \          
            src/core/image.h \
            src/core/model.h \
@@ -158,7 +157,9 @@ HEADERS += src/components/dieleclinear.h \
            ./icons/rectangle.xpm \
            ./icons/zoom.xpm \
            ./icons/gohome.xpm \
-           ./icons/connect_established.xpm
+           ./icons/connect_established.xpm \
+    src/gui/eelsmodel.h \
+    src/gui/eelsmodeltab.h
 SOURCES += src/components/dieleclinear.cpp \
            src/components/dielecmodel.cpp \
            src/components/dos.cpp \
@@ -192,7 +193,6 @@ SOURCES += src/components/dieleclinear.cpp \
            src/core/chisquare.cpp \
            src/core/component.cpp \
            src/core/debug_new.cpp \
-           src/core/eelsmodel.cpp \
            src/core/fftw++.cpp \
            src/core/image.cpp \
            src/core/main.cpp \
@@ -230,6 +230,11 @@ SOURCES += src/components/dieleclinear.cpp \
            src/gui/menu.cpp \
            src/gui/monitorchooser.cpp \
            src/gui/realinput.cpp \
-           src/gui/saysomething.cpp
+           src/gui/saysomething.cpp \
+    src/gui/eelsmodel.cpp \
+    src/gui/eelsmodeltab.cpp
 OTHER_FILES += \
     .gitignore
+
+RESOURCES += \
+    eelsmodel.qrc

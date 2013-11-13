@@ -30,6 +30,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -75,9 +76,9 @@ Spectrum::~Spectrum(){
 
 //        constructors
 Spectrum::Spectrum()
-:dataset()
+: name(),
+  dataset()
 {
-spectrumname="";
 graphptr=0;    //strange graphptr is not initialised to 0 while it should be in ansi c++?
 npoints=0;
 pppc=1.0;
@@ -86,286 +87,286 @@ setfilename("");
 }
 
 
-Spectrum::Spectrum(unsigned int n)
-  :dataset(n) //get memory
+Spectrum::Spectrum(std::size_t size)
+: name("untitled"),
+  xunits("energy"),
+  yunits("counts"),
+  dataset(size)
 {
-              spectrumname="";
   graphptr=0;    //strange graphptr is not initialised to 0 while it should be in ansi c++?
-  npoints=n;
+  npoints=size;
   pppc=1.0;
   eshift=0.0;
   //create random data for testing purposes
-  for (size_t i=0;i<n;i++){
+  for(std::size_t i=0; i<size; ++i)
+  {
     dataset[i].energy=double(i);
     setcounts(i,(double(rand())/RAND_MAX)*1000.0);
     seterror(i,1.0);
     setexclude(i,false);
-    }
-  setname("untitled");
-  setxunits("energy");
-  setyunits("counts");
-  setfilename("");
+  }
 }
 
-Spectrum::Spectrum(unsigned int n,double estart, double dispersion)
-  :dataset(n) //get memory
-
+Spectrum::Spectrum(std::size_t size, double Estart, double dispersion)
+: name("untitled"),
+  dataset(size)
 {
-              spectrumname="";
-graphptr=0;    //strange graphptr is not initialised to 0 while it should be in ansi c++?
-  npoints=n;
+  graphptr=0;    //strange graphptr is not initialised to 0 while it should be in ansi c++?
+  npoints=size;
   pppc=1.0;
   eshift=0.0;
-  for (size_t bin=0;bin<npoints;bin++){
-    dataset[bin].energy=estart+bin*dispersion;
+  for(std::size_t bin=0; bin<npoints; ++bin)
+  {
+    dataset[bin].energy=Estart+bin*dispersion;
     setcounts(bin,(double(rand())/RAND_MAX)*1000.0);
     setexclude(bin,false);
-    }
-  setname("untitled");
+  }
   setfilename("");
 }
 
-Spectrum::Spectrum(loadmsa l,std::string filename) //construct a spectrum loaded from disk in emsa format
-:dataset()
+Spectrum::Spectrum(const std::string& filename) //construct a spectrum loaded from disk in emsa format
+: name("untitled"),
+  dataset()
 //load an emsa-msa file from disk
 //this format will become an ISO standard and currently has number ISO/DIS22029
 //the current implementation is based on notes by RF Egerton and N Zalucec
 {
-      spectrumname="";
   graphptr=0;    //strange graphptr is not initialised to 0 while it should be in ansi c++?
   pppc=1.0;
   eshift=0.0;
   npoints=0;
-  //setname("untitled");
-  //get a filename from the Getfilename class
 
+  if (filename=="")
+  {
+    throw std::runtime_error("bad argument to Spectrum constructor.");
+    /*
+    Getfilename myfile(0,"Select a file");
+    //myfile.setdirname("~");
+    myfile.setfilter("Spectra (*.ems *.msa *.mas *.emsa *.EMS *.MAS *.EMSA *.MSA)");
+    myfile.setcaption("Select a spectrum file");
+    filename=myfile.open();
+    if (filename=="") throw Spectrumerr::load_cancelled();//cancelled by user
+    */
+  }
 
-
-if (filename==""){
-  Getfilename myfile(0,"Select a file");
-  //myfile.setdirname("~");
-  myfile.setfilter("Spectra (*.ems *.msa *.mas *.emsa *.EMS *.MAS *.EMSA *.MSA)");
-  myfile.setcaption("Select a spectrum file");
-  filename=myfile.open();
+  //better do it in the components because they have to store the new found filename
+  //test existence of filename and get a corrected filename if not found
+  /*
+  Fileopener f(0,0,filename);
+  filename=f.open();
+  //filename is now an updated name
   if (filename=="") throw Spectrumerr::load_cancelled();//cancelled by user
-  }
-
-//better do it in the components because they have to store the new found filename
-//test existence of filename and get a corrected filename if not found
-Fileopener f(0,0,filename);
- filename=f.open();
-//filename is now an updated name
-if (filename=="") throw Spectrumerr::load_cancelled();//cancelled by user
-
-  #ifdef DEBUGSPECTRUM
+  */
+#ifdef DEBUGSPECTRUM
   std::cout <<"the filename is: "<<filename <<"\n";
-  #endif
-//open this file for reading ascii
-std::ifstream msafile(filename.c_str());
-if (!msafile) {
-  throw Spectrum::Spectrumerr::load_error("Can not open file for reading");
-  }
+#endif
+  //open this file for reading ascii
+  std::ifstream msafile(filename.c_str());
+  if(!msafile)
+    throw Spectrum::Spectrumerr::load_error("Can not open file for reading");
 
-//show line per line what is encountered
-std::string myline;
-std::string::size_type mypos;
+  //show line per line what is encountered
+  std::string line;
+  std::string::size_type mypos;
 
-char eol='\n'; //eol, in future it should be determined from the file because it can be platform specific
-char cr='\r';
-double dE=0.0;
-double Estart=0.0;
+  double dE=0.0;
+  double Estart=0.0;
 
-while (std::getline(msafile,myline,eol))
-{
-  if (myline.find(cr)!=std::string::npos) {
-    myline.erase(myline.find(cr)); //remove carriage return from the end of the line
-  }
-  #ifdef DEBUGSPECTRUM
-  std::cout <<myline <<"\n";
-  #endif
-  //convert first 13 characters of each line to uppercase
-  //header keywords are allowed to be any mix of upper and lowercase
-  for (unsigned int i=0;(i<13)&&(i<myline.length());i++){
-    if (std::islower(myline[i])) myline[i]=std::toupper(myline[i]); //if so, replace by its uppercase equivalent
-    }
-
-  //look for specific header parts that are needed to construct the spectrum
-  if (myline.find("#TITLE")!=std::string::npos){
-    mypos=myline.find(": ");
-    if (mypos!=std::string::npos){
-      std::string title= myline.substr(mypos+2);
-      #ifdef DEBUGSPECTRUM
-      std::cout <<"title " << title <<"\n";
-      #endif
-      this->setname(title);
-      }
-    }
-  if (myline.find("#XUNITS")!=std::string::npos){
-    mypos=myline.find(": ");
-    if (mypos!=std::string::npos){
-      std::string xun= myline.substr(mypos+2);
-      #ifdef DEBUGSPECTRUM
-      std::cout <<"xunits " << xun <<"\n";
-      #endif
-      this->setxunits(xun);
-      }
-    }
-    if (myline.find("#YUNITS")!=std::string::npos){
-    mypos=myline.find(": ");
-    if (mypos!=std::string::npos){
-      std::string yun= myline.substr(mypos+2);
-      #ifdef DEBUGSPECTRUM
-      std::cout <<"yunits " << yun <<"\n";
-      #endif
-      this->setyunits(yun);
-      }
-    }
-
-  if (myline.find("#NPOINTS")!=std::string::npos){
-    mypos=myline.find(": ");
-    std::string npointstring;
-    if (mypos!=std::string::npos){
-      npointstring= myline.substr(mypos+2);
-      #ifdef DEBUGSPECTRUM
-      std::cout << "npoints" << npointstring <<"\n";
-      #endif
-      int n=atoi(npointstring.c_str());
-      #ifdef DEBUGSPECTRUM
-      std::cout << "npoints converted to int " << n <<"\n";
-      #endif
-      //if (n>4096){
-      //  throw Spectrum::Spectrumerr::load_error("Npoints is larger then 4096, which is forbidden in the EMSA standard V1.0");
-      //  }
-      this->setnpoints(n); //this results in loss of data and graph and resizes the dataset
-      }
-    }
-
-    if (myline.find("#DATATYPE")!=std::string::npos){
-    mypos=myline.find(": ");
-    if (mypos!=std::string::npos){
-      std::string dtype= myline.substr(mypos+2);
-      #ifdef DEBUGSPECTRUM
-      std::cout << "datatype" << dtype <<"\n";
-      #endif
-      if (dtype=="XY") datatype=XY;
-      if (dtype=="Y") datatype=Y;
-      }
-    }
-
-
-   if (myline.find("#XPERCHAN")!=std::string::npos){
-    mypos=myline.find(": ");
-    if (mypos!=std::string::npos){
-      std::string dispersion= myline.substr(mypos+2);
-      #ifdef DEBUGSPECTRUM
-      std::cout << "dispersion" << dispersion <<"\n";
-      #endif
-      dE=atof(dispersion.c_str()); //convert to double
-      #ifdef DEBUGSPECTRUM
-      std::cout << "dispersion converted to double " << dE <<"\n";
-      #endif
-      }
-    }
-    if (myline.find("#OFFSET")!=std::string::npos){
-    mypos=myline.find(": ");
-    if (mypos!=std::string::npos){
-      std::string offset= myline.substr(mypos+2);
-      #ifdef DEBUGSPECTRUM
-      std::cout << "estart" << offset <<"\n";
-      #endif
-      Estart=atof(offset.c_str()); //convert to double
-      #ifdef DEBUGSPECTRUM
-      std::cout << "estart converted to double " << Estart <<"\n";
-      #endif
-      }
-    }
-  if (myline.find("#SPECTRUM")!=std::string::npos) break;
-
-}
-//start to read the data
-if (datatype==Y){
-  //Y format
-  std::string number;
-  double energy,cts;
-  int index=0;
-  std::string::size_type previouspos=0;
-  while (std::getline(msafile,myline,eol))
+  while(std::getline(msafile,line))
+  {
+    //remove carriage return from the end of the line
+    if(line.back() == '\r')
+      line.pop_back();
+#ifdef DEBUGSPECTRUM
+    std::cout <<line <<"\n";
+#endif
+    //convert first 13 characters of each line to uppercase
+    //header keywords are allowed to be any mix of upper and lowercase
+    for(std::size_t i=0; (i<13) && (i<line.length()); ++i)
     {
-    if (myline.find(cr)!=std::string::npos)  myline.erase(myline.find(cr)); //remove carriage return from the end of the line
-    #ifdef DEBUGSPECTRUM
-    std::cout <<myline <<"\n";
-    #endif
-    if (myline.find("#ENDOFDATA")!=std::string::npos) break;
-    std::string piece;
-    do{
-      piece= myline.substr(previouspos,std::string::npos);
-      //  std::cout <<"piece" <<piece<<"\n";
-      mypos=piece.find(",");
-      number=piece.substr(0,mypos);
-      // cout <<number<<" : ";
-      //convert number to double
-      cts=atof(number.c_str());
-      energy=Estart+double(index)*dE;
-      // std::cout <<index<<" : "<<energy<<" : "<<cts<<"\n";
-      this->setdatapoint(index++,energy,cts,0.0);
-      previouspos+=mypos+1;
+      if(std::islower(line[i]))
+        line[i]=std::toupper(line[i]); //if so, replace by its uppercase equivalent
+    }
+
+    //look for specific header parts that are needed to construct the spectrum
+    if (line.find("#TITLE")!=std::string::npos){
+      mypos=line.find(": ");
+      if (mypos!=std::string::npos){
+        std::string title= line.substr(mypos+2);
+#ifdef DEBUGSPECTRUM
+        std::cout <<"title " << title <<"\n";
+#endif
+        name = title;
       }
-    while (mypos!=std::string::npos);
-    previouspos=0;
-    #ifdef DEBUGSPECTRUM
-    std::cout <<"\n";
-    #endif
+    }
+    if (line.find("#XUNITS")!=std::string::npos){
+      mypos=line.find(": ");
+      if (mypos!=std::string::npos){
+        std::string xun= line.substr(mypos+2);
+#ifdef DEBUGSPECTRUM
+        std::cout <<"xunits " << xun <<"\n";
+#endif
+        xunits = xun;
+      }
+    }
+    if (line.find("#YUNITS")!=std::string::npos){
+      mypos=line.find(": ");
+      if (mypos!=std::string::npos){
+        std::string yun= line.substr(mypos+2);
+#ifdef DEBUGSPECTRUM
+        std::cout <<"yunits " << yun <<"\n";
+#endif
+        yunits = yun;
+      }
+    }
+
+    if (line.find("#NPOINTS")!=std::string::npos){
+      mypos=line.find(": ");
+      std::string npointstring;
+      if (mypos!=std::string::npos){
+        npointstring= line.substr(mypos+2);
+#ifdef DEBUGSPECTRUM
+        std::cout << "npoints" << npointstring <<"\n";
+#endif
+        int n=atoi(npointstring.c_str());
+#ifdef DEBUGSPECTRUM
+        std::cout << "npoints converted to int " << n <<"\n";
+#endif
+        //if (n>4096){
+        //  throw Spectrum::Spectrumerr::load_error("Npoints is larger then 4096, which is forbidden in the EMSA standard V1.0");
+        //  }
+        this->setnpoints(n); //this results in loss of data and graph and resizes the dataset
+      }
+    }
+
+    if (line.find("#DATATYPE")!=std::string::npos){
+      mypos=line.find(": ");
+      if (mypos!=std::string::npos){
+        std::string dtype= line.substr(mypos+2);
+#ifdef DEBUGSPECTRUM
+        std::cout << "datatype" << dtype <<"\n";
+#endif
+        if (dtype=="XY") datatype=XY;
+        if (dtype=="Y") datatype=Y;
+      }
+    }
+
+
+    if (line.find("#XPERCHAN")!=std::string::npos){
+      mypos=line.find(": ");
+      if (mypos!=std::string::npos){
+        std::string dispersion= line.substr(mypos+2);
+#ifdef DEBUGSPECTRUM
+        std::cout << "dispersion" << dispersion <<"\n";
+#endif
+        dE=atof(dispersion.c_str()); //convert to double
+#ifdef DEBUGSPECTRUM
+        std::cout << "dispersion converted to double " << dE <<"\n";
+#endif
+      }
+    }
+    if (line.find("#OFFSET")!=std::string::npos){
+      mypos=line.find(": ");
+      if (mypos!=std::string::npos){
+        std::string offset= line.substr(mypos+2);
+#ifdef DEBUGSPECTRUM
+        std::cout << "estart" << offset <<"\n";
+#endif
+        Estart=atof(offset.c_str()); //convert to double
+#ifdef DEBUGSPECTRUM
+        std::cout << "estart converted to double " << Estart <<"\n";
+#endif
+      }
+    }
+    if (line.find("#SPECTRUM")!=std::string::npos) break;
+
   }
-}
-else {
-  //XY format
-  std::string number;
-  double energy,cts;
-  int index=0;
-  std::string::size_type previouspos=0;
-  while (std::getline(msafile,myline,eol))
+  //start to read the data
+  if (datatype==Y){
+    //Y format
+    std::string number;
+    double energy,cts;
+    int index=0;
+    std::string::size_type previouspos=0;
+    while (std::getline(msafile,line))
     {
-    if (myline.find(cr)!=std::string::npos) {
-      myline.erase(myline.find(cr)); //remove carriage return from the end of the line
-    }
-    #ifdef DEBUGSPECTRUM
-    std::cout <<myline <<"\n";
-    #endif
-    if (myline.find("#ENDOFDATA")!=std::string::npos) break;
-    std::string piece;
-    do{
-      piece= myline.substr(previouspos,std::string::npos);
-      //  std::cout <<"piece" <<piece<<"\n";
-      mypos=piece.find(",");
-      number=piece.substr(0,mypos);
-
-      //the first number is the energy
-      energy=atof(number.c_str());
-
-      //read the second number
-      previouspos+=mypos+1;
-      piece= myline.substr(previouspos,std::string::npos);
-      mypos=piece.find(",");
-      number=piece.substr(0,mypos);
-      //convert number to double
-      cts=atof(number.c_str());
-      //energy=Estart+double(index)*dE;
-      #ifdef DEBUGSPECTRUM
-      std::cout <<index<<" : "<<energy<<" : "<<cts<<"\n";
-      #endif
-      this->setdatapoint(index++,energy,cts,0.0);
-      previouspos+=mypos+1;
+      //remove carriage return from the end of the line
+      if(line.back() == '\r')
+        line.pop_back();
+#ifdef DEBUGSPECTRUM
+      std::cout <<myline <<"\n";
+#endif
+      if (line.find("#ENDOFDATA")!=std::string::npos) break;
+      std::string piece;
+      do{
+        piece= line.substr(previouspos,std::string::npos);
+        //  std::cout <<"piece" <<piece<<"\n";
+        mypos=piece.find(",");
+        number=piece.substr(0,mypos);
+        // cout <<number<<" : ";
+        //convert number to double
+        cts=atof(number.c_str());
+        energy=Estart+double(index)*dE;
+        // std::cout <<index<<" : "<<energy<<" : "<<cts<<"\n";
+        this->setdatapoint(index++,energy,cts,0.0);
+        previouspos+=mypos+1;
       }
-    while (mypos!=std::string::npos);
-    previouspos=0;
-    #ifdef DEBUGSPECTRUM
-    std::cout <<"\n";
-    #endif
+      while (mypos!=std::string::npos);
+      previouspos=0;
+#ifdef DEBUGSPECTRUM
+      std::cout <<"\n";
+#endif
     }
   }
-//there can still be a #CHECKSUM at the end of the file, but we ignore it here...
-setfilename(filename);
-this->initpoissonerror();
+  else {
+    //XY format
+    std::string number;
+    double energy,cts;
+    int index=0;
+    std::string::size_type previouspos=0;
+    while (std::getline(msafile,line))
+    {
+      //remove carriage return from the end of the line
+      if(line.back() == '\r')
+        line.pop_back();
+#ifdef DEBUGSPECTRUM
+      std::cout <<myline <<"\n";
+#endif
+      if (line.find("#ENDOFDATA")!=std::string::npos) break;
+      std::string piece;
+      do{
+        piece= line.substr(previouspos,std::string::npos);
+        //  std::cout <<"piece" <<piece<<"\n";
+        mypos=piece.find(",");
+        number=piece.substr(0,mypos);
+
+        //the first number is the energy
+        energy=atof(number.c_str());
+
+        //read the second number
+        previouspos+=mypos+1;
+        piece= line.substr(previouspos,std::string::npos);
+        mypos=piece.find(",");
+        number=piece.substr(0,mypos);
+        //convert number to double
+        cts=atof(number.c_str());
+        //energy=Estart+double(index)*dE;
+#ifdef DEBUGSPECTRUM
+        std::cout <<index<<" : "<<energy<<" : "<<cts<<"\n";
+#endif
+        this->setdatapoint(index++,energy,cts,0.0);
+        previouspos+=mypos+1;
+      }
+      while (mypos!=std::string::npos);
+      previouspos=0;
+#ifdef DEBUGSPECTRUM
+      std::cout <<"\n";
+#endif
+    }
+  }
+  //there can still be a #CHECKSUM at the end of the file, but we ignore it here...
+  setfilename(filename);
+  this->initpoissonerror();
 
 }
 
@@ -513,9 +514,9 @@ Spectrum& Spectrum::operator=(const Spectrum& a1){
   //copy all datafields
   this->setpppc(a1.getpppc());
   this->seteshift(a1.geteshift());
-  this->setname(a1.getname());
-  this->setxunits(a1.getxunits());
-  this->setyunits(a1.getyunits());
+  this->name = a1.name;
+  this->xunits = a1.xunits;
+  this->yunits = a1.yunits;
   graphptr=0;
   }
   return *this;
@@ -638,48 +639,22 @@ if ((index<0) | (index>=int(npoints))) throw Spectrumerr::bad_index();
 }
 void Spectrum::display(QWorkspace* parent)
 {
-  //if we already have a graph, just update it
-  if (graphptr==0){
-     const char* name=Spectrum::getname();
-    graphptr =new Graph(parent,name,this);
+/*  //if we already have a graph, just update it
+  if (graphptr==0)
+  {
+    graphptr =new Graph(parent,name.c_str(),this);
   }
   //we should have a graph now but just to be sure
   if (graphptr!=0){
     graphptr->updategraph(0,this);
-    graphptr->setcaption(getname());
-    graphptr->setxlabel(getxunits());
-    graphptr->setylabel(getyunits());
+    graphptr->setcaption(name);
+    graphptr->setxlabel(xunits.c_str());
+    graphptr->setylabel(yunits.c_str());
     graphptr->show();
  }
-}
-const char* Spectrum::getname()const
-{
-return (spectrumname.c_str());
+ */
 }
 
-const char* Spectrum::getxunits()const
-{
-return (xunits.c_str());
-}
-const char* Spectrum::getyunits()const
-{
-return (yunits.c_str());
-}
-
-
-
-void Spectrum::setname(std::string s)
-{
-spectrumname=s;
-}
-void Spectrum::setxunits(std::string s)
-{
-xunits=s;
-}
-void Spectrum::setyunits(std::string s)
-{
-yunits=s;
-}
 void Spectrum::normalize(double s)
 {
     //normalise so that spectrum has a total of s counts

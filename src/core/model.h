@@ -104,7 +104,7 @@ Component* getlastcomponent();
 void componentshow();
 size_t getcomponentsnr()const{return componentptrvector.size();}
 void calculate();
-void display(QWorkspace* parent=0); //override of Spectrum::display
+//void display(QWorkspace* parent=0); //override of Spectrum::display
 void seteshift(double e); //override of Spectrum::eshift
 void printcomponents();
 void resetsigmas();

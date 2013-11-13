@@ -28,15 +28,14 @@
 #include <sstream>
 #include <vector>
 
-#include "src/core/eelsmodel.h"
-
+#include "src/gui/eelsmodel.h"
 #include "src/gui/equalizer.h"
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
 
 class QWorkspace;
 
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 QWorkspace* getworkspaceptr();
 
 Component::Component()
@@ -51,10 +50,9 @@ Component::Component()
   this->setvisible(false);
   multiplierptr=0;
   hasmultiplier=false;
-  setdisplayname("");
   gradient.setpppc(1.0);
   setdescription("unitialized component");
-  setname("unitialized component");
+  name = "unitialized component";
 }
 
 Component::Component(int n ,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -69,10 +67,9 @@ Component::Component(int n ,double estart,double dispersion,std::vector<Paramete
   this->setvisible(false);
   multiplierptr=0;
   hasmultiplier=false;
-  setdisplayname("");
   gradient.setpppc(1.0);
   setdescription("unitialized component");
-  setname("unitialized component");
+  name = "unitialized component";
  }
 
 Component::~Component(){
@@ -91,16 +88,6 @@ Component::~Component(){
 
 //void calculate(); //each component has to define how to do this: pure virtual class, you can not create a component
 void Component::calculate(){}
-
-void Component::setname(std::string s){
-  name=s;
-  Spectrum::setname(s);
-}
-
-void Component::setdisplayname(std::string s){
-  typname=s;
-  Spectrum::setname(s);
-}
 
 void Component::setdescription(std::string s){
   description=s;

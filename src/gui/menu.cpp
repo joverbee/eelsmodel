@@ -574,6 +574,7 @@ void MenuEelsmodel::slotModelDETECTOR()
 //help menu slots
 void MenuEelsmodel::slotHelpAbout()
 {
+  //TODO see if QMessageBox::about is a proper replacement
   Hello* hellobox=new Hello();
   (void) hellobox; //get rid of unused variable warnings
 }

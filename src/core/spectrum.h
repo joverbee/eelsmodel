@@ -23,11 +23,13 @@
  * eelsmodel - core/spectrum.h
  *
  * Class to contain EELS and EDS spectra.
+ * Holds a single spectrum.
  **/
 
 #ifndef SPECTRUM_H
 #define SPECTRUM_H
 
+#include <cstddef>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -39,20 +41,27 @@ class Graph;
 
 class QWorkspace;
 
-class loadmsa{};
+class Spectrum
+{
+public:
+  Spectrum();
+  Spectrum(std::size_t size);
+  Spectrum(std::size_t size, double dispersion, double Estart);
+  Spectrum(const std::string& filename); // load from msa file
+  virtual ~Spectrum();
 
-/* Basic class that holds a single spectrum */
+  std::string name;
+  std::string xunits;
+  std::string yunits;
 
-class Spectrum {
-//internal data
+private:
+  // internal data
   unsigned int npoints;
   struct datapt{    double energy;    double counts;    double errorbar;  bool exclude;};
   std::vector<datapt>dataset;
   double pppc;                          //primary particles per count
-Graph* graphptr; //pointer to graph of the spectrum
-  std::string spectrumname;
-  std::string xunits;
-  std::string yunits;
+  Graph* graphptr; //pointer to graph of the spectrum
+
   enum datatypetype{XY,Y};
   datatypetype datatype;
   QWidget* parentptr;
@@ -68,29 +77,6 @@ Graph* graphptr; //pointer to graph of the spectrum
   };
 
 
-//member functions
-public:
-//constructors and destructor
-		/**
-		 *	Construct a dummy spectrum with zero size		
-		 */
-Spectrum();
-		/**
-		*	Construct a spectrum with size n				
-		*/
-Spectrum(unsigned int n);
-		/**
-		*	Construct a spectrum with size n,dispersion,Estart				
-		*/
-Spectrum(unsigned int,double,double);
-		/**
-		*	Construct a spectrum by loading it as msa file from the specified filename			
-		*/
-Spectrum(loadmsa l,std::string filename=0);
-		/**
-		*	Destructor of the spectrum	
-		*/
-virtual ~Spectrum();
 
 public:
 //inspectors
@@ -112,9 +98,6 @@ double geterrorbar(int index)const;
 bool isexcluded(int index)const;
 double getdispersion()const;
 void badindex(int index)const;
-const char * getname()const;
-const char * getxunits()const;
-const char * getyunits()const;
 unsigned int getmaxindex()const; //get index of the maximum value point in the spectrum
 size_t getfirsthigherthen(double)const; //get index of the first pixel with a value higher then x
 void smoothgaussian(double sigma); //smooth data by convolution with a gaussian with stdev sigma
@@ -133,9 +116,6 @@ void setcounts (int index,double cts);
  void setenergy(int index,double e);
 void setpppc(double p);
 virtual void seteshift(double e);
-void setname(std::string s);
-void setxunits(std::string s);
-void setyunits(std::string s);
 void setfilename(std::string name){filename=name;}
 void resetexcluderegion(int startindex,int endindex);
 void resetexcluderegion();

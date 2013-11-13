@@ -28,15 +28,16 @@
 #include <cmath>
 #include <iostream>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/parameter.h"
 
-Eelsmodel* geteelsmodelptr();
+#include "src/gui/eelsmodel.h"
+
+EELSModel* geteelsmodelptr();
 
 PearsonIV::PearsonIV()
 :Component()
 {
-  this->setname("Pearson IV");
+  name = "Pearson IV";
   this->setdescription("Pearson IV peak (model for ZL peak)");
   setshifter(false);
 }
@@ -91,7 +92,7 @@ PearsonIV::PearsonIV(int n,double estart,double dispersion,std::vector<Parameter
   this->addparameter(p5);
 
   //give a name and description
-  this->setname("Pearson IV");
+  name = "Pearson IV";
   this->setdescription("Pearson IV peak (model for ZL peak)");
   this->setcanconvolute(true);
 

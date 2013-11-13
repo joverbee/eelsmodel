@@ -57,11 +57,11 @@
 #include <QWorkspace>
 
 #include "src/core/component.h"
-#include "src/core/eelsmodel.h"
 #include "src/core/model.h"
 #include "src/core/monitor.h"
 
 #include "src/gui/atomchooser.h"
+#include "src/gui/eelsmodel.h"
 #include "src/gui/saysomething.h"
 
 //embedded icons
@@ -76,7 +76,7 @@
 #include "./icons/atomwiz.xpm"
 
 QWorkspace* getworkspaceptr();
-Eelsmodel* geteelsmodelptr();
+EELSModel* geteelsmodelptr();
 
 Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
                                            ,const std::vector<Component*>& componentvector
@@ -403,7 +403,7 @@ void Componentmaintenance::slot_rename(QTreeWidgetItem* item,int col){
     std::string newname;
     try{
       newname=(item->text(col).toStdString());
-      mycomponent->setdisplayname(newname);
+      mycomponent->name = newname;
     }
     catch(...){
       //something went wrong, do nothing
@@ -797,7 +797,7 @@ void Componentmaintenance::slot_atomwizard(){
                     //add a K-edge
                     mymodel->addcomponent(mymodel->getcomponentindexbyname("Hydrogenic K-edge"),&parameterlist); //get a K edge and supply the inf
                     Component* mycomponent=mymodel->getcomponent(mymodel->getcomponentsnr()-1);
-                    mycomponent->setdisplayname(namelistK[i]);
+                    mycomponent->name = namelistK[i];
                     mycomponent->estimateparams(); //auto-adjust strength
                      if (dofinestructure){
                         //add a fine structure component
@@ -822,7 +822,7 @@ void Componentmaintenance::slot_atomwizard(){
 
                     mymodel->addcomponent(mymodel->getcomponentindexbyname("Hydrogenic L-edge"),&parameterlist); //get a L edge and supply the inf
                     Component* mycomponent=mymodel->getcomponent(mymodel->getcomponentsnr()-1);
-                    mycomponent->setdisplayname(namelistL23[i]);
+                    mycomponent->name = namelistL23[i];
                     mycomponent->estimateparams(); //auto-adjust strength
                     if (dofinestructure){
                         //add a fine structure component
@@ -905,7 +905,7 @@ void Componentmaintenance::add_finestruct(Component* mycomponent,Model* mymodel,
         // conversion worked
         finename=s.str();
     }
-    mycomponentfine->setdisplayname(finename);
+    mycomponentfine->name = finename;
 
     //add monitor to show the mass center
     Parameter* aptr=mycomponentfine->getparameter(3);

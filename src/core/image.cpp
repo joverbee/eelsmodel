@@ -652,7 +652,7 @@ for (unsigned int y=0;y<nrofspectra;y++){
     sprintf(indexstr,"%d",y);
     result=result+" ["+indexstr+']';
   }
-  currentspec->setname(result);
+  currentspec->name = result;
   //copy the spectrum into the currentspec
     for (unsigned int x=0;x<epoints;x++){
       unsigned int index=0;

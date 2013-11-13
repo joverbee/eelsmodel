@@ -40,7 +40,7 @@
 
 SpinsplitEdge::SpinsplitEdge() //create a dummy version
 :Component(),tempspectrum(){
-  this->setname("Spin split edge section");
+  name = "Spin split edge section";
   this->setdescription("An edge consisting of two hartree slater cross sections and two lorentzian white lines, can be an L2,3 or M4,5 edge");
   //init the pointers
   continuum1=0;
@@ -295,7 +295,7 @@ SpinsplitEdge::SpinsplitEdge(int n,double estart,double dispersion,std::vector<P
   std::cout<<"whiteline2 ptr="<<whiteline2<<"\n";
   #endif
   //give a name and description
-  this->setname("Spin split edge section");
+  name = "Spin split edge section";
   this->setdescription("An edge consisting of two hartree slater cross sections and two lorentzian white lines, can be an L2,3 or M4,5 edge");
    this->setcanconvolute(true);
    this->setshifter(false);

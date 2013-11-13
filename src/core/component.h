@@ -44,7 +44,7 @@ class Component : public Spectrum {
 //member data
 private:
 std::vector<Parameter*> parametervector; //a vector with the different parameters of the component
-std::string name;         //name of the component is used in the user interface to label this component, should be a UNIQUE name
+//std::string name;         //name of the component is used in the user interface to label this component, should be a UNIQUE name
 std::string typname;      //a name the user can give
 std::string description;  //description of the component,can be used in the user interface help function
 bool canconvolute;        //to make it possible that some components are not convoluted
@@ -81,7 +81,6 @@ virtual void setoptions(){}; //show a window to change the options, only needs i
 
 //public modifiers
 virtual void calculate()=0;   //each component has to define how to do this: pure virtual class, you can not create a component
-void setdisplayname(std::string s);
 void setunchanged();          //set all parameters in the component to unchanged
 void setchanged();
 Parameter* getparameter(unsigned int index);
@@ -122,7 +121,6 @@ protected:
 //protected accessors, only derived components can use these
 void setconvolutor(bool b){convolutor=b;}
 void setshifter(bool b){shifter=b;}
-void setname(std::string s);
 void setdescription(std::string s);
 void addparameter(Parameter* p);
 void pullparameter();

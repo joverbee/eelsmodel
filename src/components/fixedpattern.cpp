@@ -39,7 +39,7 @@ QWorkspace* getworkspaceptr();
 FixedPattern::FixedPattern()
 :Component()
 {
-  this->setname("FixedPattern");
+  name = "FixedPattern";
   this->setdescription("y=fixed pattern spectrum loaded from file, can be shifted and scaled\nMake sure the edge file is calibrated to 0eV at the edge onset");
 }
 
@@ -82,8 +82,7 @@ FixedPattern::FixedPattern(int n,double estart,double dispersion,std::vector<Par
     p3=(*parameterlistptr)[2];
     p4=(*parameterlistptr)[3];
     //get the edge file via the filename
-    loadmsa l;
-    edgeptr = new Spectrum(l,p4->getname()); //the filename is stored in the name of p4
+    edgeptr = new Spectrum(p4->getname()); //the filename is stored in the name of p4
     if (edgeptr==0) throw Componenterr::unable_to_create();
   }
   p2->setlinear(true);
@@ -92,7 +91,7 @@ FixedPattern::FixedPattern(int n,double estart,double dispersion,std::vector<Par
   this->addparameter(p3);
   this->addparameter(p4); //the dummy parameter which contains the filename
   //give a name and description
-  this->setname("FixedPattern");
+  name = "FixedPattern";
   this->setdescription("y=spectrum loaded from file, can be shifted and scaled");
   //no convolution
   this->setcanconvolute(false);

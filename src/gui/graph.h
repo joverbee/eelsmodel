@@ -53,97 +53,99 @@ class Zoomer;
 class Graph : public QwtPlot
 {
   Q_OBJECT
-  public:
-    Graph( QWorkspace *parent=0, const char *name=0,Spectrum *spec=0); //a graph of a normal spectrum
-    Graph( QWorkspace *parent=0, const char *name=0,Multispectrum *mspec=0); //a graph of a multispectrum
-    ~Graph();
-    void reinit();
-    void Init();
-    void addgraph(Spectrum* spec);
-    void removelastgraph();
-    void setxlabel(const char* xl);
-    void setylabel(const char* yl);
-    bool validlayer(int layer)const;
-    Spectrum* getspectrumptr();
-    Multispectrum* getmultispectrumptr();
-    bool getselected()const{return selection;}
-    bool iszoomed()const{return zoomed;}
-    bool ismultispectrum()const{return multispectrum;}
-    int getstartindex()const{return startindex;}
-    int getendindex()const{return endindex;}
-    size_t getstartzoomindex(int layer=0)const;
-    size_t getendzoomindex(int layer=0)const;
-    int getnplots()const{return nplots;}
-    void resetselection();
-    void setstyle(size_t layer,size_t style);
-    void setcaption(std::string name){this->setWindowTitle(name.c_str());} //change caption
-    void updategraph(int layer,Spectrum* spec);
+
+public:
+  Graph(Spectrum* spectrum, QWidget* parent = 0); //a graph of a normal spectrum
+  Graph(QWorkspace *parent=0, const char *name=0,Multispectrum *mspec=0); //a graph of a multispectrum
+  ~Graph();
+
+  void reinit();
+  void Init();
+  void addgraph(Spectrum* spec);
+  void removelastgraph();
+  void setxlabel(const char* xl);
+  void setylabel(const char* yl);
+  bool validlayer(int layer)const;
+  Spectrum* getspectrumptr();
+  Multispectrum* getmultispectrumptr();
+  bool getselected()const{return selection;}
+  bool iszoomed()const{return zoomed;}
+  bool ismultispectrum()const{return multispectrum;}
+  int getstartindex()const{return startindex;}
+  int getendindex()const{return endindex;}
+  size_t getstartzoomindex(int layer=0)const;
+  size_t getendzoomindex(int layer=0)const;
+  int getnplots()const{return nplots;}
+  void resetselection();
+  void setstyle(size_t layer,size_t style);
+  void setcaption(std::string name){this->setWindowTitle(name.c_str());} //change caption
+  void updategraph(int layer,Spectrum* spec);
 protected:
-    void paintEvent( QPaintEvent * );
-    void mousePressEvent(QMouseEvent* e);//override the qwidget mousepressEvent
-   // void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
-    //void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
-    void mouseMoveEvent(QMouseEvent *evt);
-    void setselection(bool b){selection=b;}
-    void setstartindex(int i);
-    void setendindex(int i);
-    void setstartzoomindex(int i);
-    void setendzoomindex(int i);
-    void setzoom(bool b){zoomed=b;}
-    void setexcludecolor(QColor c){excludecolor=c;}
-    void setnormalcolor(QColor c){normalcolor=c;}
-    void setaxiscolor(QColor c){axiscolor=c;}
-    void setbgcolor(QColor c){bgcolor=c;}
-    void setdefaults();
-    void getmainwindowptr();
-    void copydata(int layer,Spectrum* spec);
+  void paintEvent( QPaintEvent * );
+  void mousePressEvent(QMouseEvent* e);//override the qwidget mousepressEvent
+  // void mouseMoveEvent(QMouseEvent* e);//override the qwidget mouseMoveEvent
+  //void mouseReleaseEvent(QMouseEvent* e);//override the qwidget mouseReleaseEvent
+  void mouseMoveEvent(QMouseEvent *evt);
+  void setselection(bool b){selection=b;}
+  void setstartindex(int i);
+  void setendindex(int i);
+  void setstartzoomindex(int i);
+  void setendzoomindex(int i);
+  void setzoom(bool b){zoomed=b;}
+  void setexcludecolor(QColor c){excludecolor=c;}
+  void setnormalcolor(QColor c){normalcolor=c;}
+  void setaxiscolor(QColor c){axiscolor=c;}
+  void setbgcolor(QColor c){bgcolor=c;}
+  void setdefaults();
+  void getmainwindowptr();
+  void copydata(int layer,Spectrum* spec);
 
 private slots:
-    void        updateCaption();
-    void        selectionmade(const QPolygon & 	polygon);
-   //void slot_graph_clicked();
+  void        updateCaption();
+  void        selectionmade(const QPolygon & 	polygon);
+  //void slot_graph_clicked();
 private:
-    int npoints;      //number of data points
-    int nplots;       //number of layers in the plot
-    QVector<QwtPlotCurveSpecial*> d_curves;
-    QVector<QVector< QPointF > >	qwtdata;
-    QVector<QVector< QPen > >	penvector;
-    Zoomer *d_zoomer[2];
-    Picker *d_picker[2];
-    QwtPlotPanner *d_panner;
-    QwtPlotMarker* d_marker1;
-    QwtPlotMarker* d_marker2;
+  int npoints;      //number of data points
+  int nplots;       //number of layers in the plot
+  QVector<QwtPlotCurveSpecial*> d_curves;
+  QVector<QVector< QPointF > >	qwtdata;
+  QVector<QVector< QPen > >	penvector;
+  Zoomer *d_zoomer[2];
+  Picker *d_picker[2];
+  QwtPlotPanner *d_panner;
+  QwtPlotMarker* d_marker1;
+  QwtPlotMarker* d_marker2;
 
-    double border;
-    double xmax;
-    double ymax;
-    double xmin;
-    double ymin;
-    int xtickcount,ytickcount;
-    QString xlabel,ylabel;
-    double ticksize;
-    double fontsize;
-    int precision;
-    std::vector<QColor> mycolors;
-    int dotsize; //size of dots in the plot
-    Spectrum* spectrumptr;
-    Multispectrum* multispectrumptr;
-    MenuEelsmodel* mainwindow; //pointer to the main window
-    QRect r; //the rectangle of the graph region
-    QRect grabrect;
-    QRubberBand* rubberrect;
-    //QPainter* paint; //pointer to paint arrea
-    QPoint startpos;//position where mouse was first clicked
-    QPoint endpos;
-    bool grabbing;
-    bool selection;
-    bool multispectrum;
-    int startindex;
-    int endindex;
-    int startzoomindex;
-    int endzoomindex;
-    bool zoomed;
-    QColor excludecolor,normalcolor,axiscolor,bgcolor;
+  double border;
+  double xmax;
+  double ymax;
+  double xmin;
+  double ymin;
+  int xtickcount,ytickcount;
+  QString xlabel,ylabel;
+  double ticksize;
+  double fontsize;
+  int precision;
+  std::vector<QColor> mycolors;
+  int dotsize; //size of dots in the plot
+  Spectrum* spectrumptr;
+  Multispectrum* multispectrumptr;
+  MenuEelsmodel* mainwindow; //pointer to the main window
+  QRect r; //the rectangle of the graph region
+  QRect grabrect;
+  QRubberBand* rubberrect;
+  //QPainter* paint; //pointer to paint arrea
+  QPoint startpos;//position where mouse was first clicked
+  QPoint endpos;
+  bool grabbing;
+  bool selection;
+  bool multispectrum;
+  int startindex;
+  int endindex;
+  int startzoomindex;
+  int endzoomindex;
+  bool zoomed;
+  QColor excludecolor,normalcolor,axiscolor,bgcolor;
 };
 
 #endif

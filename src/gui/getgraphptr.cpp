@@ -38,8 +38,7 @@
 #include <QWidget>
 #include <QWorkspace>
 
-#include "src/core/eelsmodel.h"
-
+#include "src/gui/eelsmodel.h"
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
 
@@ -85,7 +84,7 @@ void Getgraphptr::slot_ok(){
 	const QWorkspace* myworkspace=getworkspaceptr();
 	QWidgetList wlist=myworkspace->windowList(QWorkspace::StackingOrder);	
 	//start from the last one until a graph is encountered	
-	for (size_t i=0; i<wlist.size(); i++){		
+  for (int i=0; i<wlist.size(); i++){
 		//check if the item is a graph
 		 #ifdef GETGRAPHDEBUG
 	     			std::cout <<"wlist.size="<<wlist.size()<<"\n";

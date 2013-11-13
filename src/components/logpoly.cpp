@@ -38,7 +38,7 @@
 Logpoly::Logpoly() //create a dummy version
 :Component()
 {
-  this->setname("Log polynomial background");
+  name = "Log polynomial background";
   this->setdescription("Log polynomial y=A*exp(a1*(E-Estart)+a2*|a2|(E-Estart)^2+...an*|an^n-1|(E-Estart)^n) with n+1 parameters");
   degree=0;
   setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
@@ -97,7 +97,7 @@ Logpoly::Logpoly(int n,double estart,double dispersion,std::vector<Parameter*>* 
     }
   }
   //give a name and description
-  setname("Log polynomial background");
+  name = "Log polynomial background";
   setdescription("Log polynomial y=A*exp(a1*(E-Estart)+a2*|a2|(E-Estart)^2+...an*|an^n-1|(E-Estart)^n) with n+1 parameters");
   setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
 

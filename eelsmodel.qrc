@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/filesave.png</file>
+        <file>icons/zoom.png</file>
+        <file>icons/rectangle.png</file>
+        <file>icons/filenew.png</file>
+        <file>icons/fileopen.png</file>
+        <file>icons/previous.png</file>
+        <file>icons/linked.png</file>
+        <file>icons/monitor.png</file>
+        <file>icons/locked.png</file>
+        <file>icons/unlock.png</file>
+        <file>icons/connect_established.png</file>
+        <file>icons/add.png</file>
+        <file>icons/info.png</file>
+        <file>icons/remove.png</file>
+        <file>icons/gohome.png</file>
+        <file>icons/atomwiz.png</file>
+        <file>icons/ok.png</file>
+        <file>icons/eelsmodel_1_1_icon_16.ico</file>
+        <file>icons/eelsmodel_1_1_icon_32.ico</file>
+        <file>icons/eelsmodel_1_1_icon.ico</file>
+        <file>icons/eelsmodel_1_1_icon_128.ico</file>
+        <file>icons/eelsmodel.icns</file>
+        <file>icons/eelsmodel_1_1_icon.cdr</file>
+    </qresource>
+</RCC>

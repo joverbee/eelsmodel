@@ -32,11 +32,12 @@
 #include <QInputDialog>
 #include <QString>
 
-#include "src/core/eelsmodel.h"
 #include "src/core/component.h"
 #include "src/core/model.h"
 
-Eelsmodel* geteelsmodelptr();
+#include "src/gui/eelsmodel.h"
+
+EELSModel* geteelsmodelptr();
 
 Componentselector::Componentselector(QWidget *parent, const char *name,const char* message,int& value)
 : QWidget(parent) {

@@ -34,18 +34,17 @@
 #include <QTextCodec>
 #include <QTranslator>
 
-#include "src/core/eelsmodel.h"
-
+#include "src/gui/eelsmodel.h"
 #include "src/gui/hello.h"
 #include "src/gui/menu.h"
 
 //global vars keeping a pointer to eelsmodel and to the qt workspace
-Eelsmodel* global_eelsmodelptr=0;
+EELSModel* global_eelsmodelptr=0;
 QWorkspace* global_workspaceptr=0;
 MenuEelsmodel* global_menueelsmodel=0;
 //QString globaldirname=""; //global variable holding the current directory
 
-Eelsmodel* geteelsmodelptr(){
+EELSModel* geteelsmodelptr(){
 return global_eelsmodelptr;
 }
 
@@ -479,10 +478,12 @@ int main(int argc, char *argv[])
 
     //testmatrix();
 
-    QApplication a( argc, argv );
-    //a.QApplication::setGraphicsSystem("raster"); //important to fix a bug in QT with scaling of pen sizes
+    QApplication app(argc, argv);
 
-    //QTranslator tor( 0 );
+    EELSModel eelsmodel;
+
+    eelsmodel.show();
+
 
     // set the location where your .qm files are in load() below as the last parameter instead of "."
     // for development, use "/" to use the english original as
@@ -491,9 +492,7 @@ int main(int argc, char *argv[])
     //tor.load( QString("eelsmodel.") + QTextCodec::locale(), "." );
 
   //  a.installTranslator( &tor );
-    /* uncomment the following line, if you want a Windows 95 look*/
-    //a.setStyle(QApplication::WindowsStyle);
-
+/*
     //create menu, toolbar and init the workspace
     MenuEelsmodel* mymainwindow=new MenuEelsmodel();
     global_menueelsmodel=mymainwindow;
@@ -529,7 +528,7 @@ int main(int argc, char *argv[])
     QObject::connect(mymainwindow, SIGNAL(file_report_save()),myeelsmodel, SLOT(slot_save_report()) );
     QObject::connect(mymainwindow, SIGNAL(file_save_as()),myeelsmodel, SLOT(slot_save_as()) );
     QObject::connect(myeelsmodel, SIGNAL(enablemodel(bool)),mymainwindow, SLOT(slot_enable_model(bool)));
-
+*/
 
 
 
@@ -543,21 +542,7 @@ int main(int argc, char *argv[])
       global_eelsmodelptr->slot_open_project_from_filename(arg2);
     }
 
-
-
-
-
-
-    const int result=a.exec();
-    //delete the pointers we have
-    //if (myhello!=0) delete(myhello); //the hello window is deleted by itself when pressing done
-
-    //if (mymainwindow!=0) delete(mymainwindow);
-    //if (myeelsmodel!=0) delete(myeelsmodel);
-
-
-
-    return result;
+    return app.exec();
 }
 
 

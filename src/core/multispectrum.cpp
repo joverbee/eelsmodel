@@ -88,7 +88,7 @@ void Multispectrum::display(QWorkspace *parent){
   graphptr->show();
 
   //draw or update the image view and show which slice we are working with
-  if (imdisplayptr==0) imdisplayptr=new Imagedisplay(parent,getname().c_str(),this);
+  if (imdisplayptr==0) imdisplayptr=new Imagedisplay(getname().c_str(),this);
   else  imdisplayptr->update();
 }
 

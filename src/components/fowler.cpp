@@ -33,7 +33,7 @@
 Fowler::Fowler()
 :Component()
 {
-  this->setname("Fowler Nordheim");
+  name = "Fowler Nordheim";
   this->setdescription("Fowler Nordheim peak with given height,position, tunnel barier and temperature");
   setshifter(false);
 }
@@ -67,7 +67,7 @@ Fowler::Fowler(int n,double estart,double dispersion,std::vector<Parameter*>* pa
   this->addparameter(p3);
   this->addparameter(p4);
   //give a name and description
-  this->setname("Fowler Nordheim");
+  name = "Fowler Nordheim";
   this->setdescription("Fowler Nordheim peak with given height,position, tunnel barier and temperature");
   this->setcanconvolute(true);
   //only height has an analytical gradient
@@ -97,7 +97,7 @@ Fowler::Fowler(int n,double estart,double dispersion,double epeak,double height,
   this->addparameter(p4);
 
   //give a name and description
-  this->setname("Fowler Nordheim");
+  name = "Fowler Nordheim";
   this->setdescription("Fowler Nordheim peak with given height,position, tunnel barier and temperature");
   this->setcanconvolute(true);
   //only height parameter has an analytical gradient

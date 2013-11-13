@@ -36,7 +36,7 @@
 Gaussian::Gaussian()
 :Component()
 {
-this->setname("Gaussian");
+name = "Gaussian";
 this->setdescription("Gaussian peak with given height,position and FWHM");
 }
 Gaussian::Gaussian(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
@@ -66,7 +66,7 @@ this->addparameter(p1);
 this->addparameter(p2);
 this->addparameter(p3);
 //give a name and description
-this->setname("Gaussian");
+name = "Gaussian";
 this->setdescription("Gaussian peak with given height,position and FWHM");
 this->setcanconvolute(true);
 //all three parameters have an analytical gradient
@@ -91,7 +91,7 @@ Gaussian::Gaussian(int n,double estart,double dispersion,double epeak,double fwh
   this->addparameter(p2);
   this->addparameter(p3);
   //give a name and description
-  this->setname("Gaussian");
+  name = "Gaussian";
   this->setdescription("Gaussian peak with given height,position and FWHM");
   this->setcanconvolute(true);
   this->sethasgradient(0,true);
