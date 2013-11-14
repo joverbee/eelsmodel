@@ -56,7 +56,7 @@ class Graph : public QwtPlot
 
 public:
   Graph(Spectrum* spectrum, QWidget* parent = 0); //a graph of a normal spectrum
-  Graph(QWorkspace *parent=0, const char *name=0,Multispectrum *mspec=0); //a graph of a multispectrum
+  Graph(Multispectrum* mspec, QWidget* parent = 0); //a graph of a multispectrum
   ~Graph();
 
   void reinit();

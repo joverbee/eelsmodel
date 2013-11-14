@@ -148,10 +148,10 @@ if (graphptr!=0)  delete graphptr; //delete the graph if the model dies
 }
 
 void Model::maintaincomponents(){
-  //show a window with all possible and all current components
+/*  //show a window with all possible and all current components
   //the user can add and remove components
-  Componentmaintenance*  myview=new  Componentmaintenance(0,"component maintenance",componentptrvector,ptr_to_all_components);
-  myview->show();
+  ComponentEditor*  myview=new  ComponentEditor(0,"component maintenance",componentptrvector,ptr_to_all_components);
+  myview->show();*/
 }
 
 
@@ -315,7 +315,7 @@ return multi;
 }
 
 void Model::updateHL(){
-if (ismulti()){
+/*if (ismulti()){
   HLptr=Multiptr->getcurrentspectrum();
   
 }
@@ -375,7 +375,7 @@ if (ismulti()){
     	 }
      }
   }
-}
+}*/
 }
 
 void Model::updateHLnodraw(){

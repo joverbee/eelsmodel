@@ -64,34 +64,21 @@
 #include "src/gui/eelsmodel.h"
 #include "src/gui/saysomething.h"
 
-//embedded icons
-#include "./icons/locked.xpm"
-#include "./icons/unlock.xpm"
-#include "./icons/linked.xpm"
-#include "./icons/add.xpm"
-#include "./icons/remove.xpm"
-#include "./icons/info.xpm"
-#include "./icons/ok.xpm"
-#include "./icons/monitor.xpm"
-#include "./icons/atomwiz.xpm"
-
 QWorkspace* getworkspaceptr();
 EELSModel* geteelsmodelptr();
 
-Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
-                                           ,const std::vector<Component*>& componentvector
-                                           ,const std::vector<Component*>& allcomponentsvector)
+ComponentEditor::ComponentEditor(const std::vector<Component*>& componentvector,
+                                 const std::vector<Component*>& allcomponentsvector,
+                                 QWidget* parent)
 : QWidget(parent),allList(),modelList(),itemmap(){
-    this->setWindowTitle(name);
    shiftButtonPressed = false;
    rightbutton=false;
-  parent->addWindow(this); //add it explicitly to the workspace
   couplesequence=false;
   monitorsequence=false;
   monitor1item=0;
   coupleslaveitem=0;
   //define the pixmaps
-  lockedicon=QPixmap(locked_xpm);
+  /*lockedicon=QPixmap(locked_xpm);
   unlockedicon=QPixmap(unlock_xpm);
   coupledicon=QPixmap(linked_xpm);
   addicon=QPixmap(add_xpm);
@@ -99,7 +86,7 @@ Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
   infoicon=QPixmap(info_xpm);
   okicon=QPixmap(ok_xpm);
   monitoricon=QPixmap(monitor_xpm);
-  wizicon=QPixmap(wiz_xpm);
+  wizicon=QPixmap(wiz_xpm);*/
   //get pointers to the vectors containing all components and the model components
   compvector=&componentvector;
   allvector=&allcomponentsvector;
@@ -217,14 +204,14 @@ Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
   this->repaint(); //force a repaint
 }
 
-Componentmaintenance::~Componentmaintenance(){
+ComponentEditor::~ComponentEditor(){
   //tell eelsmodel that we leave
   emit componentmaintenance_died();
   //kill all structures referred to by pointers which we created
   if (lv2!=0) delete(lv2);
 }
 
-void Componentmaintenance::slot_update_monitors(){
+void ComponentEditor::slot_update_monitors(){
     //update all items without recreating the list
     //but make sure the monitors are up to date
     Model * mymodel=(geteelsmodelptr())->getmodel_nonconst();
@@ -237,7 +224,7 @@ for (int i=0;i<modelList.size();i++){
         }
     }
 }
-void  Componentmaintenance::slot_update(){
+void  ComponentEditor::slot_update(){
   //add items to the list when new components apeared
   //remove them from the list when they are no longer in the componentlist
   //check if the model is still valid
@@ -288,7 +275,7 @@ std::string labelstring;
 
 }
 
-void Componentmaintenance::slot_remove_components(){
+void ComponentEditor::slot_remove_components(){
   //look for an item in the model list that is selected
   //if more are selected, remove only the first
   //to avoid removing components in a list that is changing
@@ -321,14 +308,14 @@ void Componentmaintenance::slot_remove_components(){
     }
 }
 
-void Componentmaintenance::slot_add_components(){
+void ComponentEditor::slot_add_components(){
   //the remover should call slot_update to draw the result
   QTreeWidgetItem * item=lv1->currentItem();
   emit add_components(lv1->indexOfTopLevelItem(item)); //ask eelsmodel to do it for us
 }
 
 
-void  Componentmaintenance::slot_info(){
+void  ComponentEditor::slot_info(){
   //show info on a selected component
 
   QTreeWidgetItem * item=lv1->currentItem();
@@ -340,7 +327,7 @@ void  Componentmaintenance::slot_info(){
   infobox->information (this,"Component info",mesg.c_str());
 }
 
-void  Componentmaintenance::slot_couple(){
+void  ComponentEditor::slot_couple(){
   //couple two parameters
   //get the parameter that is selected
   QTreeWidgetItem* item=lv2->currentItem();
@@ -367,7 +354,7 @@ void  Componentmaintenance::slot_couple(){
     coupleslaveitem=0;
 }
 
-void  Componentmaintenance::slot_monitor(){
+void  ComponentEditor::slot_monitor(){
   //monitor two parameters
   //get the parameter that is selected
   QTreeWidgetItem* item=lv2->currentItem();
@@ -396,7 +383,7 @@ void  Componentmaintenance::slot_monitor(){
 }
 
 
-void Componentmaintenance::slot_rename(QTreeWidgetItem* item,int col){
+void ComponentEditor::slot_rename(QTreeWidgetItem* item,int col){
   //if a component was renamed, change its name
   if (itemiscomponent(item)){
     Component* mycomponent=(componentmap[item]);
@@ -416,7 +403,7 @@ void Componentmaintenance::slot_rename(QTreeWidgetItem* item,int col){
 }
 
 
-void Componentmaintenance::slot_param_doubleclick(QTreeWidgetItem* item,int col){
+void ComponentEditor::slot_param_doubleclick(QTreeWidgetItem* item,int col){
   if (itemisparameter(item)){
     //call interactive parameter edit
     (itemmap[item])->interactivevalue("edit value");
@@ -427,7 +414,7 @@ void Componentmaintenance::slot_param_doubleclick(QTreeWidgetItem* item,int col)
   }
 }
 
-void Componentmaintenance::slot_param_rightclick(QTreeWidgetItem* item){
+void ComponentEditor::slot_param_rightclick(QTreeWidgetItem* item){
   //if right clicked on a parameter: change locked state or in case it was coupled, remove the coupling
 
   //if you right press in couple sequence, the proces is interupted
@@ -495,7 +482,7 @@ void Componentmaintenance::slot_param_rightclick(QTreeWidgetItem* item){
   }
 }
 
-void Componentmaintenance::updateitem(QTreeWidgetItem* item){
+void ComponentEditor::updateitem(QTreeWidgetItem* item){
     //set the icons,name and monitor and index for the parameter
    //update the lock or coupled icons
    if (itemisparameter(item)){
@@ -521,14 +508,14 @@ void Componentmaintenance::updateitem(QTreeWidgetItem* item){
 
   }
   if (myparameter->iscoupledslave()){
-    item->setIcon(0,coupledicon);
+    item->setIcon(0, QIcon(":/icons/linked.png"));
   }
   else {
     if (myparameter->ischangeable()){
-      item->setIcon (0,unlockedicon);
+      item->setIcon (0, QIcon(":/icons/unlocked.png"));
     }
     else{
-      item->setIcon (0,lockedicon);
+      item->setIcon (0,QIcon(":/icons/locked.png"));
     }
   }
    }
@@ -545,7 +532,7 @@ void Componentmaintenance::updateitem(QTreeWidgetItem* item){
 }
 
 
-void Componentmaintenance::slot_param_click(QTreeWidgetItem* item,int col){
+void ComponentEditor::slot_param_click(QTreeWidgetItem* item,int col){
     //was it clicked with right?
     if (rightbutton){
         slot_param_rightclick(item);
@@ -626,7 +613,7 @@ void Componentmaintenance::slot_param_click(QTreeWidgetItem* item,int col){
 
 }
 
-bool  Componentmaintenance::modelvalid()const{
+bool  ComponentEditor::modelvalid()const{
   //check if the componentvector is still valid
   //if not, close down the component maintenance
   //this would mean that the model died
@@ -642,16 +629,16 @@ bool  Componentmaintenance::modelvalid()const{
   return true;
 }
 
-bool Componentmaintenance::itemisparameter(QTreeWidgetItem* item)const{
+bool ComponentEditor::itemisparameter(QTreeWidgetItem* item)const{
   //check if an item is a parameter by looking it up in the itemmap
   return (itemmap.find(item)!=itemmap.end());
 }
 
-bool Componentmaintenance::itemiscomponent(QTreeWidgetItem* item)const{
+bool ComponentEditor::itemiscomponent(QTreeWidgetItem* item)const{
   //check if an item is a component by looking it up in the itemmap
   return (componentmap.find(item)!=componentmap.end());
 }
-void Componentmaintenance::getposition(int& xpos,int& ypos,int& w,int& h)const{
+void ComponentEditor::getposition(int& xpos,int& ypos,int& w,int& h)const{
 //return the position of the window
   QPoint p=this->pos();
   QSize s=this->size();
@@ -666,7 +653,7 @@ void Componentmaintenance::getposition(int& xpos,int& ypos,int& w,int& h)const{
 #endif
 
 }
-void Componentmaintenance::slot_setposition(int x,int y,int w,int h){
+void ComponentEditor::slot_setposition(int x,int y,int w,int h){
 //changes position of window on screen
 //only when it fits on the screen
   // if (((qApp->mainWidget())->width()>x)&&((qApp->mainWidget())->height()>y)){
@@ -679,7 +666,7 @@ void Componentmaintenance::slot_setposition(int x,int y,int w,int h){
 #endif
 }
 
-void Componentmaintenance::keyPressEvent( QKeyEvent *event )
+void ComponentEditor::keyPressEvent( QKeyEvent *event )
 {
    if( event->key()==Qt::Key_Shift) {
 #ifdef DEBUG_COMPONENTMAINTENANCE
@@ -690,7 +677,7 @@ void Componentmaintenance::keyPressEvent( QKeyEvent *event )
 }
 
 
-void Componentmaintenance::keyReleaseEvent( QKeyEvent *event )
+void ComponentEditor::keyReleaseEvent( QKeyEvent *event )
 {
    if( event->key()==Qt::Key_Shift) {
 #ifdef DEBUG_COMPONENTMAINTENANCE
@@ -702,7 +689,7 @@ void Componentmaintenance::keyReleaseEvent( QKeyEvent *event )
 
 
 
-void Componentmaintenance::slot_param_press(QTreeWidgetItem* item,int col){
+void ComponentEditor::slot_param_press(QTreeWidgetItem* item,int col){
   //find out which button was pressed, this is needed because there is no signal to intercept right button clicks and presses
   if(QApplication::mouseButtons()==Qt::RightButton){
       slot_param_rightpress(item,col); //interupts coupling if in coupling sequence
@@ -714,7 +701,7 @@ void Componentmaintenance::slot_param_press(QTreeWidgetItem* item,int col){
   //left button is handled by other signals
 }
 
-void Componentmaintenance::slot_param_rightpress(QTreeWidgetItem* item,int col){
+void ComponentEditor::slot_param_rightpress(QTreeWidgetItem* item,int col){
     //interupt coupling sequence
     couplesequence=false;
     //get the normal cursor again
@@ -722,7 +709,7 @@ void Componentmaintenance::slot_param_rightpress(QTreeWidgetItem* item,int col){
     this->setCursor (arrow);
 }
 
-void Componentmaintenance::slot_atomwizard(){
+void ComponentEditor::slot_atomwizard(){
     //open the atomwizard and create crosssections for selected atoms
     Model * mymodel=(geteelsmodelptr())->getmodel_nonconst();
     if (mymodel==0){
@@ -850,7 +837,7 @@ void Componentmaintenance::slot_atomwizard(){
 
  delete(myatom); //kill the window
 }
-void Componentmaintenance::add_finestruct(Component* mycomponent,Model* mymodel,double Eonset,double Ewidth, double resolution){
+void ComponentEditor::add_finestruct(Component* mycomponent,Model* mymodel,double Eonset,double Ewidth, double resolution){
     //add a Fine structure component to a given hydrogenic cross section
     std::vector<Parameter*> parameterlistfine;
     Parameter* pf1=new Parameter("Estart",Eonset,1); //same onset as cross section

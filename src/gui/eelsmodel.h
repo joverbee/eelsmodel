@@ -37,9 +37,9 @@
 #include "src/core/model.h"
 
 class Component;
-class Componentmaintenance;
+class ComponentEditor;
 class Fitter;
-class Fitter_dialog;
+class fitterWidget;
 class Graph;
 class Image;
 class Multispectrum;
@@ -132,8 +132,8 @@ private:
   Model* mymodel;
   Image* myimage;
   Fitter* myfitter;
-  Componentmaintenance* mymaintain;
-  Fitter_dialog* mydialog;
+  ComponentEditor* mymaintain;
+  fitterWidget* mydialog;
   std::string reportfilename;
   std::string projectfilename;
     public:class EelsmodelErr{   //class for exeptions

@@ -48,7 +48,7 @@ b2D=false;
 
 Multispectrum::~Multispectrum(){
 //clean up all spectra, because we own them from the moment they are added to a multispectrum
- for (size_t i=0;i<dataset.size();i++){
+/* for (size_t i=0;i<dataset.size();i++){
     if (dataset[i]!=0) delete(dataset[i]);
  }
  //and clean up the graph as well, but first check if it is really still there
@@ -62,6 +62,7 @@ Multispectrum::~Multispectrum(){
  }
  if (graphptr!=0) delete(graphptr);
  std::cout << "cleaned up the multispectrum"<<std::endl;
+ */
 }
 
 void Multispectrum::addspectrum(Spectrum* spec){
@@ -78,7 +79,7 @@ void Multispectrum::addspectrum(Spectrum* spec){
 }
 
 void Multispectrum::display(QWorkspace *parent){
-  //show current spectrum
+/*  //show current spectrum
   Spectrum* specptr=this->getcurrentspectrum();
   if (specptr==0) return; //no valid spectrum yet
   if (graphptr==0) {
@@ -89,7 +90,7 @@ void Multispectrum::display(QWorkspace *parent){
 
   //draw or update the image view and show which slice we are working with
   if (imdisplayptr==0) imdisplayptr=new Imagedisplay(getname().c_str(),this);
-  else  imdisplayptr->update();
+  else  imdisplayptr->update();*/
 }
 
 void Multispectrum::update(){

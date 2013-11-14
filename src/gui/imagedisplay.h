@@ -52,9 +52,9 @@ class Imagedisplay : public QWidget
   Q_OBJECT
 
 public:
-  Imagedisplay(const QString& name, Multispectrum* mspec, QWidget* parent = 0);
-  Imagedisplay(const QString& name, Eigen::MatrixXd* matrix, QWidget* parent = 0);
-  Imagedisplay(const QString& name,size_t dim1,size_t dim2, QWidget* parent = 0);
+  Imagedisplay(Multispectrum* mspec, QWidget* parent = 0);
+  Imagedisplay(Eigen::MatrixXd* matrix, QWidget* parent = 0);
+  Imagedisplay(size_t dim1,size_t dim2, QWidget* parent = 0);
   ~Imagedisplay();
   QString getname()const;
   void update();

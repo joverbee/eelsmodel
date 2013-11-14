@@ -107,7 +107,7 @@ EELSModel::EELSModel(QWidget* parent)
   tabs->setViewMode(QMdiArea::TabbedView);
   setCentralWidget(tabs);
 
-  showMaximized();
+  //showMaximized();
 }
 
 void EELSModel::createActions()
@@ -384,20 +384,12 @@ void EELSModel::openDM3()
     return; // user cancelled
 
   //open the image and convert to mspec
-   myimage=0;
-  Multispectrum* mymspec=0;
   try
   {
-    Image* image = new Image("Image",filename.toStdString(),true);
-    //now create an mspec
-    mymspec=myimage->getmspec();
-    mymspec->display(getworkspaceptr());
+    tabs->addSubWindow(new EELSModelTab(new Image("Image",filename.toStdString(),true)));
   }
   catch(...){
     //something went wrong
-
-    myimage=0;
-    mymspec=0;
   }
   //reset the mouse pointer in case we had an exception
   QApplication::restoreOverrideCursor(); // we're done
@@ -555,12 +547,12 @@ void EELSModel::newspectrum(){
 }*/
 
 void EELSModel::componentmaintenance(){
-
+/*
 
     //Model* mymodel=gettopmodel();
     if (mymodel!=0){
       //draw the maintenance window
-     mymaintain=new Componentmaintenance(getworkspaceptr(),"Component maintenance"
+     mymaintain=new ComponentEditor(getworkspaceptr(),"Component maintenance"
                                                               ,(mymodel->getcomponentvector())
                                                               ,(mymodel->getallcomponentvector()));
 
@@ -576,7 +568,7 @@ void EELSModel::componentmaintenance(){
     else{
      Saysomething mysay(0,"Error","You have to select a valid model window first",true);
      return;
-      }
+      }*/
 }
 
 
@@ -771,12 +763,14 @@ void EELSModel::fitter_dialog(){
   //  delete(mydialog);
    //}
   //create a new one
-  mydialog=new  Fitter_dialog(getworkspaceptr(),"Fitter dialog",myfitter);
+/*
+  mydialog=new  fitterWidget(getworkspaceptr(),"Fitter dialog",myfitter);
   mydialog->show();
   connect( mydialog, SIGNAL(update() ),this, SLOT( fitter_updatescreen() ) );
   connect( mydialog, SIGNAL(signal_start_multi_report()),this, SLOT( slot_start_multi_report() ) );
   connect( mydialog, SIGNAL(signal_add_multi_report() ),this, SLOT( slot_add_multi_report() ) );
   connect( mydialog, SIGNAL(signal_fitterdialog_died() ),this, SLOT( slot_fitterdialog_died() ) );
+  */
 }
 
 void EELSModel::fitter_updatescreen(){

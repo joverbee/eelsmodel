@@ -30,6 +30,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <string>
+  using std::string;
 #include <vector>
 
 #include <QApplication>
@@ -214,31 +216,27 @@ setMinimumSize(300,150);
     #endif
 }
 
-
-
-Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
+Graph::Graph(Multispectrum* mspec, QWidget* parent)
    : QwtPlot(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints()))
 {
+  //this->setWindowTitle(name);
+  //parent->addWindow(this); //add it explicitly to the workspace
+#ifdef GRAPH_DEBUG
+  std::cout << "Constructor of graph for multispectrum\n";
+  std::cout << "parent adres is "<<parent<<"\n";
+  std::cout << "multispectrum adres is: "<<mspec<<"\n";
+  std::cout << "The size of data is :"<<data.size()<<"\n";
+  std::cout << "The size of data[0] is:"<<data[0].size()<<"\n";
+#endif
 
-    this->setWindowTitle(name);
-    parent->addWindow(this); //add it explicitly to the workspace
-      #ifdef GRAPH_DEBUG
-    std::cout << "Constructor of graph for multispectrum\n";
-    std::cout << "parent adres is "<<parent<<"\n";
-    std::cout << "multispectrum adres is: "<<mspec<<"\n";
-    std::cout << "The size of data is :"<<data.size()<<"\n";
-    std::cout << "The size of data[0] is:"<<data[0].size()<<"\n";
-    #endif
 
-
-    multispectrum=true; //it's a multispectrum
-    spectrumptr=mspec->getcurrentspectrum(); //a pointer to the current active spectrum
-    multispectrumptr=mspec; //a pointer to the whole multispectrum
+  multispectrum=true; //it's a multispectrum
+  spectrumptr=mspec->getcurrentspectrum(); //a pointer to the current active spectrum
+  multispectrumptr=mspec; //a pointer to the whole multispectrum
 
   //prepare first spectrum
-    setdefaults();
+  setdefaults();
   Init();
-
 }
 
 

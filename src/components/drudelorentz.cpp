@@ -383,7 +383,7 @@ void DrudeLorentz::addlorentzparams(size_t i){
 void DrudeLorentz::displayKroeger(){
     //make a plot of the Kroeger result
     if (kroegerim==0){
-        kroegerim=new Imagedisplay("kroeger test",&kroegermatrix);
+        kroegerim=new Imagedisplay(/*"kroeger test",*/&kroegermatrix);
     }
     kroegerim->updatereloadmatrix();
 }

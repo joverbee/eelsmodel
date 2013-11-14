@@ -57,8 +57,8 @@ Componentselector::Componentselector(QWidget *parent, const char *name,const cha
         }
         std::ostringstream suffix;
         if ((suffix <<itemname<< " nr:"<< i)){ //converting an int to a string in c++ style rather than unsafe c-style
-	     // conversion worked
-	     std::string suf=suffix.str();
+       // conversion worked
+       std::string suf=suffix.str();
         items.append(suf.c_str()); //add the suffix
       }
     }

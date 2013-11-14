@@ -46,7 +46,7 @@
 //    #include "debug_new.h" //memory leak checker
 //#endif
 
-Imagedisplay::Imagedisplay(const QString& name, Multispectrum* mspec, QWidget* parent)
+Imagedisplay::Imagedisplay(Multispectrum* mspec, QWidget* parent)
 : QWidget(parent),
   mspecptr(mspec),
   matrixptr(0),
@@ -54,7 +54,7 @@ Imagedisplay::Imagedisplay(const QString& name, Multispectrum* mspec, QWidget* p
   imwidth(image.width()),
   imheight(image.height()),
   paintslice(true),
-  imdisplayname(name),
+  //imdisplayname(name),
   is2D(mspec->is2D())
 {
 #ifdef DEBUG_IMDISPLAY
@@ -63,11 +63,7 @@ Imagedisplay::Imagedisplay(const QString& name, Multispectrum* mspec, QWidget* p
   setFocusPolicy(Qt::StrongFocus ); //needed for key input
   //parent->addWindow(this); //add it explicitly to the workspace
 
-  setname(mspec->getname().c_str());
-
   setMinimumSize(imwidth,imheight);
-
-  setWindowTitle(getname());
 
   //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
   if(is2D)
@@ -78,7 +74,7 @@ Imagedisplay::Imagedisplay(const QString& name, Multispectrum* mspec, QWidget* p
   show();
 }
 
-Imagedisplay::Imagedisplay(const QString& name,size_t dim1,size_t dim2, QWidget* parent)
+Imagedisplay::Imagedisplay(size_t dim1,size_t dim2, QWidget* parent)
 : QWidget(parent),
   mspecptr(0),
   matrixptr(new Eigen::MatrixXd(dim1,dim2)),
@@ -86,14 +82,12 @@ Imagedisplay::Imagedisplay(const QString& name,size_t dim1,size_t dim2, QWidget*
   imwidth(image.width()),
   imheight(image.height()),
   paintslice(false),
-  imdisplayname(name),
   dragging(false),
   is2D(false)
 {
 //	parent->addWindow(this); //add it explicitly to the workspace
 
-  setFocusPolicy(Qt::StrongFocus ); //needed for key input
-  setWindowTitle(name);
+  //setFocusPolicy(Qt::StrongFocus ); //needed for key input
   setMinimumSize(image.width(),image.height());
   //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
   setCursor(Qt::SplitHCursor);
@@ -108,20 +102,18 @@ Imagedisplay::Imagedisplay(const QString& name,size_t dim1,size_t dim2, QWidget*
   show();
 }
 
-Imagedisplay::Imagedisplay(const QString& name, Eigen::MatrixXd* matrix, QWidget* parent)
+Imagedisplay::Imagedisplay(Eigen::MatrixXd* matrix, QWidget* parent)
 : QWidget(parent),
   mspecptr(0),
   matrixptr(matrix),
   image(convertmatrixtoimage(*matrix)),
   paintslice(false),
-  imdisplayname(name),
   dragging(false),
   is2D(false)
 {
 //  parent->addWindow(this); //add it explicitly to the workspace
 
-  setFocusPolicy(Qt::StrongFocus ); //needed for key input
-  setWindowTitle(name);
+  //setFocusPolicy(Qt::StrongFocus ); //needed for key input
   setMinimumSize(image.width(),image.height());
   //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
   setCursor(Qt::SplitHCursor);

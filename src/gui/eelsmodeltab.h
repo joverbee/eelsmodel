@@ -27,9 +27,18 @@
 #ifndef EELSMODELTAB_H
 #define EELSMODELTAB_H
 
+#include <memory>
+
 #include <QMainWindow>
 
-#include <src/core/spectrum.h>
+#include "src/core/model.h"
+#include "src/core/spectrum.h"
+
+#include "src/fitters/fitter.h"
+
+class QLabel;
+
+class Image;
 
 class EELSModelTab : public QMainWindow
 {
@@ -37,10 +46,7 @@ class EELSModelTab : public QMainWindow
 
 public:
   explicit EELSModelTab(Spectrum* spectrum, QWidget *parent = 0);
-
-  void createActions();
-  void createToolBar();
-  void createGraphs();
+  explicit EELSModelTab(Image* spectrum, QWidget *parent = 0);
 
 signals:
 
@@ -53,13 +59,24 @@ public slots:
   void resetExclude(); // reset an excluded area from a selection or from the whome spectrum
 
   //model slots
-  void newModel();
+  void newModel(); // create new model for spectrum in tab
   void editComponent(); // edit components in the model
   void fitModel(); // fit the model to the spectrum
   void setDetector();
 
 private:
-  Spectrum* spectrum; // the (multi)spectrum
+  void createActions();
+  void createToolBar();
+  void createLayout();
+
+  bool multi; //TODO get rid of this which says if below spectrum is actually a multispectrum
+  std::unique_ptr<Spectrum> spectrum; // the (multi)spectrum from file
+  Model model; // the model, might need specializations for (multi)spectrum
+
+  // QWidgets in the tab
+  Imagedisplay* imagedisplay;
+  Graph* spectrum_graph;
+  Graph* model_graph;
 
   //edit actions
   QAction* editCut;

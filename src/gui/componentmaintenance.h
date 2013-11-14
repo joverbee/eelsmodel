@@ -42,15 +42,24 @@
 #include "src/core/parameter.h"
 #include "src/gui/monitorchooser.h"
 
-class QWorkspace;
 
 class Component;
 class Model;
 class Component;
 
-class Componentmaintenance : public QWidget  {
-  //member data
+class ComponentEditor : public QWidget
+{
   Q_OBJECT
+
+public:
+  //constructor and destructor
+  ComponentEditor(const std::vector<Component*>& componentvector,
+                       const std::vector<Component*>& allcomponentsvector,
+                       QWidget* parent = 0);
+
+private:
+  //member data
+
   QList<QTreeWidgetItem *> allList;            //list with qstandarditems of all possible components
   QList<QTreeWidgetItem *> modelList;          //list with qstandarditems of all components of the model
   QTreeWidget* lv2;                                 //treeview of the modellist
@@ -70,12 +79,8 @@ class Componentmaintenance : public QWidget  {
   QTreeWidgetItem* monitor1item;
   bool shiftButtonPressed;
   bool rightbutton;
-public:
-//constructor and destructor
-Componentmaintenance(QWorkspace *parent, const char *name
-                       ,const std::vector<Component*>& componentvector
-                       ,const std::vector<Component*>& allcomponentsvector);
-~Componentmaintenance();
+
+~ComponentEditor();
 //private inspectors
 private:
 bool modelvalid()const;                          //check if the model is still valid

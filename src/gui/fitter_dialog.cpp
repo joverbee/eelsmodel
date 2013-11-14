@@ -55,11 +55,18 @@
 
 EELSModel* geteelsmodelptr();
 
-Fitter_dialog::Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitter)
-: QWidget(parent)
+fitterWidget::fitterWidget(QWidget* parent)
+: QWidget(parent),
+  fitterChooser(new QComboBox(this))
 {
-    this->setWindowTitle(name);
-    parent->addWindow(this); //add it explicitly to the workspace
+  fitterChooser->addItems({"Least Squares Fitter",
+                           "Weighted Least Squares Fitter (ML for normal distribution)",
+                           "Maximum Likelihood Fitter for Poisson Statistics",
+                           "GSL Least Squares",
+                           "Levenberg Marquardt Poisson"});
+
+  createLayout();
+/*
     previous=false;
     startfromcurrent=false;
     redrawfit=true;
@@ -262,33 +269,35 @@ Fitter_dialog::Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitt
      connect (this,SIGNAL(signal_progressbar(int)),pbar,SLOT(setProgress(int)));
      this->show();
      this->setMinimumSize(this->minimumSizeHint()); //needed since QT4 to make sure the widget is not shown minimized
-}
-Fitter_dialog::~Fitter_dialog(){
-  //tell eelsmodel that we are off
-   emit signal_fitterdialog_died();
+     */
 }
 
+void fitterWidget::createLayout()
+{
+  QHBoxLayout* toplayout = new QHBoxLayout(this);
 
+  toplayout->addWidget(fitterChooser);
+}
 
-void Fitter_dialog::slot_change_minstep(const QString& valstring){
+void fitterWidget::slot_change_minstep(const QString& valstring){
   minstep=getnumber(valstring);
   fitterptr->setminstep(minstep);
 }
-void Fitter_dialog::slot_change_maxstep(const QString& valstring){
+void fitterWidget::slot_change_maxstep(const QString& valstring){
   maxstep=getnumber(valstring);
   fitterptr->setmaxstep(maxstep);
 }
-void Fitter_dialog::slot_change_fraction(const QString& valstring){
+void fitterWidget::slot_change_fraction(const QString& valstring){
   fraction=getnumber(valstring);
   fitterptr->setfraction(fraction);
 }
 
-void Fitter_dialog::slot_change_tolerance(const QString& valstring){
+void fitterWidget::slot_change_tolerance(const QString& valstring){
   tolerance=getnumber(valstring);
   fitterptr->settolerance(tolerance);
 }
 
-void Fitter_dialog::slot_change_nmax(const QString& valstring){
+void fitterWidget::slot_change_nmax(const QString& valstring){
   int n=int(getnumber(valstring));
   if (n<1) {
     n=1;
@@ -296,14 +305,14 @@ void Fitter_dialog::slot_change_nmax(const QString& valstring){
   fitterptr->setnmax((unsigned int)n);
 }
 
-double Fitter_dialog::getnumber(const QString& valstring)const{
+double fitterWidget::getnumber(const QString& valstring)const{
   bool ok;
   double result=valstring.toDouble(&ok);
   if (ok) return result;
   else return 0.0;
 }
 
-void Fitter_dialog::slot_stop(){
+void fitterWidget::slot_stop(){
 stop=true;
 stopbutton->setEnabled(false);
 stopbutton->repaint();
@@ -312,7 +321,7 @@ this->setWindowTitle("Stopped by user");
 confidencelabel->setText((fitterptr->LRtestconfidence_string()).c_str());
   confidencelabel->repaint();
 }
-void Fitter_dialog::slot_update(){
+void fitterWidget::slot_update(){
 QString valstring;
   // the way numbers are displayed
     int fieldwidth=-1;
@@ -338,41 +347,41 @@ valstring="%1"; //required by MacOSX otherwise empty text window
   confidencelabel->setText((fitterptr->LRtestconfidence_string()).c_str());
   confidencelabel->repaint();
 }
-void Fitter_dialog::slot_set_update_allways(bool b){
+void fitterWidget::slot_set_update_allways(bool b){
 update_allways=b;
 }
-void Fitter_dialog::slot_set_usegradients(bool b){
+void fitterWidget::slot_set_usegradients(bool b){
 usegradients=b;
 fitterptr->setusegradients(usegradients);
 }
-void Fitter_dialog::slot_set_residual(bool b){
+void fitterWidget::slot_set_residual(bool b){
 residual=b;
 fitterptr->setdoresidual(residual);
 }
-void Fitter_dialog::slot_set_multi(bool b){
+void fitterWidget::slot_set_multi(bool b){
 fitterptr->setdomulti(b);
 }
 
-void Fitter_dialog::slot_set_lintrick(bool b){
+void fitterWidget::slot_set_lintrick(bool b){
     fitterptr->dolintrick(b);
 }
 
-void Fitter_dialog::slot_set_startfromcurrent(bool b){
+void fitterWidget::slot_set_startfromcurrent(bool b){
     startfromcurrent=b;
 }
 
-void Fitter_dialog::slot_set_previous(bool b){
+void fitterWidget::slot_set_previous(bool b){
 previous=b;
 }
 
 
-void Fitter_dialog::slot_undo(){
+void fitterWidget::slot_undo(){
   //get the parameters back that where valid before doing the itteration
   (fitterptr->modelptr)->retrieveparams();
   (fitterptr->modelptr)->updateHL(); //and redraw
 }
 
-void Fitter_dialog::iterate_this_spectrum(){
+void fitterWidget::iterate_this_spectrum(){
 
     //itteration loop for 1 spectrum
 
@@ -459,7 +468,7 @@ void Fitter_dialog::iterate_this_spectrum(){
    QApplication::restoreOverrideCursor(); // we're done
 }
 
-void Fitter_dialog::slot_iterations(){
+void fitterWidget::slot_iterations(){
 //total itteration loop
 //either multifit or a single fit
 	
@@ -504,14 +513,14 @@ if (mptr->getnroffreeparameters()==0){
     }
 }
 
-void Fitter_dialog::getposition(int& xpos,int& ypos)const{
+void fitterWidget::getposition(int& xpos,int& ypos)const{
 //return the position of the window
   QPoint p=this->pos();
   xpos=p.x();
   ypos=p.y();
 
 }
-void Fitter_dialog::slot_setposition(int x, int y){
+void fitterWidget::slot_setposition(int x, int y){
 //changes position of window on screen
 //only when it fits on the screen
  // if (((qApp->desktop())->width()>x)&&((qApp->desktop())->height()>y)){
@@ -522,12 +531,12 @@ void Fitter_dialog::slot_setposition(int x, int y){
 }
 
 
-void Fitter_dialog::slot_params(){
+void fitterWidget::slot_params(){
 //set all parameters to current
  (fitterptr->modelptr)->setalluserparamstocurrent();
 }
 
-void Fitter_dialog::save_params(bool dat,bool crlb){
+void fitterWidget::save_params(bool dat,bool crlb){
     //save all user stored parameters to a binary file
     //this can be read easily by DM with the import function
     //especially convenient for 2D SI's
@@ -575,14 +584,14 @@ void Fitter_dialog::save_params(bool dat,bool crlb){
 
 
 
-void Fitter_dialog::slot_params_save_dat(){
+void fitterWidget::slot_params_save_dat(){
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     save_params(true,false);
     QApplication::restoreOverrideCursor(); // we're done
 
 }
 
-void Fitter_dialog::slot_model_save_dat(){
+void fitterWidget::slot_model_save_dat(){
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));    
     //save the calculated model for all paprameter to a binary file
     //this can be read easily by DM with the import function
@@ -619,17 +628,17 @@ void Fitter_dialog::slot_model_save_dat(){
     QApplication::restoreOverrideCursor(); // we're done
 }
 
-void Fitter_dialog::slot_params_save_txt(){
+void fitterWidget::slot_params_save_txt(){
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     save_params(false,false);
     QApplication::restoreOverrideCursor(); // we're done
 }
-void Fitter_dialog::slot_params_save_crlb_dat(){
+void fitterWidget::slot_params_save_crlb_dat(){
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     save_params(true,true);
     QApplication::restoreOverrideCursor(); // we're done
 }
 
-void Fitter_dialog::slot_set_redrawfit(bool r){
+void fitterWidget::slot_set_redrawfit(bool r){
     redrawfit=r;
 }

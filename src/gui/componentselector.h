@@ -33,8 +33,8 @@
 class Componentselector : public QWidget  {
    Q_OBJECT
 public:
-	Componentselector(QWidget *parent, const char *name, const char* message,int& value);
-	~Componentselector();
+  Componentselector(QWidget *parent, const char *name, const char* message,int& value);
+  ~Componentselector();
 };
 
 #endif

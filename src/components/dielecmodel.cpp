@@ -384,7 +384,7 @@ void DielecModel::addlorentzparams(size_t i){
 void DielecModel::displayKroeger(){
     //make a plot of the Kroeger result
     if (kroegerim==0){
-        kroegerim=new Imagedisplay("kroeger test",&kroegermatrix);
+        kroegerim=new Imagedisplay(/*"kroeger test",*/&kroegermatrix);
     }
     kroegerim->updatereloadmatrix();
 }

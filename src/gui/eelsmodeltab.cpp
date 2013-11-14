@@ -26,38 +26,43 @@
 #include "src/gui/eelsmodeltab.h"
 
 #include <QActionGroup>
-#include <QHBoxLayout>
 #include <QLabel>
+#include <QMessageBox>
+#include <QSplitter>
 #include <QToolBar>
-#include <QVBoxLayout>
 
+#include "src/core/image.h"
+#include "src/core/model.h"
+
+#include "src/gui/componentmaintenance.h"
+#include "src/gui/fitter_dialog.h"
 #include "src/gui/imagedisplay.h"
 
+//TODO consolidate these two once Spectrum is properly implemented
 EELSModelTab::EELSModelTab(Spectrum* spectrum, QWidget* parent)
 : QMainWindow(parent),
-  spectrum(spectrum)
+  multi(false),
+  spectrum(spectrum),
+  model(spectrum)
 {
   setAttribute(Qt::WA_DeleteOnClose); // delete this widget when tab is closed
+
   createToolBar();
-
-  setCentralWidget(new QWidget(this));
-
-  QHBoxLayout* columns = new QHBoxLayout;
-  centralWidget()->setLayout(columns);
-  QVBoxLayout* leftrows = new QVBoxLayout;
-  QVBoxLayout* rightrows = new QVBoxLayout;
-  columns->addLayout(leftrows);
-  columns->addLayout(rightrows);
-
-  // show image of spectrum
-  QLabel* Imagedisplay_placeholder = new QLabel("This is were the image thingie goes.");
-  Imagedisplay_placeholder->setAlignment(Qt::AlignCenter);
-  Imagedisplay_placeholder->resize(100,100);
-  leftrows->addWidget(Imagedisplay_placeholder);
-  leftrows->addWidget(new Graph(spectrum));
-
-  rightrows->addWidget(new QLabel("haha"));
+  createLayout();
 }
+
+EELSModelTab::EELSModelTab(Image* image, QWidget* parent)
+: QMainWindow(parent),
+  multi(true),
+  spectrum(image->getmspec()),
+  model(image->getmspec())
+{
+  setAttribute(Qt::WA_DeleteOnClose); // delete this widget when tab is closed
+
+  createToolBar();
+  createLayout();
+}
+
 //TODO
 void EELSModelTab::createToolBar()
 {
@@ -112,13 +117,72 @@ void EELSModelTab::createToolBar()
   basicToolbar->addAction(link);
 }
 
+void EELSModelTab::createLayout()
+{
+  QSplitter* hsplitter = new QSplitter(Qt::Horizontal);
+  QSplitter* leftsplitter = new QSplitter(Qt::Vertical, hsplitter);
+  QSplitter* rightsplitter = new QSplitter(Qt::Vertical, hsplitter);
+  hsplitter->addWidget(leftsplitter);
+  hsplitter->addWidget(rightsplitter);
+
+  setCentralWidget(hsplitter);
+
+  // show image of spectrum
+  //TODO evil hack needs to be solved at the Spectrum level
+  if(multi)
+  {
+    leftsplitter->addWidget(new Graph(dynamic_cast<Multispectrum*>(spectrum.get())));
+    leftsplitter->addWidget(new Graph(model.getmultispectrumptr()));
+  }
+  else
+  {
+    leftsplitter->addWidget(new Graph(spectrum.get()));
+    leftsplitter->addWidget(new Graph(model.getspectrumptr()));
+  }
+  rightsplitter->addWidget(new fitterWidget());
+  //rightsplitter->addWidget(new ComponentEditor(model));
+}
+
 void EELSModelTab::cut() {}
 void EELSModelTab::copy() {}
 void EELSModelTab::paste() {}
 void EELSModelTab::undoSelection() {}
 void EELSModelTab::exclude() {}
 void EELSModelTab::resetExclude() {}
-void EELSModelTab::newModel() {}
+
+
+void EELSModelTab::newModel()
+{
+  switch(QMessageBox::warning(this, "New model", "Save the current model?",
+                              QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel))
+  {
+    case QMessageBox::Save:
+      QMessageBox::warning(this, "Unimplemented", "Saving the previous model here is unimplemented.");
+    case QMessageBox::Discard:
+      break; // continue below
+    default:
+      return; // the user cancelled
+  }
+
+  //TODO evil hacks need to be solved at the Spectrum level
+  if(multi)
+  {
+    model = Model(dynamic_cast<Multispectrum*>(spectrum.get()));
+    //TODO: is this even possible?
+    //update model wheneverspectrum changes
+    connect(imagedisplay, SIGNAL(curr_spec_update()), model_graph, SLOT(slot_model_update()));
+  }
+  else
+    model = Model(spectrum.get());
+
+  model.calculate();
+  //model.display(getworkspaceptr());
+  //model->printcomponents();
+  //emit enablemodel(true);
+}
+
+
+
 void EELSModelTab::editComponent() {}
 void EELSModelTab::fitModel() {}
 void EELSModelTab::setDetector() {}
