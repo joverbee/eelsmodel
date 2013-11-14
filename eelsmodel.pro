@@ -159,7 +159,9 @@ HEADERS += src/components/dieleclinear.h \
            ./icons/gohome.xpm \
            ./icons/connect_established.xpm \
     src/gui/eelsmodel.h \
-    src/gui/eelsmodeltab.h
+    src/gui/eelsmodeltab.h \
+    src/core/loadfiles.h \
+    src/core/loaddm.h
 SOURCES += src/components/dieleclinear.cpp \
            src/components/dielecmodel.cpp \
            src/components/dos.cpp \
@@ -232,7 +234,9 @@ SOURCES += src/components/dieleclinear.cpp \
            src/gui/realinput.cpp \
            src/gui/saysomething.cpp \
     src/gui/eelsmodel.cpp \
-    src/gui/eelsmodeltab.cpp
+    src/gui/eelsmodeltab.cpp \
+    src/core/loadfiles.cpp \
+    src/core/loaddm.cpp
 OTHER_FILES += \
     .gitignore
 

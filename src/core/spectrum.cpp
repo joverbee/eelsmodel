@@ -372,7 +372,7 @@ Spectrum::Spectrum(const std::string& filename) //construct a spectrum loaded fr
 
 //    other member functions
 
-unsigned int Spectrum::getnpoints()const{return npoints;}
+unsigned int Spectrum::getnpoints()const{return dataset.size();}
 
 void Spectrum::setnpoints(int n)
 {

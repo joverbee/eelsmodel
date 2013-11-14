@@ -53,7 +53,7 @@
 #include "src/gui/getfilename.h"
 #include "src/gui/saysomething.h"
 
-Image::Image(QWidget *parent, const char *name,std::string filename,bool silent)
+Image::Image(const char *name,std::string filename,bool silent, QWidget *parent)
   :QWidget(parent),pm(),pmScaled()
 {
     this->setWindowTitle(name);
@@ -131,22 +131,10 @@ void Image::scale()
     }
 }
 
-void Image::LoadDM3(std::string filename){
-if (filename==""){
-  //open a DM3 image
-  //start to get a filename to load
-  Getfilename myfile(0,"Select a DM file to load");
-    //myfile.setdirname("~");
-  myfile.setfilter("Projects (*.dm3 *.DM3)");
-  myfile.setcaption("Select a DM file to load");
-  try{
-    filename=myfile.open();
-  }
-  catch(...){
-    throw ImageErr::load_cancelled();//cancelled by user
-    }
-  if (filename=="") throw ImageErr::load_cancelled();//cancelled by user
-}
+void Image::LoadDM3(std::string filename)
+{
+if (filename=="")
+  throw std::runtime_error("Image::LoadDM3 called with empty filename");
 
   #ifdef DEBUG_IMAGE
   std::cout <<"the filename is: "<<filename <<"\n";

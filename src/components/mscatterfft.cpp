@@ -57,7 +57,7 @@ setshifter(false);
 Mscatterfft::Mscatterfft(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
 :Component(n,estart,dispersion),LLspectrum(n,estart,dispersion)
 {
-Parameter* p;
+/*Parameter* p;
  //give a name and description
  this->setpppc(1.0); //test
  name = "Multiple scattering (FFT)";
@@ -171,7 +171,7 @@ Parameter* p;
 
 updateLL(); //set the LLptr to the right current spectrum, copy it and and normalise and do the fourier transform
  p->setname(LLptr->getfilename()); //update p to the real filename that was used
-this->addparameter(p);
+this->addparameter(p);*/
 }
 Mscatterfft::~Mscatterfft(){
   //delete storage and plans

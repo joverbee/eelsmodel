@@ -54,6 +54,7 @@ setshifter(false);
 Mscatter::Mscatter(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
 :Component(n,estart,dispersion),LLspectrum(n,estart,dispersion)
 {
+  /*
 Parameter* p;
  //give a name and description
  this->setpppc(1.0); //test
@@ -151,6 +152,7 @@ Parameter* p;
 updateLL(); //set the LLptr to the right current spectrum, copy it and and normalise
  p->setname(LLptr->getfilename()); //update p to the real filename that was used
 this->addparameter(p);
+ */
 }
 Mscatter::~Mscatter(){
 }

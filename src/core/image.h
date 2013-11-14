@@ -64,7 +64,7 @@ class ImageErr{   //class for exeptions
     };
 public:
 //constructor and destructor
-Image(QWidget *parent=0, const char *name=0,std::string filename=0,bool silent=0);
+Image(const char *name=0,std::string filename=0,bool silent=0,QWidget *parent=0);
 ~Image();
 //
 void LoadDM3(std::string filename);

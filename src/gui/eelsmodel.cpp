@@ -338,7 +338,7 @@ void EELSModel::newFile()
 
 void EELSModel::openMSA()
 {
-  statusBar()->showMessage(tr("Opening file..."));
+  statusBar()->showMessage(tr("Opening MSA file..."));
 
   QString filename = QFileDialog::getOpenFileName(this, tr("Open MSA"), "", tr("MSA File (*.msa)"));
   if(filename.isEmpty())
@@ -375,8 +375,34 @@ void EELSModel::openMSA()
   QApplication::restoreOverrideCursor(); // we're done
 }
 
+void EELSModel::openDM3()
+{
+  statusBar()->showMessage(tr("Opening DM3 file..."));
+
+  QString filename = QFileDialog::getOpenFileName(this, tr("Select a DM file to load)"), "", tr("Projects (*.dm3 *.DM3)"));
+  if(filename.isEmpty())
+    return; // user cancelled
+
+  //open the image and convert to mspec
+   myimage=0;
+  Multispectrum* mymspec=0;
+  try
+  {
+    Image* image = new Image("Image",filename.toStdString(),true);
+    //now create an mspec
+    mymspec=myimage->getmspec();
+    mymspec->display(getworkspaceptr());
+  }
+  catch(...){
+    //something went wrong
+
+    myimage=0;
+    mymspec=0;
+  }
+  //reset the mouse pointer in case we had an exception
+  QApplication::restoreOverrideCursor(); // we're done
+}
 //TODO
-void EELSModel::openDM3() {}
 void EELSModel::openProject() {}
 void EELSModel::save() {}
 void EELSModel::saveAs() {}
@@ -506,26 +532,27 @@ void EELSModel::newspectrum(){
 
 }*/
 
-Multispectrum* EELSModel::openDM3(std::string filename,bool silent)const{
+/*Multispectrum* EELSModel::openDM3(std::string filename,bool silent)const{
    //open the image and convert to mspec
    Image* myimage=0;
    Multispectrum* mymspec=0;
-   try{
-      myimage=new Image(getworkspaceptr(),"Image",filename,silent);
-      //now create an mspec
-      mymspec=myimage->getmspec();
-      mymspec->display(getworkspaceptr());
-    }
-    catch(...){
-      //something went wrong
+   try
+   {
+     myimage=new Image(getworkspaceptr(),"Image",filename,silent);
+     //now create an mspec
+     mymspec=myimage->getmspec();
+     mymspec->display(getworkspaceptr());
+   }
+   catch(...){
+     //something went wrong
 
-      myimage=0;
-      mymspec=0;
-    }
-  //reset the mouse pointer in case we had an exception
-  QApplication::restoreOverrideCursor(); // we're done
+     myimage=0;
+     mymspec=0;
+   }
+   //reset the mouse pointer in case we had an exception
+   QApplication::restoreOverrideCursor(); // we're done
    return mymspec;
-}
+}*/
 
 void EELSModel::componentmaintenance(){
 
@@ -1198,7 +1225,7 @@ void EELSModel::load_project(Model*& mymodel,Fitter*& myfitter,std::string filen
 //*      load the whole project
 //***************************************
 //model, fitter etc
-
+/*
 
 //check if a model exists
   if (mymodel!=0){
@@ -1865,6 +1892,7 @@ this->setCursor(Qt::WaitCursor); //set to wait cursor
         std::cout <<" end of load model\n";
  #endif
   this->setCursor(Qt::ArrowCursor); //set to normal cursor
+  */
 }
 void EELSModel::slot_save_model(){
 //***************************************
