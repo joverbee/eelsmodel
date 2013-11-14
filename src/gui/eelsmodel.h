@@ -71,7 +71,6 @@ public slots:
   void print(); // what is this?
   void quit();
 
-
   void toggleToolBar(bool toggle);
   void toggleStatusBar(bool toggle);
 
@@ -99,34 +98,13 @@ private:
   QAction* fileSaveReport;
   QAction* fileQuit;
 
+  // View menu actions
+  QAction* viewToggleStatusBar;
+
   // Help menu actions
   QAction* helpAbout;
   QAction* helpAboutQt;
 
-  // Edit menu actions
-  QAction* editCut;
-  QAction* editCopy;
-  QAction* editPaste;
-  QAction* editUndoSelection;
-  QAction* editExclude;
-  QAction* editResetExclude;
-
-  // View menu actions
-  QAction* viewToggleToolBar;
-  QAction* viewToggleStatusBar;
-
-  // Model actions
-  QAction* modelNew;
-  QAction* modelFit;
-  QAction* modelComponent;
-  QAction* modelDETECTOR;
-
-  //toolbar actions
-  QAction* toolbarSelection;
-  QAction* toolbarZoom;
-  QAction* toolbarLink;
-  QAction* toolbarHome;
-  QAction* toolbarNormal;
 
 
   Model* mymodel;

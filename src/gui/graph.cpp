@@ -195,6 +195,7 @@ public:
 
 Graph::Graph(Spectrum* spectrum, QWidget* parent)
 : QwtPlot(parent),
+  mouseMode(normal),
   qwtdata(1, QVector<QPointF>(spectrum->getnpoints()))
 {
   setWindowTitle(spectrum->name.c_str());
@@ -217,7 +218,9 @@ setMinimumSize(300,150);
 }
 
 Graph::Graph(Multispectrum* mspec, QWidget* parent)
-   : QwtPlot(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints()))
+: QwtPlot(parent),
+  mouseMode(normal),
+  qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints()))
 {
   //this->setWindowTitle(name);
   //parent->addWindow(this); //add it explicitly to the workspace
@@ -549,24 +552,25 @@ Multispectrum* Graph::getmultispectrumptr(){
   else return 0;
 }
 
-void Graph::mousePressEvent(QMouseEvent* e){
-    //update the state of the zoom or selection
-    d_panner->setEnabled( mainwindow->zoomMode());
-    d_zoomer[0]->setEnabled( mainwindow->zoomMode() );
-   // d_zoomer[0]->zoom( 0 );
-    d_zoomer[1]->setEnabled( mainwindow->zoomMode() );
-   // d_zoomer[1]->zoom( 0 );
-    d_picker[0]->setEnabled( mainwindow->selectMode());
-    d_picker[1]->setEnabled( mainwindow->selectMode());
-
-    if (e->button()==Qt::RightButton){
-        //abort selection
-        d_marker1->setValue( 0.0, 0.0 );
-        d_marker2->setValue( 0.0, 0.0 );
-        setselection(false);
-        replot();
-    }
-
+void Graph::mousePressEvent(QMouseEvent* e)
+{
+  //update the state of the zoom or selection
+  d_panner->setEnabled(mouseMode == zoom);
+  d_zoomer[0]->setEnabled(mouseMode == zoom);
+  // d_zoomer[0]->zoom( 0 );
+  d_zoomer[1]->setEnabled(mouseMode == zoom);
+  // d_zoomer[1]->zoom( 0 );
+  d_picker[0]->setEnabled(mouseMode == select);
+  d_picker[1]->setEnabled(mouseMode == select);
+  
+  if (e->button()==Qt::RightButton){
+    //abort selection
+    d_marker1->setValue( 0.0, 0.0 );
+    d_marker2->setValue( 0.0, 0.0 );
+    setselection(false);
+    replot();
+  }
+  
 }
 
 void Graph::resetselection(){

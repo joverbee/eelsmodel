@@ -27,8 +27,12 @@
 
 #include <QActionGroup>
 #include <QLabel>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QSplitter>
+#include <QStatusBar>
 #include <QToolBar>
 
 #include "src/core/image.h"
@@ -47,8 +51,9 @@ EELSModelTab::EELSModelTab(Spectrum* spectrum, QWidget* parent)
 {
   setAttribute(Qt::WA_DeleteOnClose); // delete this widget when tab is closed
 
-  createToolBar();
+  createMenuBar();
   createLayout();
+  createToolBar(); // needs things created in createLayout
 }
 
 EELSModelTab::EELSModelTab(Image* image, QWidget* parent)
@@ -61,6 +66,81 @@ EELSModelTab::EELSModelTab(Image* image, QWidget* parent)
 
   createToolBar();
   createLayout();
+}
+
+void EELSModelTab::createMenuBar()
+{
+  // Edit actions
+  QAction* undoSelection = new QAction(tr("&Undo selection"), this);
+  undoSelection->setStatusTip(tr("Undo selection"));
+  undoSelection->setWhatsThis(tr("Undo selection"));
+  connect(undoSelection, SIGNAL(activated()), this, SLOT(slotEditUndoSelection()));
+
+  QAction* exclude = new QAction(tr("Exclude points"), this);
+  exclude->setStatusTip(tr("Exlude selected points from fitting"));
+  exclude->setWhatsThis(tr("Exlude selected points from fitting"));
+  connect(exclude, SIGNAL(activated()), this, SLOT(slotEditExclude()));
+
+  QAction* resetExclude = new QAction(tr("Reset Exclude points"), this);
+  resetExclude->setStatusTip(tr("Reset exclude region, \n either on a selection or on the\n whole spectrum"));
+  resetExclude->setWhatsThis(tr("Reset exclude region, \n either on a selection or on the\n whole spectrum"));
+  connect(resetExclude, SIGNAL(activated()), this, SLOT(slotEditResetExclude()));
+
+  //view actions
+/* there is no other way to perform the toolbar actions
+  viewToggleToolBar = new QAction(tr("Toggle Toolbar"), this);
+  viewToggleToolBar->setStatusTip(tr("Enables/disables the toolbar"));
+  viewToggleToolBar->setWhatsThis(tr("Toggle Toolbar\n\nEnables/disables the toolbar"));
+  viewToggleToolBar->setCheckable(true);
+  connect(viewToggleToolBar, SIGNAL(toggled(bool)), this, SLOT(slotViewToolBar(bool)));
+*/
+
+  //model actions
+  QAction* modelNew = new QAction(tr("New Model"), this);
+  modelNew->setStatusTip(tr("New Model"));
+  modelNew->setWhatsThis(tr("New Model\n\nCreate a new model"));
+  connect(modelNew, SIGNAL(activated()), this, SLOT(newModel()));
+
+  QAction* modelDETECTOR = new QAction(tr("choose detector"), this);
+  modelDETECTOR->setStatusTip(tr("set the detector properties"));
+  modelDETECTOR->setWhatsThis(tr("set the detector properties"));
+  connect(modelDETECTOR, SIGNAL(activated()), this, SLOT(slotModelDETECTOR()));
+  modelDETECTOR->setEnabled(false);
+
+  // The menu bar
+  QMenu* editMenu = menuBar()->addMenu("Edit");
+  editMenu->addAction(undoSelection);
+  editMenu->addAction(exclude);
+  editMenu->addAction(resetExclude);
+
+  QMenu* modelMenu = menuBar()->addMenu("Model");
+  modelMenu->addAction(modelNew);
+  modelMenu->addAction(modelDETECTOR);
+}
+
+void EELSModelTab::createLayout()
+{
+  QSplitter* hsplitter = new QSplitter(Qt::Horizontal);
+  QSplitter* leftsplitter = new QSplitter(Qt::Vertical, hsplitter);
+  QSplitter* rightsplitter = new QSplitter(Qt::Vertical, hsplitter);
+  hsplitter->addWidget(leftsplitter);
+  hsplitter->addWidget(rightsplitter);
+
+  setCentralWidget(hsplitter);
+
+  //TODO evil hack needs to be solved at the Spectrum level
+  if(multi)
+  {
+    leftsplitter->addWidget(new Graph(dynamic_cast<Multispectrum*>(spectrum.get())));
+    leftsplitter->addWidget(new Graph(model.getmultispectrumptr()));
+  }
+  else
+  {
+    leftsplitter->addWidget(new Graph(spectrum.get()));
+    leftsplitter->addWidget(new Graph(model.getspectrumptr()));
+  }
+  rightsplitter->addWidget(new ComponentEditor(model));
+  rightsplitter->addWidget(new fitterWidget());
 }
 
 //TODO
@@ -76,20 +156,20 @@ void EELSModelTab::createToolBar()
   normal->setWhatsThis(tr("Normal\n\nSets the cursor in the normal mode"));
   normal->setCheckable(true);
   normal->setChecked(true); // this should be the default option
-  connect(normal, SIGNAL(triggered()), this, SIGNAL(toolbar_normal()));
+  connect(normal, SIGNAL(triggered()), this, SIGNAL(setNormalMode()));
   //the selection button
   QAction* selection = new QAction(QIcon(":/icons/rectangle.png"), tr("Region Select"), group);
   selection->setStatusTip(tr("Select a region in a graph"));
   selection->setWhatsThis(tr("Region Select\n\nSelect a region in a graph"));
   selection->setCheckable(true);
-  connect(selection, SIGNAL(triggered()), this, SIGNAL(toolbar_selection()));
+  connect(selection, SIGNAL(triggered()), this, SIGNAL(setSelectMode()));
 
   //the zoom button
   QAction* zoom = new QAction(QIcon(":/icons/zoom.png"), tr("&Zoom"), group);
   zoom->setStatusTip(tr("Zoom in on a graph"));
   zoom->setWhatsThis(tr("Zoom\n\nZooms in on a graph"));
   zoom->setCheckable(true);
-  connect(zoom, SIGNAL(triggered()), this, SIGNAL(toolbar_zoom()));
+  connect(zoom, SIGNAL(triggered()), this, SIGNAL(setZoomMode()));
 
   // ungrouped buttons
 
@@ -115,32 +195,6 @@ void EELSModelTab::createToolBar()
   basicToolbar->addSeparator(); // seperator between grouped and ungrouped buttons
   basicToolbar->addAction(home);
   basicToolbar->addAction(link);
-}
-
-void EELSModelTab::createLayout()
-{
-  QSplitter* hsplitter = new QSplitter(Qt::Horizontal);
-  QSplitter* leftsplitter = new QSplitter(Qt::Vertical, hsplitter);
-  QSplitter* rightsplitter = new QSplitter(Qt::Vertical, hsplitter);
-  hsplitter->addWidget(leftsplitter);
-  hsplitter->addWidget(rightsplitter);
-
-  setCentralWidget(hsplitter);
-
-  // show image of spectrum
-  //TODO evil hack needs to be solved at the Spectrum level
-  if(multi)
-  {
-    leftsplitter->addWidget(new Graph(dynamic_cast<Multispectrum*>(spectrum.get())));
-    leftsplitter->addWidget(new Graph(model.getmultispectrumptr()));
-  }
-  else
-  {
-    leftsplitter->addWidget(new Graph(spectrum.get()));
-    leftsplitter->addWidget(new Graph(model.getspectrumptr()));
-  }
-  rightsplitter->addWidget(new ComponentEditor(model));
-  rightsplitter->addWidget(new fitterWidget());
 }
 
 void EELSModelTab::cut() {}
@@ -180,8 +234,20 @@ void EELSModelTab::newModel()
   //emit enablemodel(true);
 }
 
-
-
-void EELSModelTab::editComponent() {}
-void EELSModelTab::fitModel() {}
 void EELSModelTab::setDetector() {}
+
+void EELSModelTab::setNormalMode()
+{
+  spectrum_graph->mouseMode = Graph::normal;
+  model_graph->mouseMode = Graph::normal;
+}
+void EELSModelTab::setZoomMode()
+{
+  spectrum_graph->mouseMode = Graph::zoom;
+  model_graph->mouseMode = Graph::zoom;
+}
+void EELSModelTab::setSelectMode()
+{
+  spectrum_graph->mouseMode = Graph::select;
+  model_graph->mouseMode = Graph::select;
+}

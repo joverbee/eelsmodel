@@ -51,6 +51,7 @@ public:
 signals:
 
 public slots:
+  // Edit slots
   void cut(); // put the marked text/object into the clipboard and remove it from the document
   void copy(); // put the marked text/object into the clipboard
   void paste(); // paste the clipboard into the document
@@ -58,16 +59,19 @@ public slots:
   void exclude(); // exclude points from a selected area
   void resetExclude(); // reset an excluded area from a selection or from the whome spectrum
 
-  //model slots
+  // Model slots
   void newModel(); // create new model for spectrum in tab
-  void editComponent(); // edit components in the model
-  void fitModel(); // fit the model to the spectrum
   void setDetector();
 
+  // ToolBar slots
+  void setNormalMode();
+  void setZoomMode();
+  void setSelectMode();
+
 private:
-  void createActions();
-  void createToolBar();
+  void createMenuBar();
   void createLayout();
+  void createToolBar();
 
   bool multi; //TODO get rid of this which says if below spectrum is actually a multispectrum
   std::unique_ptr<Spectrum> spectrum; // the (multi)spectrum from file
@@ -78,21 +82,30 @@ private:
   Graph* spectrum_graph;
   Graph* model_graph;
 
-  //edit actions
+  // Edit menu actions
   QAction* editCut;
   QAction* editCopy;
   QAction* editPaste;
   QAction* editUndoSelection;
   QAction* editExclude;
   QAction* editResetExclude;
-  //view actions
-  QAction* viewToolBar;
-  QAction* viewStatusBar;
-  //model actions
+
+  // View menu actions
+  QAction* viewToggleToolBar;
+  QAction* viewToggleStatusBar;
+
+  // Model actions
   QAction* modelNew;
   QAction* modelFit;
   QAction* modelComponent;
   QAction* modelDETECTOR;
+
+  //toolbar actions
+  QAction* toolbarSelection;
+  QAction* toolbarZoom;
+  QAction* toolbarLink;
+  QAction* toolbarHome;
+  QAction* toolbarNormal;
 };
 
 #endif // EELSMODELTAB_H

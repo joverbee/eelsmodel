@@ -175,20 +175,23 @@ void EELSModel::createActions()
   editResetExclude->setWhatsThis(tr("Reset exclude region, \n either on a selection or on the\n whole spectrum"));
   connect(editResetExclude, SIGNAL(triggered()), this, SLOT(resetExclude()));
 */
-/*
-  //view actions - half belongs in tabbed view
+
+  //view actions
+/* this makes little sense
   viewToggleToolBar = new QAction(tr("Toolbar"), this);
   viewToggleToolBar->setStatusTip(tr("Enables/disables the toolbar"));
   viewToggleToolBar->setWhatsThis(tr("Toolbar\n\nEnables/disables the toolbar"));
   viewToggleToolBar->setCheckable(true);
   connect(viewToggleToolBar, SIGNAL(toggled(bool)), this, SLOT(toggleToolBar(bool)));
+*/
 
   viewToggleStatusBar = new QAction(tr("Statusbar"), this);
   viewToggleStatusBar->setStatusTip(tr("Enables/disables the statusbar"));
   viewToggleStatusBar->setWhatsThis(tr("Statusbar\n\nEnables/disables the statusbar"));
   viewToggleStatusBar->setCheckable(true);
+  viewToggleStatusBar->setChecked(true);
   connect(viewToggleStatusBar, SIGNAL(toggled(bool)), this, SLOT(toggleStatusBar(bool)));
-*/
+
   // Help menu
   helpAbout = new QAction(tr("About"), this);
   helpAbout->setStatusTip(tr("About the application"));
@@ -321,6 +324,9 @@ void EELSModel::createMenuBar()
   slot_enable_model(false);
 */
 
+  QMenu* viewMenu = menuBar()->addMenu("View");
+  viewMenu->addAction(viewToggleStatusBar);
+
   menuBar()->addSeparator();
 
   QMenu* helpMenu = menuBar()->addMenu("Help");
@@ -407,7 +413,17 @@ void EELSModel::quit()
   //TODO should check all open tabs and ask to save them or close all
   qApp->quit();
 }
-void EELSModel::toggleStatusBar(bool toggle) {}
+void EELSModel::toggleStatusBar(bool toggle)
+{
+  statusBar()->showMessage(tr("Toggle statusbar..."));
+
+  if(toggle == false)
+    statusBar()->hide();
+  else
+    statusBar()->show();
+
+  statusBar()->showMessage(tr("Ready."));
+}
 void EELSModel::toggleToolBar(bool toggle) {}
 void EELSModel::about()
 {

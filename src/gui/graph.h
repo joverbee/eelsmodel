@@ -59,6 +59,11 @@ public:
   Graph(Multispectrum* mspec, QWidget* parent = 0); //a graph of a multispectrum
   ~Graph();
 
+  enum { normal, select, zoom } mouseMode;
+
+
+public:
+
   void reinit();
   void Init();
   void addgraph(Spectrum* spec);
