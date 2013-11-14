@@ -139,8 +139,8 @@ void EELSModelTab::createLayout()
     leftsplitter->addWidget(new Graph(spectrum.get()));
     leftsplitter->addWidget(new Graph(model.getspectrumptr()));
   }
+  rightsplitter->addWidget(new ComponentEditor(model));
   rightsplitter->addWidget(new fitterWidget());
-  //rightsplitter->addWidget(new ComponentEditor(model));
 }
 
 void EELSModelTab::cut() {}
@@ -149,7 +149,6 @@ void EELSModelTab::paste() {}
 void EELSModelTab::undoSelection() {}
 void EELSModelTab::exclude() {}
 void EELSModelTab::resetExclude() {}
-
 
 void EELSModelTab::newModel()
 {

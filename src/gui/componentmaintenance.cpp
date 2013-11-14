@@ -67,10 +67,12 @@
 QWorkspace* getworkspaceptr();
 EELSModel* geteelsmodelptr();
 
-ComponentEditor::ComponentEditor(const std::vector<Component*>& componentvector,
-                                 const std::vector<Component*>& allcomponentsvector,
-                                 QWidget* parent)
-: QWidget(parent),allList(),modelList(),itemmap(){
+ComponentEditor::ComponentEditor(Model& model, QWidget* parent)
+: QWidget(parent),
+  model(model),
+  compvector(model.getcomponentvector()),
+  allvector(model.getallcomponentvector())
+{
    shiftButtonPressed = false;
    rightbutton=false;
   couplesequence=false;
@@ -88,8 +90,6 @@ ComponentEditor::ComponentEditor(const std::vector<Component*>& componentvector,
   monitoricon=QPixmap(monitor_xpm);
   wizicon=QPixmap(wiz_xpm);*/
   //get pointers to the vectors containing all components and the model components
-  compvector=&componentvector;
-  allvector=&allcomponentsvector;
 
   //set the layout of this widget
   QGridLayout *lay = new QGridLayout( this );
@@ -103,8 +103,8 @@ ComponentEditor::ComponentEditor(const std::vector<Component*>& componentvector,
   lv1 = new QTreeWidget(this);
   lv1->setColumnCount(1);
 
-   for (unsigned int i=0;i<allcomponentsvector.size();i++){
-       std::string name=((*allvector)[i])->getname();
+   for (unsigned int i=0;i<allvector.size();i++){
+       std::string name=(allvector[i])->getname();
        allList.append(new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(name.c_str()).arg(i))));
   }
   lv1->insertTopLevelItems(0, allList);
@@ -118,39 +118,39 @@ ComponentEditor::ComponentEditor(const std::vector<Component*>& componentvector,
 
 
   // create a pushbutton for adding components
-  QPushButton* add= new QPushButton( addicon,"Add", this );
+  QPushButton* add= new QPushButton(QIcon(":/icons/add.png"),"Add", this );
   lay->addWidget( add ,8,0);
   connect( add, SIGNAL( clicked() ), this, SLOT( slot_add_components() ) );
 
   // create a pushbutton for removing components
-  QPushButton *remove = new QPushButton(removeicon, "Remove", this  );
+  QPushButton *remove = new QPushButton(QIcon(":/icons/remove.png"), "Remove", this  );
   lay->addWidget( remove ,8,1);
   connect( remove, SIGNAL( clicked() ), this, SLOT( slot_remove_components() ) );
 
   // create a pushbutton for getting info
-  QPushButton *info = new QPushButton( infoicon,"Info", this  );
+  QPushButton *info = new QPushButton(QIcon(":/icons/info.png"),"Info", this  );
   lay->addWidget( info ,8,2);
   connect( info, SIGNAL( clicked()), this, SLOT( slot_info() ) );
 
   // create a pushbutton for coupling
-  QPushButton *couple = new QPushButton(coupledicon,"Couple parameters", this  );
+  QPushButton *couple = new QPushButton(QIcon(":/icons/linked.png"),"Couple parameters", this  );
   lay->addWidget( couple ,8,3);
   connect( couple, SIGNAL( clicked()), this, SLOT( slot_couple() ) );
 
   // create a pushbutton for adding a monitor
-  QPushButton *monitor = new QPushButton(monitoricon,"add Monitor", this  );
+  QPushButton *monitor = new QPushButton(QIcon(":/icons/monitor.png"),"add Monitor", this  );
   lay->addWidget( monitor ,8,4);
   connect( monitor, SIGNAL( clicked()), this, SLOT( slot_monitor() ) );
 
   // create a pushbutton for exitting this widget
-  //QPushButton *ok = new QPushButton(okicon, "OK", this  );
+  //QPushButton *ok = new QPushButton(QIcon(":/icons/ok.png", "OK", this  );
   //lay->addWidget( ok ,8,5);
   //connect( ok, SIGNAL( clicked() ), this, SLOT( quit() ) );
 
 
 
 //a wizard to make cross sections
-  QPushButton *atombutton = new QPushButton(wizicon, "Add Xsections", this  );
+  QPushButton *atombutton = new QPushButton(QIcon(":/icons/atomwiz.png"), "Add Xsections", this  );
   lay->addWidget( atombutton ,8,5);
   connect( atombutton, SIGNAL( clicked() ), this, SLOT( slot_atomwizard() ) );
 
@@ -239,8 +239,8 @@ void  ComponentEditor::slot_update(){
   componentmap.clear();
   lv2->clear();
 
-  for (size_t i=0;i<compvector->size();i++){
-      Component* mycomponent=(*compvector)[i];
+  for (size_t i=0;i<compvector.size();i++){
+      Component* mycomponent=compvector[i];
       QTreeWidgetItem* myitem=new QTreeWidgetItem(lv2); //create a new item
       myitem->setFlags(Qt::ItemIsEditable|Qt::ItemIsEnabled|Qt::ItemIsSelectable);  //make the item editable
 	  componentmap[myitem]=mycomponent;   //link the item with the component via componentmap
@@ -262,7 +262,7 @@ lv2->header()->resizeSection ( 2, 5 );
   //lv2->triggerUpdate();
 
 //update the number of components etc in complabel
-const Model * mymodel=(geteelsmodelptr())->getmodel();
+/*const Model * mymodel=(geteelsmodelptr())->getmodel();
 int total=mymodel->getnrofallparams();
 int free=mymodel->getnroffreeparameters();
 std::string labelstring;
@@ -272,7 +272,7 @@ std::string labelstring;
 	     labelstring=s.str();
       }
       this->setWindowTitle(labelstring.c_str());
-
+*/
 }
 
 void ComponentEditor::slot_remove_components(){
@@ -295,8 +295,8 @@ void ComponentEditor::slot_remove_components(){
     }
     const Component* mycomponent=componentmap[item];
     int index=0;
-    for (size_t i=0;i<compvector->size();i++){
-      const Component* currentcomponent=compvector->at(i);
+    for (size_t i=0;i<compvector.size();i++){
+      const Component* currentcomponent=compvector.at(i);
       if (currentcomponent==mycomponent){
         index=i;
         break;
@@ -320,8 +320,8 @@ void  ComponentEditor::slot_info(){
 
   QTreeWidgetItem * item=lv1->currentItem();
   const int index=lv1->indexOfTopLevelItem(item);
-  const std::string name=((*allvector)[index])->getname();
-  const std::string description=((*allvector)[index])->getdescription();
+  const std::string name=allvector[index]->getname();
+  const std::string description=allvector[index]->getdescription();
   const std::string mesg= "name: "+name+"\n"+"description: "+description+"\n";
   QMessageBox* infobox;
   infobox->information (this,"Component info",mesg.c_str());
@@ -370,7 +370,7 @@ void  ComponentEditor::slot_monitor(){
     monitor1item=item;
     monitorsequence=true;
     //change the cursor to show that we are in couple sequence mode
-    QCursor crosshair=QCursor(monitoricon,-1,-1);
+    QCursor crosshair=QCursor(QPixmap(":/icons/monitor.png"),-1,-1);
     this->setCursor (crosshair);
     return;
     //now wait for the user to click on the parameter to couple to
@@ -449,8 +449,8 @@ void ComponentEditor::slot_param_rightclick(QTreeWidgetItem* item){
           //get the component this parameter belongs to
           //browse through all components
           Component* mycomponent=0;
-          for (size_t i=0;i<compvector->size();i++){
-            mycomponent=(*compvector)[i];
+          for (size_t i=0;i<compvector.size();i++){
+            mycomponent=compvector[i];
             if (mycomponent->hasparameter(itemmap[item])){
 #ifdef DEBUG_COMPONENTMAINTENANCE
     std::cout << "parameter found in component: "<<i<<"\n";
@@ -503,7 +503,7 @@ void ComponentEditor::updateitem(QTreeWidgetItem* item){
 
    //get the monitors and icons right
   if (myparameter->ismonitored()){
-    item->setIcon (1,monitoricon);
+    item->setIcon (1,QIcon(":/icons/monitor.png"));
     item->setText(1,(myparameter->getmonitor())->getresultstring().c_str());
 
   }
@@ -618,8 +618,8 @@ bool  ComponentEditor::modelvalid()const{
   //if not, close down the component maintenance
   //this would mean that the model died
   try{
-     if (compvector->size()>0){
-       const Component* mycomponent=(*compvector)[0];
+     if (compvector.size()>0){
+       const Component* mycomponent=compvector[0];
        std::string name=mycomponent->getname();
      }
   }

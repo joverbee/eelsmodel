@@ -53,11 +53,10 @@ class ComponentEditor : public QWidget
 
 public:
   //constructor and destructor
-  ComponentEditor(const std::vector<Component*>& componentvector,
-                       const std::vector<Component*>& allcomponentsvector,
-                       QWidget* parent = 0);
+  ComponentEditor(Model& model, QWidget* parent = 0);
 
 private:
+  Model& model;
   //member data
 
   QList<QTreeWidgetItem *> allList;            //list with qstandarditems of all possible components
@@ -66,8 +65,8 @@ private:
   QTreeWidget* lv1;
 
   QLabel* complabel;
-  const std::vector<Component*>* compvector;      //vector with components in the model
-  const std::vector<Component*>* allvector;       //vector with all possible components
+  const std::vector<Component*>& compvector;      //vector with components in the model
+  const std::vector<Component*>& allvector;       //vector with all possible components
   std::map<const QTreeWidgetItem*,Parameter*> itemmap;        //map that links item* which represent the parameters to the parameter*
   std::map<const QTreeWidgetItem*,Component*> componentmap;   //map that links item* which represent the components to the Component*
   QPixmap okicon,lockedicon,unlockedicon,coupledicon,addicon,removeicon,infoicon,monitoricon,wizicon; //some icons
