@@ -25,7 +25,7 @@
 
 #include "src/gui/graph.h"
 
-//#define GRAPH_DEBUG
+#define GRAPH_DEBUG
 
 #include <cmath>
 #include <cstdlib>
@@ -204,16 +204,16 @@ setMinimumSize(300,150);
     spectrumptr=spectrum;
     //parent->addWindow(this); //add it explicitly to the workspace (important in QT4)
     #ifdef GRAPH_DEBUG
-    std::cout << "Constructor of graph\n";
-    std::cout << "parent adres is "<<parent<<"\n";
-    std::cout << "spectrum adres is: "<<spec<<"\n";
-    std::cout << "The size of data is :"<<data.size()<<"\n";
-    std::cout << "The size of data[0] is:"<<data[0].size()<<"\n";
+    qDebug() << "Constructor of graph\n";
+    qDebug() << "parent adres is "<<parent<<"\n";
+    qDebug() << "spectrum adres is: "<<spectrum<<"\n";
+    qDebug() << "The size of data is :"<<qwtdata.size()<<"\n";
+    qDebug() << "The size of data[0] is:"<<qwtdata[0].size()<<"\n";
     #endif
      setdefaults();
   Init();
     #ifdef GRAPH_DEBUG
-    std::cout << "End of constructor of Graph\n";
+    qDebug() << "End of constructor of Graph\n";
     #endif
 }
 
@@ -225,11 +225,11 @@ Graph::Graph(Multispectrum* mspec, QWidget* parent)
   //this->setWindowTitle(name);
   //parent->addWindow(this); //add it explicitly to the workspace
 #ifdef GRAPH_DEBUG
-  std::cout << "Constructor of graph for multispectrum\n";
-  std::cout << "parent adres is "<<parent<<"\n";
-  std::cout << "multispectrum adres is: "<<mspec<<"\n";
-  std::cout << "The size of data is :"<<data.size()<<"\n";
-  std::cout << "The size of data[0] is:"<<data[0].size()<<"\n";
+  qDebug() << "Constructor of graph for multispectrum\n";
+  qDebug() << "parent adres is "<<parent<<"\n";
+  qDebug() << "multispectrum adres is: "<<mspec<<"\n";
+  qDebug() << "The size of data is :"<<qwtdata.size()<<"\n";
+  qDebug() << "The size of data[0] is:"<<qwtdata[0].size()<<"\n";
 #endif
 
 
@@ -255,7 +255,7 @@ Graph::~Graph(){
 void Graph::Init(){
     this->setAutoReplot(false);
      #ifdef GRAPH_DEBUG
-    std::cout << "Start of init\n";
+    qDebug() << "Start of init\n";
     #endif
 
 
@@ -369,13 +369,13 @@ void Graph::selectionmade(const QPolygon & 	polygon){
 }
 void Graph::setdefaults(){
       #ifdef GRAPH_DEBUG
-    std::cout << "Start of setdefaults\n";
+    qDebug() << "Start of setdefaults\n";
     #endif
 // min size for this widget
  this->setMinimumSize(300,150);
 
    #ifdef GRAPH_DEBUG
-    std::cout << "Before reseting grabbing and area selection\n";
+    qDebug() << "Before reseting grabbing and area selection\n";
     #endif
 //reset all grabbing and arrea selection
   grabbing=false;
@@ -385,17 +385,17 @@ void Graph::setdefaults(){
   setendindex(npoints);
   rubberrect=0;
    #ifdef GRAPH_DEBUG
-    std::cout << "Before reseting zoom\n";
-       std::cout << "npoints="<<npoints<<"\n";
+    qDebug() << "Before reseting zoom\n";
+       qDebug() << "npoints="<<npoints<<"\n";
 
     #endif
 //reset zoom
   setstartzoomindex(0);
   setendzoomindex(npoints-1);
   #ifdef GRAPH_DEBUG
-  std::cout << "endzoomindex="<<endzoomindex<<"\n";
-  std::cout << "startzoomindex="<<startzoomindex<<"\n";
-    std::cout << "before defining colors\n";
+  qDebug() << "endzoomindex="<<endzoomindex<<"\n";
+  qDebug() << "startzoomindex="<<startzoomindex<<"\n";
+    qDebug() << "before defining colors\n";
     #endif
 //define default colors
   setnormalcolor(QColor("blue"));
@@ -403,7 +403,7 @@ void Graph::setdefaults(){
   setaxiscolor(QColor("black"));
   setbgcolor(QColor("white"));
   #ifdef GRAPH_DEBUG
-    std::cout << "Before mycolors\n";
+    qDebug() << "Before mycolors\n";
     #endif
   mycolors.clear();
   mycolors.push_back(QColor("red"));
@@ -411,13 +411,13 @@ void Graph::setdefaults(){
   mycolors.push_back(QColor("green"));
   dotsize=10; //size of a dot in the plot with style=2 in pixels
   #ifdef GRAPH_DEBUG
-    std::cout << "End of setdefaults\n";
+    qDebug() << "End of setdefaults\n";
     #endif
 }
 
 void Graph::getmainwindowptr(){
       #ifdef GRAPH_DEBUG
-    std::cout << "Start of getmainwindowptr\n";
+    qDebug() << "Start of getmainwindowptr\n";
     #endif
   //get a pointer to the main window to make possible to ask
   //if we are in zoom or exclude regions mode
@@ -457,7 +457,7 @@ void Graph::copydata(int layer,Spectrum* spec){
 
 
 #ifdef GRAPH_DEBUG
- std::cout <<"end of copydata\n";
+ qDebug() <<"end of copydata\n";
 #endif
 }
 
@@ -489,9 +489,9 @@ void Graph::addgraph(Spectrum *spec)
   mycurveptr->attach(this);
 
   #ifdef GRAPHDEBUG
-   std::cout <<"addgraph function\n";
-  std::cout <<"the new size of data is "<<data.size()<<"\n";
-   std::cout <<"the new size of data[0] is "<<data[0].size()<<"\n";
+   qDebug() <<"addgraph function\n";
+  qDebug() <<"the new size of data is "<<data.size()<<"\n";
+   qDebug() <<"the new size of data[0] is "<<data[0].size()<<"\n";
   #endif
   //add the data in the new layer
    copydata(nplots-1,spec);
@@ -509,9 +509,9 @@ void Graph::removelastgraph(){
 
 
   #ifdef GRAPHDEBUG
-   std::cout <<"removelastgraph function\n";
-  std::cout <<"the new size of data is "<<data.size()<<"\n";
-   std::cout <<"the new size of data[0] is "<<data[0].size()<<"\n";
+   qDebug() <<"removelastgraph function\n";
+  qDebug() <<"the new size of data is "<<data.size()<<"\n";
+   qDebug() <<"the new size of data[0] is "<<data[0].size()<<"\n";
   #endif
 }
 

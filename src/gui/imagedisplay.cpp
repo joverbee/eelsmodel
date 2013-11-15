@@ -63,7 +63,7 @@ Imagedisplay::Imagedisplay(Multispectrum* mspec, QWidget* parent)
   setFocusPolicy(Qt::StrongFocus ); //needed for key input
   //parent->addWindow(this); //add it explicitly to the workspace
 
-  setMinimumSize(imwidth,imheight);
+  //setMinimumSize(imwidth,imheight);
 
   //set the cursor of this widget as an up/down arrow to drag the current spectrum line up and down
   if(is2D)

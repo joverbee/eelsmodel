@@ -105,9 +105,8 @@ EELSModel::EELSModel(QWidget* parent)
 */
 
   tabs->setViewMode(QMdiArea::TabbedView);
+  tabs->setTabsClosable(true);
   setCentralWidget(tabs);
-
-  //showMaximized();
 }
 
 void EELSModel::createActions()
@@ -118,37 +117,37 @@ void EELSModel::createActions()
   //fileNew->setWhatsThis(tr("New File\n\nCreates a new document"));
   //connect(fileNew, SIGNAL(triggered()), this, SLOT(newFile()));
 
-  fileOpenMSA = new QAction(QIcon(":/icons/fileopen.png"), tr("Open Spectrum"), this);
+  fileOpenMSA = new QAction(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Open Spectrum"), this);
   fileOpenMSA->setStatusTip(tr("Opens an existing spectrum"));
   fileOpenMSA->setWhatsThis(tr("Open Spectrum\n\nOpens an existing spectrum"));
   connect(fileOpenMSA, SIGNAL(triggered()), this, SLOT(openMSA()));
 
-  fileOpenProject = new QAction(QIcon(":/icons/fileopen.png"), tr("Open Project"), this);
+  fileOpenProject = new QAction(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Open Project"), this);
   fileOpenProject->setStatusTip(tr("Opens an existing project"));
   fileOpenProject->setWhatsThis(tr("Open Project\n\nOpens an existing project"));
   connect(fileOpenProject, SIGNAL(triggered()), this, SLOT(openProject()));
 
-  fileOpenDM3 = new QAction(QIcon(":/icons/fileopen.png"), tr("Open DM3"), this);
+  fileOpenDM3 = new QAction(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Open DM3"), this);
   fileOpenDM3->setStatusTip(tr("Opens a Digital Micrograph 3 image"));
   fileOpenDM3->setWhatsThis(tr("Open DM3\n\nOpens a Digital Micrograph 3 image"));
   connect(fileOpenDM3, SIGNAL(triggered()), this, SLOT(openDM3()));
 
-  fileSave = new QAction(QIcon(":/icons/filesave.png"), tr("Save Model as txt"), this);
+  fileSave = new QAction(style()->standardIcon(QStyle::SP_DriveFDIcon), tr("Save Model as txt"), this);
   fileSave->setStatusTip(tr("Saves the model as a tab delimited text file"));
   fileSave->setWhatsThis(tr("Save Model as txt.\n\nSaves model and its components as a tab delimitted text file"));
   connect(fileSave, SIGNAL(triggered()), this, SLOT(save()));
 
-  fileSaveProject = new QAction(QIcon(":/icons/filesave.png"), tr("Save Project"), this);
+  fileSaveProject = new QAction(style()->standardIcon(QStyle::SP_DriveFDIcon), tr("Save Project"), this);
   fileSaveProject->setStatusTip(tr("Saves the actual project"));
   fileSaveProject->setWhatsThis(tr("Save Project.\n\nSaves the actual project"));
   connect(fileSaveProject, SIGNAL(triggered()), this, SLOT(saveProject()));
 
-  fileSaveReport = new QAction(QIcon(":/icons/filesave.png"), tr("Save Report"), this);
+  fileSaveReport = new QAction(style()->standardIcon(QStyle::SP_DriveFDIcon), tr("Save Report"), this);
   fileSaveReport->setStatusTip(tr("Saves a report"));
   fileSaveReport->setWhatsThis(tr("Save report.\n\nSaves the parameter values to a file\n for easy reading in a spreadsheet"));
   connect(fileSaveReport, SIGNAL(triggered()), this, SLOT(saveReport()));
 
-  fileSaveAs = new QAction(QIcon(":/icons/filesave.png"), tr("Save Spectrum as"), this);
+  fileSaveAs = new QAction(style()->standardIcon(QStyle::SP_DriveFDIcon), tr("Save Spectrum as"), this);
   fileSaveAs->setStatusTip(tr("Saves the spectrum as a dat file"));
   fileSaveAs->setWhatsThis(tr("Save As\n\nSaves the spectrum as a dat file"));
   connect(fileSaveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
@@ -361,24 +360,19 @@ void EELSModel::openMSA()
   }
   catch(const Spectrum::Spectrumerr::load_error& e)
   {
-    setCursor(Qt::ArrowCursor); //set to normal cursor
     Saysomething mysay(0,"Error",e.msgptr,true);
-    return;
   }
   catch(const Spectrum::Spectrumerr::load_cancelled&)
   {
     setCursor(Qt::ArrowCursor); //set to normal cursor
-    return;
   }
   catch(...)
   {
-    this->setCursor(Qt::ArrowCursor); //set to normal cursor
     Saysomething mysay(0,"Error","An unexpected error has occured during emsa load",true);
     return;
   }
 
-  //reset the mouse pointer in case we had an exception
-  QApplication::restoreOverrideCursor(); // we're done
+  statusBar()->showMessage(tr("Ready."), 2000);
 }
 
 void EELSModel::openDM3()
@@ -394,11 +388,12 @@ void EELSModel::openDM3()
   {
     tabs->addSubWindow(new EELSModelTab(new Image("Image",filename.toStdString(),true)));
   }
-  catch(...){
+  catch(...)
+  {
     //something went wrong
   }
-  //reset the mouse pointer in case we had an exception
-  QApplication::restoreOverrideCursor(); // we're done
+
+  statusBar()->showMessage(tr("Ready."), 2000);
 }
 //TODO
 void EELSModel::openProject() {}

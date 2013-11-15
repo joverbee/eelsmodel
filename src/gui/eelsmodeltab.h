@@ -46,7 +46,7 @@ class EELSModelTab : public QMainWindow
 
 public:
   explicit EELSModelTab(Spectrum* spectrum, QWidget *parent = 0);
-  explicit EELSModelTab(Image* spectrum, QWidget *parent = 0);
+  explicit EELSModelTab(Image* image, QWidget *parent = 0);
 
 signals:
 
@@ -67,6 +67,9 @@ public slots:
   void setNormalMode();
   void setZoomMode();
   void setSelectMode();
+
+protected:
+  void closeEvent(QCloseEvent *event);
 
 private:
   void createMenuBar();

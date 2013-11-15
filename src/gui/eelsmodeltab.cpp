@@ -31,6 +31,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QPixmap>
 #include <QSplitter>
 #include <QStatusBar>
 #include <QToolBar>
@@ -126,21 +127,32 @@ void EELSModelTab::createLayout()
   hsplitter->addWidget(leftsplitter);
   hsplitter->addWidget(rightsplitter);
 
+  hsplitter->setChildrenCollapsible(false);
+  leftsplitter->setChildrenCollapsible(false);
+  rightsplitter->setChildrenCollapsible(false);
+
   setCentralWidget(hsplitter);
 
+  rightsplitter->addWidget(new ComponentEditor(model));
   //TODO evil hack needs to be solved at the Spectrum level
   if(multi)
   {
-    leftsplitter->addWidget(new Graph(dynamic_cast<Multispectrum*>(spectrum.get())));
-    leftsplitter->addWidget(new Graph(model.getmultispectrumptr()));
+    QLabel* image = new QLabel();
+    image->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    image->setPixmap(QPixmap::fromImage(convertmspectoimage(*dynamic_cast<Multispectrum*>(spectrum.get()))));
+
+    leftsplitter->addWidget(image);
+
+    rightsplitter->addWidget(new Graph(dynamic_cast<Multispectrum*>(spectrum.get())));
+    rightsplitter->addWidget(new Graph(model.getmultispectrumptr()));
   }
   else
   {
-    leftsplitter->addWidget(new Graph(spectrum.get()));
-    leftsplitter->addWidget(new Graph(model.getspectrumptr()));
+    rightsplitter->addWidget(new Graph(spectrum.get()));
+    rightsplitter->addWidget(new Graph(model.getspectrumptr()));
   }
-  rightsplitter->addWidget(new ComponentEditor(model));
-  rightsplitter->addWidget(new fitterWidget());
+
+  leftsplitter->addWidget(new fitterWidget());
 }
 
 //TODO
@@ -206,11 +218,13 @@ void EELSModelTab::resetExclude() {}
 
 void EELSModelTab::newModel()
 {
-  switch(QMessageBox::warning(this, "New model", "Save the current model?",
+  switch(QMessageBox::warning(this, "EELSModel",
+                              tr("Creating a new model will replace the current one.\n"
+                                 "Save the current model?"),
                               QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel))
   {
     case QMessageBox::Save:
-      QMessageBox::warning(this, "Unimplemented", "Saving the previous model here is unimplemented.");
+      QMessageBox::warning(this, "Unimplemented", "Saving a model is currently unimplemented.");
     case QMessageBox::Discard:
       break; // continue below
     default:
@@ -250,4 +264,20 @@ void EELSModelTab::setSelectMode()
 {
   spectrum_graph->mouseMode = Graph::select;
   model_graph->mouseMode = Graph::select;
+}
+
+void EELSModelTab::closeEvent(QCloseEvent* event)
+{
+  switch(QMessageBox::warning(this, tr("EELSModel"),
+                              tr("This will discard the current model.\n"
+                                 "Save the current model?"),
+                              QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel))
+  {
+    case QMessageBox::Save:
+      QMessageBox::warning(this, "Unimplemented", "Saving a model is currently unimplemented.");
+    case QMessageBox::Discard:
+      break;
+    default: // also cancel
+      return;
+  }
 }
