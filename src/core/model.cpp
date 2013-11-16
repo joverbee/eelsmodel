@@ -315,6 +315,11 @@ bool Model::ismulti()const{
 return multi;
 }
 
+bool Model::islinear()const{
+    //return if the whole model is linear in its parameters
+    return getnroffreenonlinparameters()==0;
+}
+
 void Model::updateHL(){
 if (ismulti()){
   HLptr=Multiptr->getcurrentspectrum();

@@ -263,19 +263,33 @@ double Fitter::iteration(){
 
   modelptr->storeparams(); //store current parameters
 
-  do{
-    modifiedcurve(flambda);
-    //invert this matrix
-    modcurveptr->inv_inplace();
-    //calculate new parameters to improve the fit
-    newparameters();
-    modelptr->calculate();
-    //if chi square increased, increase flambda and try again
-    newgoodness=goodness_of_fit();
-    flambda*=10.0;
+  if (modelptr->islinear())
+  {
+    //linear fitting
+      modifiedcurve(0.0);
+      //invert this matrix
+      modcurveptr->inv_inplace();
+      //calculate new parameters to improve the fit
+      newparameters();
+      modelptr->calculate();
+      //if chi square increased, increase flambda and try again
+      newgoodness=goodness_of_fit();
+  }
+  else
+  { //nonlinear fitting
+    do{
+      modifiedcurve(flambda);
+      //invert this matrix
+      modcurveptr->inv_inplace();
+      //calculate new parameters to improve the fit
+      newparameters();
+      modelptr->calculate();
+      //if chi square increased, increase flambda and try again
+      newgoodness=goodness_of_fit();
+      flambda*=10.0;
     }
-  while( (goodness<newgoodness) && (flambda < 10000.0) );
-
+    while( (goodness<newgoodness) && (flambda < 10000.0) );
+  }
   if (goodness<newgoodness){
     //if the last step was bad, undo it and recalc with old params
     modelptr->retrieveparams();
@@ -299,12 +313,14 @@ void Fitter::iterate(int n){
   //do n itterations
   for (int i=0;i<n;i++){
     iteration();
+    if (modelptr->islinear()) break; //no need to do more than one itteration for a linear model
   }
 }
 bool Fitter::iterate_and_check(int n){
   //do n iterations but stop earlier if converged
    for (int i=0;i<n;i++){
     iteration();
+    if (modelptr->islinear()) break; //no need to do more than one itteration for a linear model
     if (converged()) return true;
     }
   return false;

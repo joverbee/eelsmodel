@@ -122,6 +122,7 @@ const Multispectrum* getconstmultispectrumptr()const{return Multiptr;}
 const Spectrum* getconstspectrumptr()const{return this;}
 void setlocked(bool b){locked=b;}
 bool is_locked()const{return locked;}
+bool islinear()const;
 bool has_changed(){return changed;}
 void setchanged(bool b){changed=b;if (b) {init();};} //force an init after changes
 int getcomponentindexbyname(std::string name)const;
