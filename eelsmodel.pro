@@ -6,8 +6,8 @@ CONFIG+=exceptions
 CONFIG+=rtti
 QMAKE_CXXFLAGS_RELEASE+=-O3
 QMAKE_CXXFLAGS_RELEASE-=-fno-exceptions
-
 macx{
+include( /Users/jv/qwt-6.1.0/qwt.prf )
 INCLUDEPATH += /usr/local/atlas/include \
     /Users/jv/boost/boost_1_34_1 \
     /usr/local/include \
