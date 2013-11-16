@@ -146,7 +146,7 @@ GDos::GDos(int n,double estart,double dispersion,std::vector<Parameter*>* parame
 	     // conversion worked
 	     name=s.str();
       }
-	Parameter* p=new Parameter(name,1.0,1);
+      Parameter* p=new Parameter(name,1.0,1);
 
       /*}
       try{
@@ -193,6 +193,7 @@ GDos::GDos(int n,double estart,double dispersion,std::vector<Parameter*>* parame
     //get parameters from a list
     for (size_t i=0;i<(parameterlistptr->size());i++){
       Parameter* p=(*parameterlistptr)[i];
+      if ((i>3)&&(i<(parameterlistptr->size()-1))) p->setlinear(true); //the points are linear
       this->addparameter(p);
     }
     degree=(parameterlistptr->size())-5;//there are 5 other parameters

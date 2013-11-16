@@ -234,8 +234,7 @@ void LevenbergMarquardt::prepareforiteration(){
 
     //if all parameters are linear, we can take bigger steps to start
     //and we should get a solution in 1 itteration only
-    if (modelptr->getnroffreelinparameters()==modelptr->getnroffreeparameters()){
-        lambdac=1.0;
+    if (modelptr->islinear()){
         nmax=1; //only 1 iteration needed
     }
 
@@ -250,8 +249,13 @@ double LevenbergMarquardt::iteration(){
     #endif
   modelptr->setlocked(true);
   const double lold=this->likelyhoodfunction();
-  const method_enum method=inversion; //choose method to calculate the LM step
 
+  method_enum method=inversion;
+  if (modelptr->islinear())
+  {
+      method=linear; //choose method to calculate the LM step
+      this->dolintrick(false);
+  }
   //if the model has changed (a new or removed component eg.) do an update
   if (modelptr->has_changed()){
     createmodelinfo();
@@ -267,7 +271,7 @@ double LevenbergMarquardt::iteration(){
   double l=calcstep(lambda,method); //and this whenever only lambda changed
   //check if this step was any good
 
-  if (l<lold){
+  if ((l<lold)&&(!(modelptr->islinear()))){
         //step3: is worse than what it was, keep lambdac and recalc step
         lambda=lambdac;
         restorecurrentparams(); //get back to original params
@@ -360,7 +364,7 @@ if (getdolintrick()){
     //make sure starting parameters obey relation of linear to nonlinear if this option is set
     //lin_from_nonlin(); //this is done in prepare for iteration
     //modelptr->calculate();
-    if (modelptr->getnroffreenonlinparameters()==0) return ;
+    if (modelptr->islinear()) return ;
 }else{
     //if no parameters, don't do anything
     if (modelptr->getnroffreeparameters()==0) return;
@@ -388,6 +392,13 @@ switch (method){
 
     //do a QR decomposition on it and store the results to use in calcstep
     Xprime.QRdecomp(Q,R);
+    break;
+
+    case linear:
+    //transpose Xprime
+    XprimeT.transpose(Xprime);
+    XTX.multiply(XprimeT,Xprime);
+    calcscaling();
     break;
 
     case inversion:
@@ -455,6 +466,22 @@ switch (method){
     q=-Pi*Rinv*u; // a faster way to do it?
     qlambda=D*q;
     */
+    break;
+
+    case linear:
+    //can we speed this up further?
+    XTXcopy=XTX;
+    XTXcopy.inv_inplace();
+    Work.multiply(XTXcopy,XprimeT);
+    Step.multiply(Work,dtprime);
+    //add Step to freeparameters vector
+    for (size_t i=0;i<XTX.dim1();i++){
+        Parameter* p=0;
+        double currval=0.0;
+        p=modelptr->getfreeparam(i);
+        currval=x0[i];
+        updateparam(p,currval+Step(i,0)); //update only the nonlinear parameters
+    }
     break;
 
     case inversion:

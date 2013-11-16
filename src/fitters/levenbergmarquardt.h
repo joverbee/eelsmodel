@@ -60,7 +60,7 @@ class LevenbergMarquardt : public Fitter  {
     std::vector<double> x0;
     std::vector<double> x0nonlin;
     std::vector<double> d0;
-    enum method_enum{QR,inversion};
+    enum method_enum{QR,inversion,linear};
 
 public:
 LevenbergMarquardt(Model* m);
