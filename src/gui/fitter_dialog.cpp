@@ -427,6 +427,7 @@ void Fitter_dialog::iterate_this_spectrum(){
 
     if (redrawfit) {
         mptr->updateHL();
+        emit(update()); //update the screen after each fit
     }
     else{
          mptr->updateHLnodraw();
@@ -447,7 +448,7 @@ void Fitter_dialog::iterate_this_spectrum(){
     mptr->storeuserparams(result);//keep parameters for later saving etc, or as starting value for next fit
 
     //show the result
-    emit(update()); //update the screen after each fit
+
     confidencelabel->setText((fitterptr->LRtestconfidence_string()).c_str());
     confidencelabel->repaint();
 
@@ -494,7 +495,7 @@ if (mptr->getnroffreeparameters()==0){
         this->iterate_this_spectrum(); //signal first if j=0
         if (stop) break;
       }
-
+      emit(update()); //update the screen after each fit
       //come back to the original state
       //mptr->setcurrentspectrum(currentindex,true); //with redraw
       //(mptr->getmultispectrumptr())->update();//update the line tool on the multispectrum

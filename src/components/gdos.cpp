@@ -160,7 +160,7 @@ GDos::GDos(int n,double estart,double dispersion,std::vector<Parameter*>* parame
       this->addparameter(*p);
       */
       p->setboundaries(-1.0,20.0);
-      p->setlinear(true); //these parameters are linear
+      //p->setlinear(true); //these parameters are linear: not true as they are multiplied to another component
       this->addparameter(p);
     }
     //now link this to a cross section which needs to be multiplied
@@ -193,7 +193,7 @@ GDos::GDos(int n,double estart,double dispersion,std::vector<Parameter*>* parame
     //get parameters from a list
     for (size_t i=0;i<(parameterlistptr->size());i++){
       Parameter* p=(*parameterlistptr)[i];
-      if ((i>3)&&(i<(parameterlistptr->size()-1))) p->setlinear(true); //the points are linear
+      //if ((i>3)&&(i<(parameterlistptr->size()-1))) p->setlinear(true); //the points are linear: not true
       this->addparameter(p);
     }
     degree=(parameterlistptr->size())-5;//there are 5 other parameters

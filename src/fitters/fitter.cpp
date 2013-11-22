@@ -133,7 +133,7 @@ void Fitter::createmodelinfo()
   else information_matrix->resize(modelptr->getnroffreeparameters());
 
   if (constructed) {
-    created_modelinfo(); //perform other tasks if necessery, user suplies these in derived classes
+    created_modelinfo(); //perform other tasks if necessary, user suplies these in derived classes
     //do this only when not called from the constructor, otherwise the derived classes are not properly constructed yet
   }
   modelptr->setchanged(false);//reset the trigger...

@@ -699,72 +699,77 @@ else{
             }
         if (modelptr->isexcluded(i)){
         	Xprime(i,j)=0.0; //exluded points have no gradient	
-        }else{
+        }
+        else{
         	Xprime(i,j)=(gradient->getcounts(i))/sqrt(gn+eps);
         }
-        }
+    }
     return;
   }
-  //numerical partial derivative to a parameter p store in row j of derivative matrix
-  // deriv=(f[i](p+delta)-currentspectrum[i])/delta
-  Parameter* p=0;
-  p=modelptr->getfreeparam(jid);
-  const double originalvalue=p->getvalue(); //make sure originalvalue can not be changed
-  double delt=fabs(originalvalue*fraction);
-   if (delt<minstep) delt=minstep;
-   if (delt>maxstep) delt=maxstep;
-  double delta=delt;//make sure delta can not be changed
+
+
+      //numerical partial derivative to a parameter p store in row j of derivative matrix
+      // deriv=(f[i](p+delta)-currentspectrum[i])/delta
+      Parameter* p=0;
+      p=modelptr->getfreeparam(jid);
+      //a real numerical derivative
+      const double originalvalue=p->getvalue(); //make sure originalvalue can not be changed
+      double delt=fabs(originalvalue*fraction);
+      if (delt<minstep) delt=minstep;
+      if (delt>maxstep) delt=maxstep;
+      double delta=delt;//make sure delta can not be changed
 
 #ifdef FITTER_DEBUG_DETAIL
-std::cout << "model in X0=\n";
-modelptr->printparameters();
+      std::cout << "model in X0=\n";
+      modelptr->printparameters();
 #endif
-  //add delta
-  p->setvalue(originalvalue+delta);
-  if (getdolintrick()){
-    lin_from_nonlin();
-    //delta should now also contain the distance including the change in linear parameters
-    //we can assume that current parameters are present in the storage because we called that before calling modified_derivative
-    delta=0.0;
-     for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-        delta+=pow(x0[j]-modelptr->getfreeparam(j)->getvalue(),2.0); //sum of distances squared
-    }
-    delta=sqrt(delta);
-  }
+      //add delta
+      p->setvalue(originalvalue+delta);
+      if (getdolintrick()){
+          lin_from_nonlin();
+          //delta should now also contain the distance including the change in linear parameters
+          //we can assume that current parameters are present in the storage because we called that before calling modified_derivative
+          delta=0.0;
+          for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
+              delta+=pow(x0[j]-modelptr->getfreeparam(j)->getvalue(),2.0); //sum of distances squared
+          }
+          delta=sqrt(delta);
+      }
 #ifdef FITTER_DEBUG_DETAIL
-std::cout << "model in X0+deltaX=\n";
-modelptr->printparameters();
-std::cout << "delta=" << delta <<"\n";
+      std::cout << "model in X0+deltaX=\n";
+      modelptr->printparameters();
+      std::cout << "delta=" << delta <<"\n";
 #endif
 
-  modelptr->calculate();
-  for (size_t i=0;i<modelptr->getnpoints();i++){
-        Xprime(i,j)=modelptr->getcounts(i);
-  }
-
-
-  for (unsigned int i=0;i<modelptr->getnpoints();i++){
-        double gn=currentspectrum->getcounts(i); //make sure model data is really positive
-        if (gn<0.0){
-            gn=0.0; //don't use points where the model would go negative, is not physical for Poisson model
-            }
-
-        Xprime(i,j)-=gn;
-        Xprime(i,j)/=(delta*(sqrt(gn)+eps)); //store the MODIFIED derivative (divide by sqrt(gn): the model)
-        if (modelptr->isexcluded(i)){
-           Xprime(i,j)=0.0; //exluded points have no gradient	
-        }
+      modelptr->calculate();
+      for (size_t i=0;i<modelptr->getnpoints();i++){
+          Xprime(i,j)=modelptr->getcounts(i);
       }
 
-  //reset to original, BIG advantage, the model is already calculated now, this saves time
-  if (getdolintrick()){
-    //restore all params to currentparams
-    restorecurrentparams();
-  }
-  else{
-    p->setvalue(originalvalue);
-  }
-  modelptr->calculate();
+
+      for (unsigned int i=0;i<modelptr->getnpoints();i++){
+          double gn=currentspectrum->getcounts(i); //make sure model data is really positive
+          if (gn<0.0){
+              gn=0.0; //don't use points where the model would go negative, is not physical for Poisson model
+          }
+
+          Xprime(i,j)-=gn;
+          Xprime(i,j)/=(delta*(sqrt(gn)+eps)); //store the MODIFIED derivative (divide by sqrt(gn): the model)
+          if (modelptr->isexcluded(i)){
+              Xprime(i,j)=0.0; //exluded points have no gradient
+          }
+      }
+
+      //reset to original, BIG advantage, the model is already calculated now, this saves time
+      if (getdolintrick()){
+          //restore all params to currentparams
+          restorecurrentparams();
+      }
+      else{
+          p->setvalue(originalvalue);
+      }
+      *modelptr=*currentspectrum; //copy old model, no need to calculate again
+      //modelptr->calculate();
 }
 
 void LevenbergMarquardt::storecurrentparams(){
