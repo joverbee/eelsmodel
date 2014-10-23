@@ -81,6 +81,7 @@ HEADERS += src/components/dieleclinear.h \
            src/components/fowler.h \
            src/components/gaussian.h \
            src/components/gdos.h \
+           src/components/gdoslin.h \
            src/components/hsedge.h \
            src/components/kedge.h \
            src/components/kedgerel.h \
@@ -180,6 +181,7 @@ SOURCES += src/components/dieleclinear.cpp \
            src/components/fowler.cpp \
            src/components/gaussian.cpp \
            src/components/gdos.cpp \
+           src/components/gdoslin.cpp \
            src/components/hsedge.cpp \
            src/components/kedge.cpp \
            src/components/kedgerel.cpp \

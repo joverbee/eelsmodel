@@ -49,6 +49,7 @@
 #include "src/components/eshift.h"
 #include "src/components/dos.h"
 #include "src/components/gdos.h"
+#include "src/components/gdoslin.h"
 #include "src/components/fowler.h"
 #include "src/components/mscatterfft.h"
 #include "src/components/mscatterexpfft.h"
@@ -152,6 +153,9 @@ p=new DosLifetimeSpline();    //create a dummy version of your component
 ptr_to_all_components.push_back(p); //put it in the list
 
 p=new GDos();    //create a dummy version of your component
+ptr_to_all_components.push_back(p); //put it in the list
+
+p=new GDoslin();    //create a dummy version of your component
 ptr_to_all_components.push_back(p); //put it in the list
 
 p=new DrudeLorentz();    //create a dummy version of your component
