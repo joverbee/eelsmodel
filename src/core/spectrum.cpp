@@ -634,7 +634,7 @@ double Spectrum::getdispersion()const
 
 void Spectrum::badindex(int index)const
 {
-if ((index<0) | (index>=int(npoints))) throw Spectrumerr::bad_index();
+if ((index<0) || (index>=int(npoints))) throw Spectrumerr::bad_index();
 }
 void Spectrum::display(QWorkspace* parent)
 {

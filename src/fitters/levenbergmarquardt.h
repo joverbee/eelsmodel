@@ -54,8 +54,9 @@ class LevenbergMarquardt : public Fitter  {
     //CurveMatrix GaTGa;
     //CurveMatrix Work2;
     CurveMatrix Y;
+    CurveMatrix Yprime;
     CurveMatrix B;
-
+bool prepared;
 
     std::vector<double> x0;
     std::vector<double> d0;

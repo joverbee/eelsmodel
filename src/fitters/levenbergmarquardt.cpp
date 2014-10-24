@@ -50,6 +50,7 @@ LevenbergMarquardt::LevenbergMarquardt(Model* m)
 {
 settype("Levenberg Marquardt Poisson");
 setcandolin(true); //we can do a special trick with linear parameters to speed up things
+prepared=false;
 #ifdef FITTER_DEBUG
  std::cout <<"constructed LM Poisson\n";
  #endif
@@ -90,7 +91,6 @@ double LevenbergMarquardt::likelyhoodfunction()const{
 std::string LevenbergMarquardt::goodness_of_fit_string()const{
   //returns a string which says how good the fit is
   char s[256];
-  //divide by number of points...TO DO
   double likelyhood=-likelyhoodfunction();
   const double n=this->degreesoffreedom();
   likelyhood=likelyhood/n;
@@ -203,24 +203,16 @@ void LevenbergMarquardt::updatemonitors(){
 
 
 void LevenbergMarquardt::prepareforiteration(){
-    //prepare fitting parameters for itteration
-    lambdaiter=20; //max nr of itterations to optimise alpha
-    lambdac=0.01; //alpha starting step
-    nu=10.0; //factor with which to reduce lambda during itterations
+    //prepare fitting parameters for itteration  
     //copy the experiment in Y
     Y.resize(modelptr->getnpoints(),1);
+    Yprime.resize(modelptr->getnpoints(),1);
+
     for (size_t i=0;i<modelptr->getnpoints();i++){
       Y(i,0)=(modelptr->getHLptr())->getcounts(i);
+      Yprime(i,0)=sqrt(fabs(Y(i,0)));
     }
 
-    if (getdolintrick()){
-        if (modelptr->islinear()){
-            //if all parameters are linear, we get a solution in 1 itteration only
-            //but only do this if getdolintrick is on in user interface
-            //allows to force nonlinear fitter for a linear model
-            nmax=1; //only 1 iteration needed
-        }
-   }
 }
 
 double LevenbergMarquardt::iteration(){
@@ -231,35 +223,39 @@ double LevenbergMarquardt::iteration(){
         std::cout << "at start of iteration lambdac="<<lambdac<<" \n";
     #endif
   modelptr->setlocked(true);
-  const double lold=this->likelyhoodfunction();
-  //compute the general LM, maximise the likelihood, eq. 6.154
-  double lambda=lambdac/nu;
+
 
 
   //if the model has changed (a new or removed component eg.) do an update
 
-
+  if (modelptr->has_changed()){
+    createmodelinfo();
+  }
 
   method_enum method=inversion;
+
   if (getdolintrick()&&(modelptr->islinear()))
   {
       method=linear; //choose method to calculate the LM step
-      if (modelptr->has_changed()){
-        createmodelinfo();
-        preparestep(method);//for linear we need a prepare step (deriv calculation), but only if model has changed
+      lambdaiter=0; //no itterations needed for linear
+      lambdac=0; //alpha makes no sense for linear
+       nu=10.0; //factor with which to reduce lambda during itterations
       }
-  }
   else{
-      if (modelptr->has_changed()){
-        createmodelinfo();
-      }
-      preparestep(method); //for nonlinear we need to recalc the derivatives every time as they depend on the actual parameters
+      lambdaiter=20; //max nr of itterations to optimise alpha
+      lambdac=0.01; //alpha starting step
+      nu=10.0; //factor with which to reduce lambda during itterations
   }
 
+  const double lold=this->likelyhoodfunction();
+  //compute the general LM, maximise the likelihood, eq. 6.154
+  double lambda=lambdac/nu;
+
+  preparestep(method);//do required precalculation, for linear only needed when model has changed
   double l=calcstep(lambda,method); //and this whenever only lambda or the spectrum changed
   //check if this step was any good
 
-  if (l<lold){
+  if ((l<lold)&&(!(method==linear))){
         //step3: is worse than what it was, keep lambdac and recalc step
       //we should never get here for a linear model, in case we do it might be worth trying nonlinear which is better than giving upu
         lambda=lambdac;
@@ -298,6 +294,7 @@ double LevenbergMarquardt::iteration(){
         #ifdef FITTER_DEBUG
         std::cout << "levenbergmarquardt: no valid step found that reduces the chisq. function\n";
         #endif
+        //don't prevent to make a bad step, for debuggin reasons: if it wants to diverge, let it do so
         restorecurrentparams();
         modelptr->calculate();
     }
@@ -355,17 +352,19 @@ void LevenbergMarquardt::preparestep(method_enum method){
     if (modelptr->getnroffreeparameters()==0) return;
 
 storecurrentparams();
-//create Xprime
-calculate_ModifiedJacobian();
-calculate_dtprime();
 
-#ifdef FITTER_DEBUG_DETAIL
-std::cout << "dtprime=";
-dtprime.debugdisplay();
-std::cout <<"\n";
-#endif
+
 switch (method){
     case QR:
+    //create Xprime
+    calculate_ModifiedJacobian();
+    calculate_dtprime();
+
+    #ifdef FITTER_DEBUG_DETAIL
+    std::cout << "dtprime=";
+    dtprime.debugdisplay();
+    std::cout <<"\n";
+    #endif
     //prepare QR decomp, then this speeds up the calculation of steps with
     //different lambda
     //take Cinv (this is diagonal) inside X to make the equation  inv(XT
@@ -380,20 +379,70 @@ switch (method){
     break;
 
     case linear:
+    if (prepared) break; //if already prepared, don't repeat
+    //create Xprime
+    calculate_ModifiedJacobian();
+
+#ifdef FITTER_DEBUG_DETAIL
+std::cout << "Yprime=";
+Yprime.debugdisplay();
+std::cout <<"\n";
+#endif
+
+
+
+    //calculate_dtprime();
     //transpose Xprime
     XprimeT.transpose(Xprime);
+
+#ifdef FITTER_DEBUG_DETAIL
+std::cout << "Xprime=";
+Xprime.debugdisplay();
+std::cout<<"\n";
+std::cout << "XprimeT=";
+XprimeT.debugdisplay();
+std::cout<<"\n";
+#endif
+
     XTX.multiply(XprimeT,Xprime);
-    calcscaling();
+
+#ifdef FITTER_DEBUG_DETAIL
+std::cout << "XTX=";
+XTX.debugdisplay();
+std::cout<<"\n";
+#endif
+
     XTXcopy=XTX;
     XTXcopy.inv_inplace();
-    Work.multiply(XTXcopy,XprimeT);
 
+#ifdef FITTER_DEBUG_DETAIL
+std::cout << "inv(XTX)=";
+XTXcopy.debugdisplay();
+std::cout<<"\n";
+#endif
+
+    Work.multiply(XTXcopy,XprimeT);
+#ifdef FITTER_DEBUG_DETAIL
+std::cout << "Work=";
+Work.debugdisplay();
+std::cout<<"\n";
+#endif
+
+    prepared=true;
     break;
 
     case inversion:
     default:
     //the straightforward way with inversion,
+    //create Xprime
+    calculate_ModifiedJacobian();
+    calculate_dtprime();
 
+    #ifdef FITTER_DEBUG_DETAIL
+    std::cout << "dtprime=";
+    dtprime.debugdisplay();
+    std::cout <<"\n";
+    #endif
         //transpose Xprime
     XprimeT.transpose(Xprime);
     #ifdef FITTER_DEBUG_DETAIL
@@ -432,13 +481,10 @@ double LevenbergMarquardt::calcstep(double lambda,method_enum method){
 //	with e.g QRsolve or LUsolve or SVDsolve
 
 //QR decomposition, more numerically stable but slower
-if (getdolintrick()){
-    //if no nonlinear parameters, just skip this calcstep
-    if (modelptr->getnroffreenonlinparameters()==0) return -(std::numeric_limits<double>::max)();
-}else{
-    //if no paramters, don't do anything
+
+
     if (modelptr->getnroffreeparameters()==0) return -(std::numeric_limits<double>::max)();
-}
+
 
 
 switch (method){
@@ -458,25 +504,24 @@ switch (method){
     break;
 
     case linear:
-    //all model related calculations have been done before in the preparation step, just multiply with the experiment in dtprime
-    Step.multiply(Work,dtprime);
+    //all model related calculations have been done before in the preparation step, just multiply with the (scaled) experiment in Yprime
+    Step.multiply(Work,Yprime);
     //add Step to freeparameters vector
     for (size_t i=0;i<XTX.dim1();i++){
         Parameter* p=0;
-        double currval=0.0;
         p=modelptr->getfreeparam(i);
-        currval=x0[i];
-        updateparam(p,currval+Step(i,0)); //update only the nonlinear parameters
+        updateparam(p,Step(i,0)); //update only the nonlinear parameters
     }
+#ifdef FITTER_DEBUG
+std::cout << "Calculated step ";
+modelptr->printparameters();
+#endif
     break;
 
     case inversion:
     default:
     //the straightforward way with inversion,
     //step=(inv(XT*X+lambda*eye(n))*XT*Cinv*dt)'; %eq 6.154
-
-
-
     XTXcopy=XTX;
     //add lambda to diagonal
         for (size_t i=0;i<XTXcopy.dim1();i++){
@@ -522,15 +567,13 @@ std::cout<<"\n";
 
 }
 #ifdef FITTER_DEBUG
-std::cout << "Calculated step before nonlin\n";
+std::cout << "Calculated step ";
 modelptr->printparameters();
 #endif
 
 modelptr->calculate();
 
 #ifdef FITTER_DEBUG
-std::cout << "Calculated step AFTER nonlin\n";
-modelptr->printparameters();
 std::cout << "the likelihood is:"<<this->likelyhoodfunction()<<"\n";
 #endif
 
@@ -589,7 +632,7 @@ size_t jid=j;
 
 
       //numerical partial derivative to a parameter p store in row j of derivative matrix
-      // deriv=(f[i](p+delta)-currentspectrum[i])/delta
+      // deriv=(f[i](p+delta)-currentmodel[i])/delta
       Parameter* p=0;
       p=modelptr->getfreeparam(jid);
       //a real numerical derivative
@@ -614,8 +657,11 @@ size_t jid=j;
 
       modelptr->calculate();
       for (size_t i=0;i<modelptr->getnpoints();i++){
-          Xprime(i,j)=modelptr->getcounts(i);
+          const double newgn=modelptr->getcounts(i);
+          Xprime(i,j)=newgn;
       }
+
+
 
 
       for (unsigned int i=0;i<modelptr->getnpoints();i++){
@@ -624,7 +670,8 @@ size_t jid=j;
               gn=0.0; //don't use points where the model would go negative, is not physical for Poisson model
           }
 
-          Xprime(i,j)-=gn;
+          //Xprime(i,j)+=modelptr->getcounts(i);
+          Xprime(i,j)-=gn; //as it was
           Xprime(i,j)/=(delta*(sqrt(gn)+eps)); //store the MODIFIED derivative (divide by sqrt(gn): the model)
           if (modelptr->isexcluded(i)){
               Xprime(i,j)=0.0; //exluded points have no gradient
@@ -680,12 +727,12 @@ std::cout<<"\n";
 void LevenbergMarquardt::createmodelinfo()
 //create all links to parameters of a model, do this whenever the model has changed
 {
+  prepared=false;
   Fitter::createmodelinfo();
   //init storage for matrice
   Xprime.resize(modelptr->getnpoints(),modelptr->getnroffreeparameters());
   dtprime.resize(modelptr->getnpoints(),1);
   prepareforiteration();
-
 }
 //The Matlab code
 /*

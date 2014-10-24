@@ -413,7 +413,7 @@ void Fitter_dialog::iterate_this_spectrum(){
         if (update_allways) emit(update());
         qApp->processEvents();
         if (stop) break;
-
+        if (fitterptr->getdolintrick()) break; //only one iterration for linear fitting
         if (fitterptr->converged()){
             //tolerance reached
             pbar->setValue(n);

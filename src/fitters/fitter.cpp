@@ -312,14 +312,14 @@ void Fitter::iterate(int n){
   //do n itterations
   for (int i=0;i<n;i++){
     iteration();
-    if (modelptr->islinear()) break; //no need to do more than one itteration for a linear model
+    if (getdolintrick()) return; //no need to do more than one itteration for a linear model
   }
 }
 bool Fitter::iterate_and_check(int n){
   //do n iterations but stop earlier if converged
    for (int i=0;i<n;i++){
     iteration();
-    if (modelptr->islinear()) break; //no need to do more than one itteration for a linear model
+    if (getdolintrick()) return true; //no need to do more than one itteration for a linear modell
     if (converged()) return true;
     }
   return false;
