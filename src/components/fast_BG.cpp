@@ -44,7 +44,7 @@ fast_BG::fast_BG() //create a dummy version
 :Component()
 {
 setname("Fast background");
-setdescription("y=A[x(E/E0)^-r+(1-x)(E/E0)^-r'] with A,x,r and r' the two parameters. r and r' are constant so this is a linear function (therefore fast)");
+setdescription("y=A1(E/E0)^-r1+A2(E/E0)^-r'' with A1,A2 the two parameters. r and r' are constant so this is a linear function (therefore fast)");
 setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
 setshifter(false);
 
@@ -61,14 +61,14 @@ fast_BG::fast_BG(int n,double estart,double dispersion,std::vector<Parameter*>* 
     Parameter* p4; //r2
 
     if (parameterlistptr==0){
-      p1=new Parameter("A",1.0e3,1);
-      p2=new Parameter("x",0.5,1);
+      p1=new Parameter("A1",1.0e3,1);
+      p2=new Parameter("A2",1.0e3,1);
       p3=new Parameter("r1",2.0,0);
       p4=new Parameter("r2",3.0,0);
       p1->setboundaries(0.0,1.0e10);
-      p2->setboundaries(0.0,1.0);
-      p3->setboundaries(1.0,5.0);
-      p4->setboundaries(1.0,5.0);
+      p2->setboundaries(0.0,1.0e10);
+      p3->setboundaries(1.0,10.0);
+      p4->setboundaries(1.0,10.0);
 
     }
     else{
@@ -90,7 +90,7 @@ fast_BG::fast_BG(int n,double estart,double dispersion,std::vector<Parameter*>* 
 
     //give a name and description
     setname("Fast background");
-    setdescription("y=A[x(E/E0)^-r+(1-x)(E/E0)^-r'] with A,x,r and r' the two parameters. r and r' are constant so this is a linear function (therefore fast)");
+    setdescription("y=A1(E/E0)^-r1+A2(E/E0)^-r'' with A1,A2 the two parameters. r and r' are constant so this is a linear function (therefore fast)");
     setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
     setshifter(false);
     //an analytical gradient is available for both parameters
@@ -112,9 +112,9 @@ void fast_BG::calculate()
 {
 //check if any of paramters is changed, if not : don't calculate
 const Parameter* p1= getparameter(0);
-const double A=p1->getvalue();
+const double A1=p1->getvalue();
 const Parameter* p2= getparameter(1);
-const double x=p2->getvalue();
+const double A2=p2->getvalue();
 const Parameter* p3= getparameter(2);
 const double r1=p3->getvalue();
 const Parameter* p4= getparameter(3);
@@ -123,14 +123,14 @@ const double r2=p4->getvalue();
 if (p1->changed()||p2->changed()||p3->changed()||p4->changed())
 {
   #ifdef COMPONENT_DEBUG
-  std::cout << "parameters changed calculating fast_BG \n A: " << A << " x:" <<x<< " r1: "<<r1<<" r2: "<<r2<<"\n";
+  std::cout << "parameters changed calculating fast_BG \n A1: " << A1 << " A2:" <<A2<< " r1: "<<r1<<" r2: "<<r2<<"\n";
   #endif
 
   const Model* mymodel=geteelsmodelptr()->getmodel();
   const double en0=fabs(mymodel->getfirstnonexludeenergy());
   for (size_t i=0;i<this->getnpoints();i++){
         double en=this->getenergy(i);
-        const double cts=A*(x*pow((en0/en),r1)+(1.0-x)*pow((en0/en),r2));//a sum of 2 power laws
+        const double cts=A1*pow((en0/en),r1)+A2*pow((en0/en),r2);//a sum of 2 power laws
         this->setcounts(i,cts);
   }
   this->setunchanged();
@@ -143,10 +143,10 @@ else{
 }
 Spectrum* fast_BG::getgradient(size_t j){
   //get analytical partial derivative to parameter j in point i
-  const Parameter* Aptr= getparameter(0);
-  double A=Aptr->getvalue();
-  const Parameter* xptr= getparameter(1);
-  double x=xptr->getvalue();
+  const Parameter* A1ptr= getparameter(0);
+  double A1=A1ptr->getvalue();
+  const Parameter* A2ptr= getparameter(1);
+  double A2=A2ptr->getvalue();
   const Parameter* r1ptr= getparameter(2);
   double r1=r1ptr->getvalue();
   const Parameter* r2ptr= getparameter(3);
@@ -159,7 +159,7 @@ Spectrum* fast_BG::getgradient(size_t j){
   const double en0=fabs(mymodel->getfirstnonexludeenergy());
 
   #ifdef COMPONENT_DEBUG
-  std::cout << "calculating the partial derivative in A: " << A << " r:" <<r<<"\n";
+  std::cout << "calculating the partial derivative in A1: " << A1 << " r:" <<r<<"\n";
   #endif
   switch(j){
   case 0:
@@ -168,7 +168,7 @@ Spectrum* fast_BG::getgradient(size_t j){
   {
       double en=this->getenergy(i);
       if ((en>0.0)&&(r1>0.0)&&(r2>0.0)){
-          gradient.setcounts(i,x*pow((en0/en),r1)+(1.0-x)*pow((en0/en),r2));
+          gradient.setcounts(i,pow((en0/en),r1));
       }
       else{
 	//only meaningfull when E>0 and r>0
@@ -183,8 +183,8 @@ Spectrum* fast_BG::getgradient(size_t j){
   {
       double en=this->getenergy(i);
        if ((en>0.0)&&(r1>0.0)&&(r2>0.0)){
-        gradient.setcounts(i,A*(pow((en0/en),r1)-pow((en0/en),r2)));
-      }
+           gradient.setcounts(i,pow((en0/en),r2));
+        }
       else{
 	//only meaningfull when E>0 and r>0
 	gradient.setcounts(i,0.0);
@@ -194,12 +194,12 @@ Spectrum* fast_BG::getgradient(size_t j){
   break;
 
   case 2:
-  //analytical derivative wrt r
+  //analytical derivative wrt r1
    for (unsigned int i=0;i<(this->getnpoints());i++)
   {
       double en=this->getenergy(i);
        if ((en>0.0)&&(r1>0.0)&&(r2>0.0)){
-        gradient.setcounts(i,A*x*pow((en0/en),r1)*log(en0/en));
+        gradient.setcounts(i,A1*pow((en0/en),r1)*log(en0/en));
       }
       else{
     //only meaningfull when E>0 and r>0
@@ -210,12 +210,12 @@ Spectrum* fast_BG::getgradient(size_t j){
   break;
 
 case 3:
-//analytical derivative wrt r
+//analytical derivative wrt r2
  for (unsigned int i=0;i<(this->getnpoints());i++)
 {
     double en=this->getenergy(i);
      if ((en>0.0)&&(r1>0.0)&&(r2>0.0)){
-        gradient.setcounts(i,A*(1.0-x)*pow((en0/en),r2)*log(en0/en));
+        gradient.setcounts(i,A2*pow((en0/en),r2)*log(en0/en));
     }
     else{
   //only meaningfull when E>0 and r>0
@@ -338,13 +338,13 @@ void fast_BG::estimateparams(){
             //force these values in case of locked params, otherwise the fit has a strange effect
             const bool lockstate1=p1->ischangeable();
             p1->setchangeable(true);
-            p1->setvalue(A);
+            p1->setvalue(A*x);
             p1->setchangeable(lockstate1);
 
 
             const bool lockstate2=p2->ischangeable();
             p2->setchangeable(true);
-            p2->setvalue(x);
+            p2->setvalue(A*(1-x));
             p2->setchangeable(lockstate2);
 
             const bool lockstate3=p3->ischangeable();

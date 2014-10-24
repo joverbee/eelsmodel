@@ -272,7 +272,6 @@ double Fitter::iteration(){
       //calculate new parameters to improve the fit
       newparameters();
       modelptr->calculate();
-      //if chi square increased, increase flambda and try again
       newgoodness=goodness_of_fit();
   }
   else
@@ -521,6 +520,7 @@ void Fitter::calculate_beta_and_alpha(){
 void Fitter::dolintrick(bool b){
     dolin=b;
     createmodelinfo(); //some parts may depend on the fact that we do the linear trick or not
+    modelptr->setchanged(true);
 }
 bool  Fitter::getdolintrick()const{
     return dolin;

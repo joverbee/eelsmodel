@@ -133,13 +133,6 @@ double LevenbergMarquardt::getcovariance(int i,int j){
 
 void LevenbergMarquardt::preparecovariance(){
   //prepare covariance matrix by inverting the Fischer Information Matrix
-
-  //this only works with dolintrick off!!!
-  bool b=getdolintrick();
-  if (b){
-    this->dolintrick(false);
-    this->calculate_ModifiedJacobian();
-  }
  //calculate the Fischer information matrix
  for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
     for (size_t k=0;k<modelptr->getnroffreeparameters();k++){
@@ -164,10 +157,7 @@ void LevenbergMarquardt::preparecovariance(){
   information_matrix->debugdisplay();
   #endif
 
-  if (b){
-    this->dolintrick(true);
-     this->calculate_ModifiedJacobian();
-  }
+
 }
 
 double LevenbergMarquardt::likelihoodratio(){
@@ -214,7 +204,7 @@ void LevenbergMarquardt::updatemonitors(){
 
 void LevenbergMarquardt::prepareforiteration(){
     //prepare fitting parameters for itteration
-    lambdaiter=20; //max 10 itterations to optimise alpha
+    lambdaiter=20; //max nr of itterations to optimise alpha
     lambdac=0.01; //alpha starting step
     nu=10.0; //factor with which to reduce lambda during itterations
     //copy the experiment in Y
@@ -222,22 +212,15 @@ void LevenbergMarquardt::prepareforiteration(){
     for (size_t i=0;i<modelptr->getnpoints();i++){
       Y(i,0)=(modelptr->getHLptr())->getcounts(i);
     }
-    //make sure starting conditions have valid linear parameters calculated from the nonlinear
-    //this is important because the partial derivative expects this to be the case
-    //for the nezt iterations we can be sure because iteraction always leave with lin paramters calculated from nonlin
+
     if (getdolintrick()){
-        //if no nonlinear parameters, just skip this calcstep
-        //make sure starting parameters obey relation of linear to nonlinear if this option is set
-        lin_from_nonlin();
-        modelptr->calculate();
-    }
-
-    //if all parameters are linear, we can take bigger steps to start
-    //and we should get a solution in 1 itteration only
-    if (modelptr->islinear()){
-        nmax=1; //only 1 iteration needed
-    }
-
+        if (modelptr->islinear()){
+            //if all parameters are linear, we get a solution in 1 itteration only
+            //but only do this if getdolintrick is on in user interface
+            //allows to force nonlinear fitter for a linear model
+            nmax=1; //only 1 iteration needed
+        }
+   }
 }
 
 double LevenbergMarquardt::iteration(){
@@ -249,32 +232,39 @@ double LevenbergMarquardt::iteration(){
     #endif
   modelptr->setlocked(true);
   const double lold=this->likelyhoodfunction();
-
-  method_enum method=inversion;
-  if (modelptr->islinear())
-  {
-      method=linear; //choose method to calculate the LM step
-      this->dolintrick(false);
-  }
-  //if the model has changed (a new or removed component eg.) do an update
-  if (modelptr->has_changed()){
-    createmodelinfo();
-  }
-
   //compute the general LM, maximise the likelihood, eq. 6.154
   double lambda=lambdac/nu;
 
 
+  //if the model has changed (a new or removed component eg.) do an update
 
 
-  preparestep(method); //call this whenever X changed
-  double l=calcstep(lambda,method); //and this whenever only lambda changed
+
+  method_enum method=inversion;
+  if (getdolintrick()&&(modelptr->islinear()))
+  {
+      method=linear; //choose method to calculate the LM step
+      if (modelptr->has_changed()){
+        createmodelinfo();
+        preparestep(method);//for linear we need a prepare step (deriv calculation), but only if model has changed
+      }
+  }
+  else{
+      if (modelptr->has_changed()){
+        createmodelinfo();
+      }
+      preparestep(method); //for nonlinear we need to recalc the derivatives every time as they depend on the actual parameters
+  }
+
+  double l=calcstep(lambda,method); //and this whenever only lambda or the spectrum changed
   //check if this step was any good
 
-  if ((l<lold)&&(!(modelptr->islinear()))){
+  if (l<lold){
         //step3: is worse than what it was, keep lambdac and recalc step
+      //we should never get here for a linear model, in case we do it might be worth trying nonlinear which is better than giving upu
         lambda=lambdac;
         restorecurrentparams(); //get back to original params
+
         #ifdef FITTER_DEBUG
         std::cout << "levenbergmarquardt: step3\n";
         #endif
@@ -298,8 +288,9 @@ double LevenbergMarquardt::iteration(){
                 }
             }
         }
+
     }
-    if (l>lold){
+    if(l>=lold){
         lambdac=lambda; //keep lambda, step was good
         }
     else{
@@ -359,16 +350,10 @@ void LevenbergMarquardt::preparestep(method_enum method){
 //prepare all that is needed to do a Levenberg Marquardt step
 //without doing the step
 
-if (getdolintrick()){
-    //if no nonlinear parameters, just skip this calcstep
-    //make sure starting parameters obey relation of linear to nonlinear if this option is set
-    //lin_from_nonlin(); //this is done in prepare for iteration
-    //modelptr->calculate();
-    if (modelptr->islinear()) return ;
-}else{
+
     //if no parameters, don't do anything
     if (modelptr->getnroffreeparameters()==0) return;
-}
+
 storecurrentparams();
 //create Xprime
 calculate_ModifiedJacobian();
@@ -399,6 +384,10 @@ switch (method){
     XprimeT.transpose(Xprime);
     XTX.multiply(XprimeT,Xprime);
     calcscaling();
+    XTXcopy=XTX;
+    XTXcopy.inv_inplace();
+    Work.multiply(XTXcopy,XprimeT);
+
     break;
 
     case inversion:
@@ -469,10 +458,7 @@ switch (method){
     break;
 
     case linear:
-    //can we speed this up further?
-    XTXcopy=XTX;
-    XTXcopy.inv_inplace();
-    Work.multiply(XTXcopy,XprimeT);
+    //all model related calculations have been done before in the preparation step, just multiply with the experiment in dtprime
     Step.multiply(Work,dtprime);
     //add Step to freeparameters vector
     for (size_t i=0;i<XTX.dim1();i++){
@@ -493,10 +479,9 @@ switch (method){
 
     XTXcopy=XTX;
     //add lambda to diagonal
-
-    for (size_t i=0;i<XTXcopy.dim1();i++){
-        XTXcopy(i,i)+=lambda*d0[i]; //apply scaling
-    }
+        for (size_t i=0;i<XTXcopy.dim1();i++){
+            XTXcopy(i,i)+=lambda*d0[i]; //apply scaling
+        }
 #ifdef FITTER_DEBUG_DETAIL
 std::cout << "lambda="<<lambda;
 std::cout << "XTX+lambda I=";
@@ -527,15 +512,8 @@ std::cout<<"\n";
     for (size_t i=0;i<XTX.dim1();i++){
         Parameter* p=0;
         double currval=0.0;
-        if (getdolintrick()){
-            p=modelptr->getfreenonlinparam(i);
-            currval=x0[modelptr->getfreeindexfromnonlinindex(i)];
-        }
-        else{
-            p=modelptr->getfreeparam(i);
-            currval=x0[i];
-        }
-
+        p=modelptr->getfreeparam(i);
+        currval=x0[i];
 
         updateparam(p,currval+Step(i,0)); //update only the nonlinear parameters
 
@@ -548,10 +526,6 @@ std::cout << "Calculated step before nonlin\n";
 modelptr->printparameters();
 #endif
 
-//and now apply lin_from_nonlin
-if (getdolintrick()){
-    lin_from_nonlin();
-}
 modelptr->calculate();
 
 #ifdef FITTER_DEBUG
@@ -563,93 +537,6 @@ std::cout << "the likelihood is:"<<this->likelyhoodfunction()<<"\n";
 return this->likelyhoodfunction();
 }
 
-void LevenbergMarquardt::lin_from_nonlin(){
-    //calculate linear parameters from nonlinear parameters
-
-    //calculate_Y(); //in the new nonlinear, but with the old linear
-
-    *tempspectrumptr=*modelptr; //copy the current model in tem
-
-    //calculate Ga=matrix with derivatives to the linear parameters
-    for (size_t i=0;i<modelptr->getnroffreelinparameters();i++){
-        //set all other linear parameters to 0
-        for (size_t j=0;j<modelptr->getnroffreelinparameters();j++){
-             modelptr->getfreelinparam(j)->setvalue(0.0);
-         }
-        //and this one to 1
-        modelptr->getfreelinparam(i)->setvalue(1.0);
-        modelptr->calculate();
-        //copy it in Ga
-         for (size_t j=0;j<modelptr->getnpoints();j++){
-             Ga(j,i)=modelptr->getcounts(j);
-
-             //for Poisson we might use this, but problem is that then which gn to use?
-             //the idea was that the linear parameters only depend on the nonlinear
-             //but if we introduce gn, then the lin also depend on the whole model
-             //const double gn=tempspectrumptr->getcounts(j);
-             //Ga(j,i)=modelptr->getcounts(j)/sqrt(gn+eps);
-         }
-    }
-
-#ifdef FITTER_DEBUG_DETAIL
-std::cout << "Ga=";
-Ga.debugdisplay();
-std::cout<<"\n";
-#endif
-
-    //create GaT a transposed version
-    GaT.transpose(Ga);
- #ifdef FITTER_DEBUG_DETAIL
-std::cout << "GaT=";
-GaT.debugdisplay();
-std::cout<<"\n";
-#endif
-    //create Y contains the experimental values
-    GaTGa.multiply(GaT,Ga);
- #ifdef FITTER_DEBUG_DETAIL
-std::cout << "GaTGa=";
-GaTGa.debugdisplay();
-std::cout<<"\n";
-#endif
-
-    GaTGa.inv_inplace();
-
-#ifdef FITTER_DEBUG_DETAIL
-std::cout << "inv(GaTGa)=";
-GaTGa.debugdisplay();
-std::cout<<"\n";
-#endif
-
-    Work2.multiply(GaTGa,GaT);
-#ifdef FITTER_DEBUG_DETAIL
-std::cout << "inv(GaTGa)GaT=";
-Work2.debugdisplay();
-std::cout<<"\n";
-#endif
-
-    //B.multiply(Work2,Y);
-
-    B.multiply(Work2,Y); //Y is now similar to dtprime, but keep dtprime only for the nonlin fitter
-#ifdef FITTER_DEBUG_LIN
-std::cout << "inv(GaTGa)GaT Y=";
-B.debugdisplay();
-std::cout<<"\n";
-#endif
-
-    //and copy these back into the linear parameters of the model
-    //for (size_t i=0;i<modelptr->getnroffreelinparameters();i++){
-     //   modelptr->getfreelinparam(i)->setvalue(B(i,0));
-    //}
-
-    //apply the step
-    for (size_t i=0;i<GaTGa.dim1();i++){
-        Parameter* p=modelptr->getfreelinparam(i);
-        updateparam(p,B(i,0)); //update only the nonlinear parameters
-        #ifdef FITTER_DEBUG_LIN
-        std::cout << "Bi="<<B(i,0)<<"\n";
-        #endif
-    }
-}
 
 void LevenbergMarquardt::calculate_ModifiedJacobian(){
   //calculate derivative matrix
@@ -676,14 +563,7 @@ void LevenbergMarquardt::modified_partial_derivative(size_t j,const Spectrum* cu
 // depends on usegradients and on the fact that the component has a getgradient
 
 //convert j to index in freeparameter if doing the dolintrick
-size_t jid;
-if (getdolintrick()){
-    jid=modelptr->getfreeindexfromnonlinindex(j);
-    usegradients=false; //in case of the lintric, the gradient are not only dg/dalfa but dg/dbeta*dbeta/dalfa
-}
-else{
-    jid=j;
-    }
+size_t jid=j;
 
   if ((usegradients)&&((modelptr->getcomponentforfreeparam(jid))->get_has_gradient(modelptr->getfreeparamindex(jid)))) {
     Spectrum* gradient=modelptr->getgradientptr(modelptr->getcomponentfreeparamindex(jid),modelptr->getfreeparamindex(jid));
@@ -725,16 +605,7 @@ else{
 #endif
       //add delta
       p->setvalue(originalvalue+delta);
-      if (getdolintrick()){
-          lin_from_nonlin();
-          //delta should now also contain the distance including the change in linear parameters
-          //we can assume that current parameters are present in the storage because we called that before calling modified_derivative
-          delta=0.0;
-          for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-              delta+=pow(x0[j]-modelptr->getfreeparam(j)->getvalue(),2.0); //sum of distances squared
-          }
-          delta=sqrt(delta);
-      }
+
 #ifdef FITTER_DEBUG_DETAIL
       std::cout << "model in X0+deltaX=\n";
       modelptr->printparameters();
@@ -761,13 +632,7 @@ else{
       }
 
       //reset to original, BIG advantage, the model is already calculated now, this saves time
-      if (getdolintrick()){
-          //restore all params to currentparams
-          restorecurrentparams();
-      }
-      else{
-          p->setvalue(originalvalue);
-      }
+      p->setvalue(originalvalue);
       *modelptr=*currentspectrum; //copy old model, no need to calculate again
       //modelptr->calculate();
 }
@@ -775,14 +640,9 @@ else{
 void LevenbergMarquardt::storecurrentparams(){
     //store current free params
     x0.resize(modelptr->getnroffreeparameters()); //make sure it fits
-    x0nonlin.resize(modelptr->getnroffreenonlinparameters()); //make sure it fits
     for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
         x0[j]=modelptr->getfreeparam(j)->getvalue();
     }
-    for (size_t j=0;j<modelptr->getnroffreenonlinparameters();j++){
-        x0nonlin[j]=modelptr->getfreenonlinparam(j)->getvalue();
-    }
-
 }
 
 
@@ -803,14 +663,7 @@ void LevenbergMarquardt::calcscaling(){
         if (d0[i]<eps){
             d0[i]=1.0; //avoid too small scaling
         }
-
-        //trick set lambda=0 for linear params, is this similar to dolintrick?
-//         if (!getdolintrick()){
-//        if (modelptr->getfreeparam(i)->islinear()){
-//            d0[i]=0.0; //make lambda 0 for linear params
-//            }
-//         }
-    }
+}
 
 
 
@@ -828,18 +681,11 @@ void LevenbergMarquardt::createmodelinfo()
 //create all links to parameters of a model, do this whenever the model has changed
 {
   Fitter::createmodelinfo();
-  //init storage for matrices
-  if (getdolintrick()){
-    Xprime.resize(modelptr->getnpoints(),modelptr->getnroffreenonlinparameters());
-  }
-  else{
-    Xprime.resize(modelptr->getnpoints(),modelptr->getnroffreeparameters());
-  }
-
+  //init storage for matrice
+  Xprime.resize(modelptr->getnpoints(),modelptr->getnroffreeparameters());
   dtprime.resize(modelptr->getnpoints(),1);
-  Ga.resize(modelptr->getnpoints(),modelptr->getnroffreelinparameters());
-
   prepareforiteration();
+
 }
 //The Matlab code
 /*

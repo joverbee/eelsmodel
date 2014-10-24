@@ -49,16 +49,15 @@ class LevenbergMarquardt : public Fitter  {
     CurveMatrix Work;
     CurveMatrix Step;
     CurveMatrix dtprime;
-    CurveMatrix Ga;
-    CurveMatrix GaT;
-    CurveMatrix GaTGa;
-    CurveMatrix Work2;
+    //CurveMatrix Ga;
+    //CurveMatrix GaT;
+    //CurveMatrix GaTGa;
+    //CurveMatrix Work2;
     CurveMatrix Y;
     CurveMatrix B;
 
 
     std::vector<double> x0;
-    std::vector<double> x0nonlin;
     std::vector<double> d0;
     enum method_enum{QR,inversion,linear};
 
@@ -83,7 +82,6 @@ double calcstep(double lambda,method_enum method);
 void preparestep(method_enum method);
 double iteration();
 void prepareforiteration();
-void lin_from_nonlin();
 void storecurrentparams();
 void restorecurrentparams();
 void calcscaling();
