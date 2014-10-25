@@ -219,6 +219,8 @@ double LevenbergMarquardt::weight(size_t j){
     //if gn is unrealistically small, force it to one
     //important to make the fitter stable when the model goes negative during the fitting
     if (gn<1.0) gn=1.0;
+    if (getdolintrick())    return 1.0; //switch weighin of for testing linear fitting. In principle the linear fit can start from an
+    //empty model with all parameters zero, weighing is problematic then as the model is not a good predictor for the actual experiment
     return 1.0/sqrt(gn);
 }
 
@@ -648,7 +650,7 @@ if (modelptr->islinear()){
     modelptr->calculate();
     for (size_t i=0;i<modelptr->getnpoints();i++){
         const double newgn=modelptr->getcounts(i);
-        Xprime(i,j)=sqrt(newgn);
+        Xprime(i,j)=newgn*weight(i);
     }
     restorecurrentparams();
     *modelptr=*currentspectrum; //copy old model, no need to calculate again
