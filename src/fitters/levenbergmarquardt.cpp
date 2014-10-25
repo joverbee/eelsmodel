@@ -207,12 +207,19 @@ void LevenbergMarquardt::prepareforiteration(){
     //copy the experiment in Y
     Y.resize(modelptr->getnpoints(),1);
     Yprime.resize(modelptr->getnpoints(),1);
-
     for (size_t i=0;i<modelptr->getnpoints();i++){
-      Y(i,0)=(modelptr->getHLptr())->getcounts(i);
-      Yprime(i,0)=sqrt(fabs(Y(i,0)));
+      const double wn=(modelptr->getHLptr())->getcounts(i); //experiment
+      Y(i,0)=wn;
+      Yprime(i,0)=wn*weight(i);
     }
+}
 
+double LevenbergMarquardt::weight(size_t j){
+    double gn=modelptr->getcounts(j);
+    //if gn is unrealistically small, force it to one
+    //important to make the fitter stable when the model goes negative during the fitting
+    if (gn<1.0) gn=1.0;
+    return 1.0/sqrt(gn);
 }
 
 double LevenbergMarquardt::iteration(){
@@ -322,7 +329,7 @@ std::cout << "in calculate dtprime gn="<< "\t";
     for (size_t i=0;i<modelptr->getnpoints();i++){
         const double gn=fabs(modelptr->getcounts(i)); //model
         const double wn=fabs((modelptr->getHLptr())->getcounts(i)); //experiment
-        dtprime(i,0)=(wn-gn)/sqrt(gn+eps);
+        dtprime(i,0)=(wn-gn)*weight(i);
         #ifdef FITTER_DEBUG_DETAIL
 std::cout << gn<< "\t";
 #endif
@@ -505,7 +512,7 @@ switch (method){
 
     case linear:
     //all model related calculations have been done before in the preparation step, just multiply with the (scaled) experiment in Yprime
-    Step.multiply(Work,Yprime);
+    Step.multiply(Work,Y);
     //add Step to freeparameters vector
     for (size_t i=0;i<XTX.dim1();i++){
         Parameter* p=0;
@@ -616,28 +623,46 @@ size_t jid=j;
     }
     //copy it in the Xprime matrix
     for (unsigned int i=0;i<modelptr->getnpoints();i++){
-        double gn=currentspectrum->getcounts(i); //make sure model data is really positive
-        if (gn<0.0){
-            gn=0.0; //don't use points where the model would go negative, is not physical for Poisson model
-            }
         if (modelptr->isexcluded(i)){
         	Xprime(i,j)=0.0; //exluded points have no gradient	
         }
         else{
-        	Xprime(i,j)=(gradient->getcounts(i))/sqrt(gn+eps);
+            Xprime(i,j)=(gradient->getcounts(i))*weight(i);
         }
     }
     return;
   }
 
 
+if (modelptr->islinear()){
+    storecurrentparams();
+    //for a purely linear model we can calc the derivative by setting each parameter to 1 while to others are put to zero
+    for (size_t i=0;i<modelptr->getnroffreeparameters();i++){
+        if (j!=i) {
+            modelptr->getfreeparam(i)->setvalue(0.0); //set all other to zero
+        }
+        else{
+            modelptr->getfreeparam(i)->setvalue(1.0); //except when i==j
+        }
+    }
+    modelptr->calculate();
+    for (size_t i=0;i<modelptr->getnpoints();i++){
+        const double newgn=modelptr->getcounts(i);
+        Xprime(i,j)=sqrt(newgn);
+    }
+    restorecurrentparams();
+    *modelptr=*currentspectrum; //copy old model, no need to calculate again
+}
+else{
+    Parameter* p=0;
+    p=modelptr->getfreeparam(jid);
+    //a real numerical derivative
+    const double originalvalue=p->getvalue(); //make sure originalvalue can not be changed
+    double delt=fabs(originalvalue*fraction);
+
       //numerical partial derivative to a parameter p store in row j of derivative matrix
       // deriv=(f[i](p+delta)-currentmodel[i])/delta
-      Parameter* p=0;
-      p=modelptr->getfreeparam(jid);
-      //a real numerical derivative
-      const double originalvalue=p->getvalue(); //make sure originalvalue can not be changed
-      double delt=fabs(originalvalue*fraction);
+
       if (delt<minstep) delt=minstep;
       if (delt>maxstep) delt=maxstep;
       double delta=delt;//make sure delta can not be changed
@@ -661,18 +686,11 @@ size_t jid=j;
           Xprime(i,j)=newgn;
       }
 
-
-
-
       for (unsigned int i=0;i<modelptr->getnpoints();i++){
           double gn=currentspectrum->getcounts(i); //make sure model data is really positive
-          if (gn<0.0){
-              gn=0.0; //don't use points where the model would go negative, is not physical for Poisson model
-          }
-
           //Xprime(i,j)+=modelptr->getcounts(i);
           Xprime(i,j)-=gn; //as it was
-          Xprime(i,j)/=(delta*(sqrt(gn)+eps)); //store the MODIFIED derivative (divide by sqrt(gn): the model)
+          Xprime(i,j)/=(delta/weight(i)); //store the MODIFIED derivative (divide by sqrt(gn): the model)
           if (modelptr->isexcluded(i)){
               Xprime(i,j)=0.0; //exluded points have no gradient
           }
@@ -682,6 +700,7 @@ size_t jid=j;
       p->setvalue(originalvalue);
       *modelptr=*currentspectrum; //copy old model, no need to calculate again
       //modelptr->calculate();
+}
 }
 
 void LevenbergMarquardt::storecurrentparams(){

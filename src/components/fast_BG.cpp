@@ -178,7 +178,7 @@ Spectrum* fast_BG::getgradient(size_t j){
 
   break;
   case 1:
-  //analytical derivative wrt r
+  //analytical derivative wrt A2
    for (unsigned int i=0;i<(this->getnpoints());i++)
   {
       double en=this->getenergy(i);

@@ -88,6 +88,7 @@ void restorecurrentparams();
 void calcscaling();
 void calculate_dtprime();
 void calculate_Y();
+double weight(size_t j);
 };
 
 #endif
