@@ -792,9 +792,13 @@ void Componentmaintenance::slot_atomwizard(){
                 p7->setchangeable(false); //the fitter should not change this in normal operation
                 parameterlist.push_back(p7);
 
+                double Ewidth=70.0; //make it dependent on the edge onset
+                Parameter* p8=new Parameter("edge onset",Ewidth,1);
+                p8->setchangeable(false); //the fitter should not change this in normal operation
+                parameterlist.push_back(p8);
 
                 if ((ElistK[i]!=0.0)&&(ElistK[i]>Estart)&&(ElistK[i]<Estop)){
-                    //add a K-edge
+                    //add a K-edge 
                     mymodel->addcomponent(mymodel->getcomponentindexbyname("Hydrogenic K-edge"),&parameterlist); //get a K edge and supply the inf
                     Component* mycomponent=mymodel->getcomponent(mymodel->getcomponentsnr()-1);
                     mycomponent->setdisplayname(namelistK[i]);
@@ -802,9 +806,9 @@ void Componentmaintenance::slot_atomwizard(){
                      if (dofinestructure){
                         //add a fine structure component
                         const double Eonset=ElistK[i]-chemicalshift;
-                        const double Ewidth=70.0; //make it dependent on the edge onset
+
                         add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
-                        //check for overlaps and emit a warning if neede
+                        //check for overlaps and emit a warning if needed
                         for (size_t j=0;j<Zlist.size();j++){
                             if ((((Eonset+Ewidth)>ElistK[j]-chemicalshift)&&(Eonset<ElistK[j]-chemicalshift))||(((Eonset+Ewidth)>ElistL23[j]-chemicalshift)&&(Eonset<ElistL23[j]-chemicalshift))){
                                 //overlap detected
@@ -819,6 +823,11 @@ void Componentmaintenance::slot_atomwizard(){
                     p2->setvalue(ElistL23[i]);
                     p2->setchangeable(false);
                     parameterlist[1]=p2;
+                    Ewidth=50.0; //make it dependent on the edge onset
+                    p8->setchangeable(true);
+                    p8->setvalue(Ewidth);
+                    p8->setchangeable(false); //the fitter should not change this in normal operation
+                    parameterlist[7]=p8;
 
                     mymodel->addcomponent(mymodel->getcomponentindexbyname("Hydrogenic L-edge"),&parameterlist); //get a L edge and supply the inf
                     Component* mycomponent=mymodel->getcomponent(mymodel->getcomponentsnr()-1);
@@ -827,7 +836,6 @@ void Componentmaintenance::slot_atomwizard(){
                     if (dofinestructure){
                         //add a fine structure component
                         const double Eonset=ElistL23[i]-chemicalshift;
-                        const double Ewidth=50.0; //make it dependent on the edge onset
                         add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
                         //check for overlaps and emit a warning if neede
                         for (size_t j=0;j<Zlist.size();j++){
@@ -857,8 +865,7 @@ void Componentmaintenance::add_finestruct(Component* mycomponent,Model* mymodel,
     pf1->setchangeable(false);
     parameterlistfine.push_back(pf1);
 
-    const double Estopfine=Eonset+Ewidth;
-    Parameter* pf2=new Parameter("Estop",Estopfine,1);
+    Parameter* pf2=new Parameter("E width",Ewidth,1);
     pf2->setchangeable(false);
     parameterlistfine.push_back(pf2);
 
@@ -883,19 +890,20 @@ void Componentmaintenance::add_finestruct(Component* mycomponent,Model* mymodel,
             name=s.str();
         }
         Parameter* p=new Parameter(name,1.0,1);
-        p->setboundaries(-1.0,20.0);
+        p->setboundaries(-1.0e10,1.0e10);
         p->setlinear(true); //these parameters are linear
         parameterlistfine.push_back(p);
     }
+
     //now link this to a cross section which needs to be multiplied
-    int cnr=mymodel->getcomponentindexbypointer(mycomponent);
+    //int cnr=mymodel->getcomponentindexbypointer(mycomponent);
 
     //save this number in a parameter
-    Parameter* pf5=new Parameter("compnr",cnr,1);
-    pf5->setchangeable(false);
-    parameterlistfine.push_back(pf5);
+    //Parameter* pf5=new Parameter("compnr",cnr,1);
+    //pf5->setchangeable(false);
+    //parameterlistfine.push_back(pf5);
 
-    mymodel->addcomponent(mymodel->getcomponentindexbyname("Generic Fine Structure (DOS)"),&parameterlistfine); //get a L edge and supply the inf
+    mymodel->addcomponent(mymodel->getcomponentindexbyname("Linear Fine Structure (DOS)"),&parameterlistfine); //get a L edge and supply the inf
     Component* mycomponentfine=mymodel->getcomponent(mymodel->getcomponentsnr()-1);
     mycomponent->setmultiplierptr(mycomponentfine); //tell to the xsection that we are his multiplier
     //and change the name
@@ -908,10 +916,12 @@ void Componentmaintenance::add_finestruct(Component* mycomponent,Model* mymodel,
     mycomponentfine->setdisplayname(finename);
 
     //add monitor to show the mass center
-    Parameter* aptr=mycomponentfine->getparameter(3);
-    Parameter* bptr=mycomponentfine->getparameter(2);
-    Monitor* mptr=new Monitor(aptr,bptr,3); //make a monitor on a param to show result of mass center
-    (void*) mptr; //supress unused variable warning
+    //Parameter* aptr=mycomponentfine->getparameter(3);
+    //Parameter* bptr=mycomponentfine->getparameter(2);
+    //Monitor* mptr=new Monitor(aptr,bptr,3); //make a monitor on a param to show result of mass center
+    //(void*) mptr; //supress unused variable warning
     //couple the edge onsets
     (mycomponentfine->getparameter(0))->couple(mycomponent->getparameter(1),1.0);
+    //and the onset energy width
+    (mycomponentfine->getparameter(1))->couple(mycomponent->getparameter(7),1.0);
 }

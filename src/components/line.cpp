@@ -30,6 +30,19 @@
 
 #include "src/core/parameter.h"
 
+#include "src/core/eelsmodel.h"
+#include "src/core/model.h"
+#include "src/core/slice_iter.h"
+
+#include "src/gui/graph.h"
+#include "src/gui/saysomething.h"
+
+Eelsmodel* geteelsmodelptr();
+QWorkspace* getworkspaceptr();
+
+
+
+
 Line::Line()
 :Component()
 {
@@ -95,6 +108,36 @@ std::cout <<"parameters have not changed, i don't need to calculate again\n";
 #endif
 }
 
+}
+
+
+Spectrum* Line::getgradient(size_t j){
+//get analytical partial derivative to parameter j in point i
+  const Model* mymodel=geteelsmodelptr()->getmodel();
+
+  #ifdef COMPONENT_DEBUG
+  std::cout << "calculating the partial derivative in A: " << A << " B:" <<B<<"\n";
+  #endif
+  switch(j){
+  case 0:
+  //analytical derivative wrt A
+    for (size_t i=0;i<this->getnpoints();i++)
+    {
+        gradient.setcounts(i,1.0);
+     }
+  break;
+  case 1:
+  //analytical derivative wrt r
+   for (unsigned int i=0;i<(this->getnpoints());i++)
+    {
+        double en=this->getenergy(i);
+        gradient.setcounts(i,en);
+    }
+  break;
+  default:
+  throw Componenterr::bad_index();
+  }
+  return &gradient;
 }
 
 Line* Line::clone()const{

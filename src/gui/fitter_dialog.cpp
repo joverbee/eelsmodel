@@ -158,7 +158,7 @@ Fitter_dialog::Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitt
     
     QCheckBox * check_residual = new QCheckBox( "Generate residuals" );
     QCheckBox * check_redrawfit = new QCheckBox( "Redraw during multifit" );
-    QCheckBox * check_lintrick = new QCheckBox( "Use Linear/Nonlinear fit" );
+    QCheckBox * check_lintrick = new QCheckBox( "Use Linear fit if possible" );
     
     QCheckBox * check_startfromcurrent = new QCheckBox( "Start multifit from current spectrum" );
     
@@ -399,7 +399,7 @@ void Fitter_dialog::iterate_this_spectrum(){
     if (mptr->ismulti()){
         (mptr->getmultispectrumptr())->update();//advance the line tool on the multispectrum
     }
-    fitterptr->createmodelinfo(); //make sure the fitter has up to date info from the model
+    //fitterptr->createmodelinfo(); //make sure the fitter has up to date info from the model
     fitterptr->initfitter(); //make sure the fitter has up to date info from the model
     mptr->storeparams(); //to be able to come back in case of divergence
 

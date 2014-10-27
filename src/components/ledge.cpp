@@ -50,6 +50,7 @@ Ledge::Ledge(int n,double estart,double dispersion,std::vector<Parameter*>* para
   Parameter* p5;
   Parameter* p6;
   Parameter* p7;
+  Parameter* p8;
   if (parameterlistptr==0){
     p1=new Parameter("E0",300e3,1);
     p1->interactivevalue("enter primary energy [eV]");
@@ -84,6 +85,10 @@ Ledge::Ledge(int n,double estart,double dispersion,std::vector<Parameter*>* para
 
     p6=new Parameter("strength",1.0e2,1);
     p6->interactivevalue("enter strength of edge");
+    p8=new Parameter("onset",5.0e1,1);
+    p8->interactivevalue("width of onset region [eV]");
+    p8->setchangeable(false); //the fitter should not change this in normal operation
+
   }
   else{
     p1=(*parameterlistptr)[0];
@@ -94,15 +99,27 @@ Ledge::Ledge(int n,double estart,double dispersion,std::vector<Parameter*>* para
     p6=(*parameterlistptr)[5];
     //try to see if we also find an convergence angle
     //to be compatible with older version
-    if (parameterlistptr->size()==7){
+    if (parameterlistptr->size()==8){
         p7=(*parameterlistptr)[6];
+        p8=(*parameterlistptr)[7];
     }
     else{
-        //create a new convergence angle parameters and put it to 0.0
-        p7=new Parameter("convergence angle",0.0e-3,1);
-        //p7.interactivevalue("enter convergence half angle [rad]");
-        p7->setchangeable(false); //the fitter should not change this in normal operation
+        if (parameterlistptr->size()==7){
+            p7=(*parameterlistptr)[6];
+            p8=new Parameter("onset",0.0,1);
+            p8->setchangeable(false); //the fitter should not change this in normal operation
+        }
+        else{
+
+            //create a new convergence angle parameters and put it to 0.0
+            p7=new Parameter("convergence angle",0.0e-3,1);
+            p7->setchangeable(false); //the fitter should not change this in normal operation
+            p8=new Parameter("onset",0.0,1);
+            p8->setchangeable(false); //the fitter should not change this in normal operation
+        }
     }
+
+
   }
 
   p6->setlinear(true); //strength is a linear parameter
@@ -114,6 +131,7 @@ Ledge::Ledge(int n,double estart,double dispersion,std::vector<Parameter*>* para
   this->addparameter(p5);
   this->addparameter(p6);
   this->addparameter(p7);
+  this->addparameter(p8);
 
   //give a name and description
   this->setname("Hydrogenic L-edge");
@@ -142,8 +160,10 @@ void Ledge::calculate(){
   const double strength=strengthptr->getvalue();
   const Parameter* alphaptr= getparameter(6);
   const double alpha=alphaptr->getvalue();
+  const Parameter* onsetptr= getparameter(7);
+  const double onset=onsetptr->getvalue();
 
-  if (E0ptr->changed()||Ekptr->changed()||Zptr->changed()||thetastepptr->changed()||thetamaxptr->changed()||alphaptr->changed()){
+  if (E0ptr->changed()||Ekptr->changed()||Zptr->changed()||thetastepptr->changed()||thetamaxptr->changed()||alphaptr->changed()||onsetptr->changed()){
     #ifdef COMPONENT_DEBUG
     std::cout << "parameters changed calculating L edge \n E0: " << E0 << " Ek:" <<Ek
             << " Z: "<<Z<<" thetasteps: "<<thetasteps<<" thetamax: "<<thetamax<<" strength: "<<strength<<"\n";
@@ -184,7 +204,7 @@ void Ledge::calculate(){
       const double E=this->getenergy(i);
       double integral=0.0;
       double cts=0.0;
-      if ((E>=Ek)&&(E>0.0)){
+      if ((E>=(Ek+onset))&&(E>0.0)){
         const double qa0sqmin=pow(E,2.0)/(4.0*R*T)+pow(E,3.0)/(8.0*pow(gamma,3.0)*R*pow(T,2.0)); //partial expansion for theta=0
         const double qa0sqmax=qa0sqmin+4.0*pow(gamma,2.0)*(T/R)*pow(sin((thetamax+alpha)/2.0),2.0);
         const double lnqa0sqstep=(log(qa0sqmax)-log(qa0sqmin))/floor(thetasteps);

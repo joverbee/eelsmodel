@@ -55,8 +55,8 @@ fast_BG::fast_BG(int n,double estart,double dispersion,std::vector<Parameter*>* 
 
     //create the parameters
     //add the required parameters
-    Parameter* p1; //A
-    Parameter* p2; //x, the mixing between the 2 power laws
+    Parameter* p1; //A1
+    Parameter* p2; //A2,
     Parameter* p3; //r1
     Parameter* p4; //r2
 
@@ -65,8 +65,8 @@ fast_BG::fast_BG(int n,double estart,double dispersion,std::vector<Parameter*>* 
       p2=new Parameter("A2",1.0e3,1);
       p3=new Parameter("r1",2.0,0);
       p4=new Parameter("r2",3.0,0);
-      p1->setboundaries(0.0,1.0e10);
-      p2->setboundaries(0.0,1.0e10);
+      p1->setboundaries(-1.0e10,1.0e10);
+      p2->setboundaries(-1.0e10,1.0e10);
       p3->setboundaries(1.0,10.0);
       p4->setboundaries(1.0,10.0);
 
@@ -78,7 +78,7 @@ fast_BG::fast_BG(int n,double estart,double dispersion,std::vector<Parameter*>* 
       p4=(*parameterlistptr)[3];
     }
 
-    //parameter A and x are a linear parameters
+    //parameter A1 and A2 are linear parameters
     p1->setlinear(true);
     p2->setlinear(true);
 
@@ -93,9 +93,11 @@ fast_BG::fast_BG(int n,double estart,double dispersion,std::vector<Parameter*>* 
     setdescription("y=A1(E/E0)^-r1+A2(E/E0)^-r'' with A1,A2 the two parameters. r and r' are constant so this is a linear function (therefore fast)");
     setcanconvolute(false); //don't convolute the background it only gives problems and adds no extra physics
     setshifter(false);
-    //an analytical gradient is available for both parameters
+    //an analytical gradient is available for all parameters
     sethasgradient(0,true);
     sethasgradient(1,true);
+    sethasgradient(2,true);
+    sethasgradient(3,true);
 
 
     if (parameterlistptr==0){

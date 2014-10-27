@@ -499,7 +499,7 @@ Spectrum* Model::getgradientptr(size_t compindex, size_t parameterindex){
   Component* mycomponent=componentptrvector[compindex];
   //ask for an analytical gradient if available
   if (mycomponent->get_has_gradient(parameterindex)){
-    return mycomponent->getgradient(parameterindex);
+      return mycomponent->getgradient(parameterindex);
   }
   else{
     //no gradient

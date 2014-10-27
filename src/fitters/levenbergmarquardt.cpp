@@ -138,10 +138,7 @@ void LevenbergMarquardt::preparecovariance(){
     for (size_t k=0;k<modelptr->getnroffreeparameters();k++){
        (*information_matrix)(j,k)=0.0;
         for (unsigned int i=0;i<modelptr->getnpoints();i++){
-          //only take non-excluded points
-          if (!modelptr->isexcluded(i)){
             (*information_matrix)(j,k)+=Xprime(i,j)*Xprime(i,k);
-          }
         }
     }
   }
@@ -215,12 +212,15 @@ void LevenbergMarquardt::prepareforiteration(){
 }
 
 double LevenbergMarquardt::weight(size_t j){
+    if (modelptr->isexcluded(j)) return 0.0; //if point is excluded it gets zero weight
+
+    if (getdolintrick())    return 1.0; //switch weighin of for testing linear fitting. In principle the linear fit can start from an
+    //empty model with all parameters zero, weighing is problematic then as the model is not a good predictor for the actual experiment
+
     double gn=modelptr->getcounts(j);
     //if gn is unrealistically small, force it to one
     //important to make the fitter stable when the model goes negative during the fitting
-    if (gn<1.0) gn=1.0;
-    if (getdolintrick())    return 1.0; //switch weighin of for testing linear fitting. In principle the linear fit can start from an
-    //empty model with all parameters zero, weighing is problematic then as the model is not a good predictor for the actual experiment
+    if (gn<1.0) gn=1.0;  
     return 1.0/sqrt(gn);
 }
 
@@ -625,12 +625,7 @@ size_t jid=j;
     }
     //copy it in the Xprime matrix
     for (unsigned int i=0;i<modelptr->getnpoints();i++){
-        if (modelptr->isexcluded(i)){
-        	Xprime(i,j)=0.0; //exluded points have no gradient	
-        }
-        else{
             Xprime(i,j)=(gradient->getcounts(i))*weight(i);
-        }
     }
     return;
   }
@@ -683,19 +678,10 @@ else{
 #endif
 
       modelptr->calculate();
-      for (size_t i=0;i<modelptr->getnpoints();i++){
-          const double newgn=modelptr->getcounts(i);
-          Xprime(i,j)=newgn;
-      }
-
       for (unsigned int i=0;i<modelptr->getnpoints();i++){
-          double gn=currentspectrum->getcounts(i); //make sure model data is really positive
-          //Xprime(i,j)+=modelptr->getcounts(i);
-          Xprime(i,j)-=gn; //as it was
-          Xprime(i,j)/=(delta/weight(i)); //store the MODIFIED derivative (divide by sqrt(gn): the model)
-          if (modelptr->isexcluded(i)){
-              Xprime(i,j)=0.0; //exluded points have no gradient
-          }
+          const double newgn=modelptr->getcounts(i);
+          const double gn=currentspectrum->getcounts(i); //make sure model data is really positive
+          Xprime(i,j)=(newgn-gn)*weight(i)/delta; //as it was
       }
 
       //reset to original, BIG advantage, the model is already calculated now, this saves time

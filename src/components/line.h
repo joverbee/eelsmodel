@@ -34,7 +34,7 @@ Line();
 	Line(int,double,double,std::vector<Parameter*>* parameterlistptr=0);
 	~Line();
 void calculate();
-Spectrum* getgradient(size_t j){return 0;}
+Spectrum* getgradient(size_t j);
 Line* clone()const;
 Line* new_component(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr=0)const;
 };
