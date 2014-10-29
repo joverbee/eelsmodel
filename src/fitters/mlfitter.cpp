@@ -30,6 +30,8 @@
 #include <cstdio>
 #include <cmath>
 
+#include <Eigen/Dense>
+
 #include "src/core/model.h"
 #include "src/core/monitor.h"
 
@@ -104,7 +106,14 @@ std::string MLFitter::goodness_of_fit_string()const{
 }
 void MLFitter::calculate_beta_and_alpha(){
   //calculate beta and alpha matrix
-  alphaptr->clearlower();  //clear lower left corner including diagonal
+  //clear lower left corner including diagonal
+  for(int i = 0; i<alpha.rows(); ++i)
+  {
+    for(int j = 0; j<=i; ++j)
+    {
+      alpha(i,j)=0;
+    }
+  }
   //clear beta
   for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
     beta[j]=0.0;
@@ -116,12 +125,12 @@ void MLFitter::calculate_beta_and_alpha(){
       double modeldata=fabs(modelptr->getcounts(i)); //make sure modeldata is realy positive
         for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
            //adapted version of beta for ML
-           beta[j] += 0.5*((expdata-modeldata)/(modeldata+eps))*((*derivptr)(j,i));
+           beta[j] += 0.5*((expdata-modeldata)/(modeldata+eps))*deriv(j,i);
            //original for lsq
            //beta[j] +=      (expdata-modeldata)                 *((*derivptr)[j][i]);
            for (size_t k=0; k<=j; k++){
               //adapted version of alpha matrix for ML
-              (*alphaptr)(j,k) += 0.5*(expdata/(pow(modeldata,2.0)+eps))*((*derivptr)(j,i))*((*derivptr)(k,i));
+              alpha(j,k) += 0.5*(expdata/(pow(modeldata,2.0)+eps))*deriv(j,i)*deriv(k,i);
               //original for lsq
               //(*alphaptr)[j][k] +=                                        ((*derivptr)[j][i]*(*derivptr)[k][i]);
               }
@@ -135,7 +144,7 @@ void MLFitter::calculate_beta_and_alpha(){
   //was j=0 but first row needs not to be copied because is already full
       for (size_t k=0; k<j; k++){
         //was k<=j but you don't need to copy the diagonal terms
-        ((*alphaptr)(k,j)) = ((*alphaptr)(j,k));
+        alpha(k,j) = alpha(j,k);
         }
       }
 }
@@ -163,7 +172,7 @@ double MLFitter::getcovariance(int i,int j){
   double result=0.0;
   try{
     //be carefull...
-    result=(*information_matrix)(i,j);
+    result=information_matrix(i,j);
   }
   catch(...){
     return 0.0;
@@ -177,12 +186,12 @@ void MLFitter::preparecovariance(){
  //calculate the Fischer information matrix
  for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
     for (size_t k=0;k<modelptr->getnroffreeparameters();k++){
-       (*information_matrix)(j,k)=0.0;
+       information_matrix(j,k)=0.0;
         for (unsigned int i=0;i<modelptr->getnpoints();i++){
           //only take non-excluded points
           if (!modelptr->isexcluded(i)){
             double modeldata=fabs(modelptr->getcounts(i)); //make sure modeldata is realy positive
-            (*information_matrix)(j,k)+=(1.0/(modeldata+eps))*((*derivptr)(j,i))*((*derivptr)(k,i));
+            information_matrix(j,k)+=(1.0/(modeldata+eps))*deriv(j,i)*deriv(k,i);
           }
         }
     }
@@ -192,7 +201,7 @@ void MLFitter::preparecovariance(){
   information_matrix->debugdisplay();
   #endif
   //invert the Fischer matrix to get the lower bound for the variance
-  information_matrix->inv_inplace();
+  information_matrix = information_matrix.inverse();
 
   #ifdef FITTER_DEBUG
   std::cout <<"The inverted Fischer information matrix:\n";

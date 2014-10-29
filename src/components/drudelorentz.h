@@ -31,7 +31,8 @@
 #include <complex>
 
 #include "src/core/component.h"
-#include "src/core/curvematrix.h"
+
+#include <Eigen/Core>
 
 class Imagedisplay;
 
@@ -41,7 +42,7 @@ class DrudeLorentz : public Component  {
     Spectrum* eps1spectrum; //storage for eps1 and ep2 spectrum
     Spectrum* eps2spectrum;
     size_t thetapoints;
-    CurveMatrix kroegermatrix;
+    Eigen::MatrixXd kroegermatrix;
     Imagedisplay* kroegerim;
     bool showkroeger;
     bool integrate;

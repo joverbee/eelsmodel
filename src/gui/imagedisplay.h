@@ -34,7 +34,8 @@
 #include <QMouseEvent>
 #include <QWidget>
 
-#include "src/core/curvematrix.h"
+#include <Eigen/Core>
+
 #include "src/core/multispectrum.h"
 
 class QWorkspace;
@@ -49,14 +50,14 @@ unsigned int imwidth;
 unsigned int imheight;
 bool paintslice;
 Multispectrum* mspecptr;
-CurveMatrix* matrixptr;
+Eigen::MatrixXd* matrixptr;
 std::string imdisplayname;
 bool dragging;
 bool is2D;
 QWorkspace *parentptr;
 public:
 Imagedisplay(QWorkspace *parent=0, const char *name=0,Multispectrum* mspec=0);
-Imagedisplay(QWorkspace *parent=0, const char *name=0,CurveMatrix *matrix=0);
+Imagedisplay(QWorkspace *parent=0, const char *name=0, Eigen::MatrixXd* matrix = 0);
 Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2);
 ~Imagedisplay();
 std::string getname()const;
@@ -65,7 +66,7 @@ void setname(std::string name);
 void updatereloadmspec();
 void updatereloadmatrix();
 Multispectrum* getmultispectrumptr(){return mspecptr;};
-CurveMatrix* getmatrix(){return matrixptr;};
+Eigen::MatrixXd& getmatrix(){return *matrixptr;};
 protected:
 void paintEvent( QPaintEvent * );
 bool reconvertImage();
@@ -73,7 +74,7 @@ void mousePressEvent(QMouseEvent* e);
 void mouseMoveEvent(QMouseEvent* e);
 void mouseReleaseEvent(QMouseEvent* e);
 virtual void keyPressEvent( QKeyEvent *event );
-void convertmatrixtoimage(CurveMatrix * matrix);
+void convertmatrixtoimage(const Eigen::MatrixXd& matrix);
 void convertmspectoimage(Multispectrum * mspec);
 signals:
 void curr_spec_update();

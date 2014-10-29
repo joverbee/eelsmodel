@@ -34,14 +34,15 @@
 #include <fstream>
 
 #include "src/core/component.h"
-#include "src/core/curvematrix.h"
+
+#include <Eigen/Core>
 
 class HSedge : public Component  {
 Spectrum tempspectrum; //temporary storage of the spectrum shape
 std::string filename; //the HS-GOS table filename
 float info1_1,info1_2,info1_3,info2_1,info2_2; //info numbers determining the energy and q scale
 int ncol,nrow;
-CurveMatrix* GOSmatrix; //HS gos table matrix
+Eigen::MatrixXd GOSmatrix; //HS gos table matrix
 
 public:
 //constructors

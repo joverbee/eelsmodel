@@ -34,7 +34,6 @@
 #include "src/components/gaussian.h"
 
 #include "src/core/parameter.h"
-#include "src/core/curvematrix.h"
 
 #include "src/gui/getfilename.h"
 #include "src/gui/imagedisplay.h"

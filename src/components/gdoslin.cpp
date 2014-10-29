@@ -39,7 +39,7 @@
 
 #include <QDialog>
 
-#include "src/components/GDoslin.h"
+#include "src/components/gdoslin.h"
 
 #include "src/core/fftw++.h"
 #include "src/core/eelsmodel.h"
@@ -50,7 +50,7 @@
 #include "src/gui/componentselector.h"
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
-#include "src/gui/GDosoptions.h"
+#include "src/gui/GDOSoptions.h"
 
 using namespace fftwpp;
 

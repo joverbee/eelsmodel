@@ -37,7 +37,7 @@
 #include <QPaintEvent>
 #include <QWorkspace>
 
-#include "src/core/curvematrix.h"
+#include <Eigen/Core>
 
 //#ifdef DEBUG
 //    #include "debug_new.h" //memory leak checker
@@ -77,31 +77,31 @@ this->setMinimumSize(imwidth,imheight);
 
 }
 Imagedisplay::Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2)
-	: QWidget(parent),image()
-	{
-    matrixptr=new CurveMatrix(dim1,dim2);				     
-	is2D=false;
-	parent->addWindow(this); //add it explicitly to the workspace
-	this->setFocusPolicy(Qt::StrongFocus ); //needed for key input
-	mspecptr=0;
-	paintslice=false;
-	dragging=false;
-	parentptr=parent;
-	setname(name);
-	this->setWindowTitle(name.c_str());
-	//create the image
-	imwidth=matrixptr->dim1();
-	imheight=matrixptr->dim2();
-	image=QImage(imwidth,imheight,QImage::Format_RGB32);
+  : QWidget(parent),image()
+  {
+    matrixptr = new Eigen::MatrixXd(dim1,dim2);
+  is2D=false;
+  parent->addWindow(this); //add it explicitly to the workspace
+  this->setFocusPolicy(Qt::StrongFocus ); //needed for key input
+  mspecptr=0;
+  paintslice=false;
+  dragging=false;
+  parentptr=parent;
+  setname(name);
+  this->setWindowTitle(name.c_str());
+  //create the image
+  imwidth=matrixptr->cols();
+  imheight=matrixptr->rows();
+  image=QImage(imwidth,imheight,QImage::Format_RGB32);
 
 
-	//fit the data in a grayscale image
-	convertmatrixtoimage(matrixptr);
-	
-	this->setMinimumSize(imwidth,imheight);
+  //fit the data in a grayscale image
+  convertmatrixtoimage(*matrixptr);
+
+  this->setMinimumSize(imwidth,imheight);
 }
 
-Imagedisplay::Imagedisplay(QWorkspace *parent, const char *name,CurveMatrix* matrix)
+Imagedisplay::Imagedisplay(QWorkspace *parent, const char *name, Eigen::MatrixXd* matrix)
 : QWidget(parent),image()
 {
 
@@ -118,13 +118,13 @@ this->setWindowTitle(name);
 matrixptr=matrix;
 
 //create the image
-imwidth=matrix->dim1();
-imheight=matrix->dim2();
+imwidth=matrix->cols();
+imheight=matrix->rows();
 image=QImage(imwidth,imheight,QImage::Format_RGB32);
 
 
 //fit the data in a grayscale image
-convertmatrixtoimage(matrix);
+convertmatrixtoimage(*matrix);
 this->setMinimumSize(imwidth,imheight);
 
 }
@@ -139,22 +139,22 @@ Imagedisplay::~Imagedisplay(){
     if (mspecptr!=0) delete(mspecptr);
 }
 
-void Imagedisplay::convertmatrixtoimage(CurveMatrix* matrix){
+void Imagedisplay::convertmatrixtoimage(const Eigen::MatrixXd& matrix){
      //copy and scale contents from the mspectrum in image
-     const double min=matrix->getmin();
-     const double max=matrix->getmax();
+     const double min=matrix.minCoeff();
+     const double max=matrix.maxCoeff();
      #ifdef DEBUG_IMDISPLAY
      std::cout<<"min: "<<min<<"  max: "<<max<<"\n";
      #endif
 
-     imwidth=matrix->dim1();
-     imheight=matrix->dim2();
+     imwidth=matrix.cols();
+     imheight=matrix.rows();
      image=QImage(imwidth,imheight,QImage::Format_RGB32);
 
      for (unsigned int x=0;x<imwidth;x++){
          for (unsigned int y=0;y<imheight;y++){
              //adjust the display value to fit into the range 0-255 in BW mode
-             double color=(*matrix)(x,y);
+             double color=matrix(x,y);
              color=((color-min)/(max-min))*255.0;
              int icolor=int(color);
              QColor rgbcolor=QColor(icolor,icolor,icolor);
@@ -270,7 +270,7 @@ void Imagedisplay::updatereloadmspec(){
 
 void Imagedisplay::updatereloadmatrix(){
 //reconvert the image from the matrix and repaint
-  convertmatrixtoimage(matrixptr);
+  convertmatrixtoimage(*matrixptr);
   this->repaint();
 }
 
