@@ -362,7 +362,7 @@ int model_df (const gsl_vector * x, void *params,gsl_matrix * J)
   //copy this in J
   for (size_t i = 0; i < (pointertothis->modelptr)->getnpoints(); i++){
     for (size_t j=0;j<pointertothis->modelptr->getnroffreeparameters();j++){
-      const double d=(*(pointertothis->derivptr))(j,i);
+      const double d=pointertothis->deriv(j,i);
         //#ifdef FITTER_DEBUG
         //std::cout <<"J["<<i<<"]["<<j<<"]= "<<d<<"\n";
         //#endif

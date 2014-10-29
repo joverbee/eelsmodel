@@ -30,7 +30,8 @@
 
 #include "src/fitters/fitter.h"
 #include "src/core/model.h"
-#include "src/core/curvematrix.h"
+
+#include <Eigen/Core>
 
 /* Maximum Likelihood fitter for Poisson Statistics. */
 #define N 100
@@ -40,22 +41,22 @@ class LevenbergMarquardt : public Fitter  {
     double lambdac; //alpha starting step
     double nu; //factor with which to reduce lambda during itterations
     bool dolin;
-    CurveMatrix Xprime;
-    CurveMatrix XprimeT;
-    CurveMatrix XTX;
-    CurveMatrix XTXcopy;
-    CurveMatrix Q;
-    CurveMatrix R;
-    CurveMatrix Work;
-    CurveMatrix Step;
-    CurveMatrix dtprime;
-    //CurveMatrix Ga;
-    //CurveMatrix GaT;
-    //CurveMatrix GaTGa;
-    //CurveMatrix Work2;
-    CurveMatrix Y;
-    CurveMatrix Yprime;
-    CurveMatrix B;
+    Eigen::MatrixXd Xprime;
+    Eigen::MatrixXd XprimeT;
+    Eigen::MatrixXd XTX;
+    Eigen::MatrixXd XTXcopy;
+    Eigen::MatrixXd Q;
+    Eigen::MatrixXd R;
+    Eigen::MatrixXd Work;
+    Eigen::MatrixXd Step;
+    Eigen::MatrixXd dtprime;
+    //Eigen::MatrixXd Ga;
+    //Eigen::MatrixXd GaT;
+    //Eigen::MatrixXd GaTGa;
+    //Eigen::MatrixXd Work2;
+    Eigen::MatrixXd Y;
+    Eigen::MatrixXd Yprime;
+    Eigen::MatrixXd B;
 bool prepared;
 
     std::vector<double> x0;

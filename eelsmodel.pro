@@ -45,16 +45,20 @@ QMAKE_CXXFLAGS+=-DGSL_DLL
     }
 }
 else{
+    INCLUDEPATH += /usr/include/eigen3
     LIBS+=-lfftw3
     CONFIG+=qwt
 }
 
+CONFIG(debug, debug|release) {
+  # debug
+}else {
+  # release
+  DEFINES += NDEBUG
+}
+
 LIBS+=-lgsl
 LIBS+=-lgslcblas
-LIBS+=-llapack
-LIBS+=-lcblas
-LIBS+=-lf77blas
-LIBS+=-latlas
 TEMPLATE = app
 DEPENDPATH += . \
               src/components \
@@ -81,7 +85,7 @@ HEADERS += src/components/dieleclinear.h \
            src/components/fowler.h \
            src/components/gaussian.h \
            src/components/gdos.h \
-           src/components/gdoslin.h \
+           #src/components/gdoslin.h \
            src/components/hsedge.h \
            src/components/kedge.h \
            src/components/kedgerel.h \
@@ -105,7 +109,6 @@ HEADERS += src/components/dieleclinear.h \
            src/core/chisquare.h \
            src/core/component.h \
            src/core/cslice_iter.h \
-           src/core/curvematrix.h \
            src/core/debug_new.h \
            src/core/eelsmodel.h \
            src/core/fftw++.h \          
@@ -181,7 +184,7 @@ SOURCES += src/components/dieleclinear.cpp \
            src/components/fowler.cpp \
            src/components/gaussian.cpp \
            src/components/gdos.cpp \
-           src/components/gdoslin.cpp \
+           #src/components/gdoslin.cpp \
            src/components/hsedge.cpp \
            src/components/kedge.cpp \
            src/components/kedgerel.cpp \
@@ -202,7 +205,6 @@ SOURCES += src/components/dieleclinear.cpp \
            src/core/chisquare.cpp \
            src/core/component.cpp \
            src/core/cslice_iter.cpp \
-           src/core/curvematrix.cpp \
            src/core/debug_new.cpp \
            src/core/eelsmodel.cpp \
            src/core/fftw++.cpp \

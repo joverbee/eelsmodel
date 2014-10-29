@@ -66,7 +66,6 @@ use bi-cubic interpolation
 #include <iostream>
 #include <string>
 
-#include "src/core/curvematrix.h"
 #include "src/core/parameter.h"
 
 #include "src/gui/fileopener.h"
@@ -75,7 +74,6 @@ use bi-cubic interpolation
 
 HSedge::HSedge() //create a dummy version
 :Component(),tempspectrum(){
-  GOSmatrix=0;
   this->setname("Hartree Slater cross section");
   this->setdescription("Hartree Slater cross section from tabulated GOS tables by P. Rez");
 
@@ -83,7 +81,6 @@ HSedge::HSedge() //create a dummy version
 
 HSedge::HSedge(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr)
 :Component(n,estart,dispersion),tempspectrum(n,estart,dispersion){
-  GOSmatrix=0;
   //add the required parameters
   Parameter* p1;
   Parameter* p2;
@@ -193,10 +190,7 @@ HSedge::HSedge(int n,double estart,double dispersion,std::vector<Parameter*>* pa
 }
 
 
-HSedge::~HSedge(){
-  //clean up the GOS table
-  if (GOSmatrix!=0)    delete(GOSmatrix);
-}
+HSedge::~HSedge(){}
 
 void HSedge::calculate(){
   //get the parameters
@@ -449,7 +443,7 @@ void HSedge::readGOSfile(std::string filename){
         std::cout <<"nrow " <<nrow<<"\n";
     #endif
 
-    GOSmatrix=new CurveMatrix(nrow,ncol);
+    GOSmatrix= Eigen::MatrixXd(nrow,ncol);
 
     //read the data
     for (int i=0;i<nrow;i++){
@@ -465,7 +459,7 @@ void HSedge::readGOSfile(std::string filename){
           std::cout <<data<<"\n";
         #endif
         const double R=13.606; //Rydberg of energy in eV
-        (*GOSmatrix)(i,j)=data/(correction*R); //careful data is stored per rydberg and we want per eV to be compatible with sigmak
+        GOSmatrix(i,j)=data/(correction*R); //careful data is stored per rydberg and we want per eV to be compatible with sigmak
       }
     }
   }  //end of try
@@ -523,7 +517,7 @@ double HSedge::getinterpolatedgos(double energy,double q)const{
   }
   if (j==0){
     //q vector too low
-    return (*GOSmatrix)(i,0);
+    return GOSmatrix(i,0);
   }
   if (j==ncol){
     //q vector too high
@@ -542,10 +536,10 @@ double HSedge::getinterpolatedgos(double energy,double q)const{
   const double distq=q-lowerq;
 
   //return bi-linear result
-  const double result1=(1.0/(deltaenergy*deltaq))*((deltaenergy-distE)*(deltaq-distq))*(*GOSmatrix)(i-1,j-1);
-  const double result2=(1.0/(deltaenergy*deltaq))*((deltaenergy-distE)*(distq))*(*GOSmatrix)(i-1,j);
-  const double result3=(1.0/(deltaenergy*deltaq))*(distE*(deltaq-distq))*(*GOSmatrix)(i,j-1);
-  const double result4=(1.0/(deltaenergy*deltaq))*(distE*distq)*(*GOSmatrix)(i,j);
+  const double result1=(1.0/(deltaenergy*deltaq))*((deltaenergy-distE)*(deltaq-distq))*GOSmatrix(i-1,j-1);
+  const double result2=(1.0/(deltaenergy*deltaq))*((deltaenergy-distE)*(distq))*GOSmatrix(i-1,j);
+  const double result3=(1.0/(deltaenergy*deltaq))*(distE*(deltaq-distq))*GOSmatrix(i,j-1);
+  const double result4=(1.0/(deltaenergy*deltaq))*(distE*distq)*GOSmatrix(i,j);
 
   return result1+result2+result3+result4;
 }

@@ -32,7 +32,6 @@
 #include <fstream>
 
 #include "src/core/component.h"
-#include "src/core/curvematrix.h"
 
 class SpinsplitEdgeHyd : public Component  {
 Spectrum tempspectrum; //temporary storage of the spectrum shape

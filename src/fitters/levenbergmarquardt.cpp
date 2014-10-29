@@ -41,6 +41,8 @@
 #include <cmath>
 #include <cstdio>
 
+#include <Eigen/Dense>
+
 #include "src/core/component.h"
 #include "src/core/model.h"
 #include "src/core/monitor.h"
@@ -123,7 +125,7 @@ double LevenbergMarquardt::getcovariance(int i,int j){
   double result=0.0;
   try{
     //be carefull...
-    result=(*information_matrix)(i,j);
+    result=information_matrix(i,j);
   }
   catch(...){
     return 0.0;
@@ -136,9 +138,9 @@ void LevenbergMarquardt::preparecovariance(){
  //calculate the Fischer information matrix
  for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
     for (size_t k=0;k<modelptr->getnroffreeparameters();k++){
-       (*information_matrix)(j,k)=0.0;
+       information_matrix(j,k)=0.0;
         for (unsigned int i=0;i<modelptr->getnpoints();i++){
-            (*information_matrix)(j,k)+=Xprime(i,j)*Xprime(i,k);
+            information_matrix(j,k)+=Xprime(i,j)*Xprime(i,k);
         }
     }
   }
@@ -147,7 +149,7 @@ void LevenbergMarquardt::preparecovariance(){
   information_matrix->debugdisplay();
   #endif
   //invert the Fischer matrix to get the lower bound for the variance
-  information_matrix->inv_inplace();
+  information_matrix = information_matrix.inverse();
 
   #ifdef FITTER_DEBUG
   std::cout <<"The inverted Fischer information matrix:\n";
@@ -384,7 +386,7 @@ switch (method){
     //Get corrected Jacobian Xprime=sqrt(Cinv)*X;
 
     //do a QR decomposition on it and store the results to use in calcstep
-    Xprime.QRdecomp(Q,R);
+    //Xprime.QRdecomp(Q,R);
     break;
 
     case linear:
@@ -402,7 +404,7 @@ std::cout <<"\n";
 
     //calculate_dtprime();
     //transpose Xprime
-    XprimeT.transpose(Xprime);
+    XprimeT = Xprime.transpose();
 
 #ifdef FITTER_DEBUG_DETAIL
 std::cout << "Xprime=";
@@ -413,7 +415,7 @@ XprimeT.debugdisplay();
 std::cout<<"\n";
 #endif
 
-    XTX.multiply(XprimeT,Xprime);
+    XTX = XprimeT * Xprime;
 
 #ifdef FITTER_DEBUG_DETAIL
 std::cout << "XTX=";
@@ -421,8 +423,7 @@ XTX.debugdisplay();
 std::cout<<"\n";
 #endif
 
-    XTXcopy=XTX;
-    XTXcopy.inv_inplace();
+    XTXcopy = XTX.inverse();
 
 #ifdef FITTER_DEBUG_DETAIL
 std::cout << "inv(XTX)=";
@@ -430,7 +431,7 @@ XTXcopy.debugdisplay();
 std::cout<<"\n";
 #endif
 
-    Work.multiply(XTXcopy,XprimeT);
+    Work = XTXcopy * XprimeT;
 #ifdef FITTER_DEBUG_DETAIL
 std::cout << "Work=";
 Work.debugdisplay();
@@ -453,7 +454,7 @@ std::cout<<"\n";
     std::cout <<"\n";
     #endif
         //transpose Xprime
-    XprimeT.transpose(Xprime);
+    XprimeT = Xprime.transpose();
     #ifdef FITTER_DEBUG_DETAIL
     std::cout << "Xprime=";
     Xprime.debugdisplay();
@@ -464,7 +465,7 @@ std::cout<<"\n";
     std::cout<<"\n";
     #endif
     //multiply and store in Work
-    XTX.multiply(XprimeT,Xprime);
+    XTX = XprimeT * Xprime;
     #ifdef FITTER_DEBUG_DETAIL
     std::cout << "XTX=";
     XTX.debugdisplay();
@@ -514,9 +515,9 @@ switch (method){
 
     case linear:
     //all model related calculations have been done before in the preparation step, just multiply with the (scaled) experiment in Yprime
-    Step.multiply(Work,Y);
+    Step = Work * Y;
     //add Step to freeparameters vector
-    for (size_t i=0;i<XTX.dim1();i++){
+    for (size_t i=0;i<XTX.rows();i++){
         Parameter* p=0;
         p=modelptr->getfreeparam(i);
         updateparam(p,Step(i,0)); //update only the nonlinear parameters
@@ -533,7 +534,7 @@ modelptr->printparameters();
     //step=(inv(XT*X+lambda*eye(n))*XT*Cinv*dt)'; %eq 6.154
     XTXcopy=XTX;
     //add lambda to diagonal
-        for (size_t i=0;i<XTXcopy.dim1();i++){
+        for (size_t i=0;i<XTXcopy.rows();i++){
             XTXcopy(i,i)+=lambda*d0[i]; //apply scaling
         }
 #ifdef FITTER_DEBUG_DETAIL
@@ -544,14 +545,14 @@ std::cout<<"\n";
 #endif
 
     //invert
-    XTXcopy.inv_inplace(); 
+    XTXcopy = XTXcopy.inverse();
 #ifdef FITTER_DEBUG_DETAIL
 std::cout << "inv(XTX+lambda I)=";
 XTXcopy.debugdisplay();
 std::cout<<"\n";
 #endif
     //multiply with XT
-    Work.multiply(XTXcopy,XprimeT);
+    Work = XTXcopy * XprimeT;
  #ifdef FITTER_DEBUG_DETAIL
 std::cout << "inv(XTX)XT=";
 Work.debugdisplay();
@@ -560,10 +561,10 @@ std::cout<<"\n";
 
 
     //multiply with dtprime=dt/sqrt(gn)
-    Step.multiply(Work,dtprime);
+    Step = Work * dtprime;
 
     //add Step to freeparameters vector
-    for (size_t i=0;i<XTX.dim1();i++){
+    for (size_t i=0;i<XTX.rows();i++){
         Parameter* p=0;
         double currval=0.0;
         p=modelptr->getfreeparam(i);
@@ -599,7 +600,7 @@ void LevenbergMarquardt::calculate_ModifiedJacobian(){
 #ifdef FITTER_DEBUG_DETAIL
 std::cout << "Xprime.dim1="<<Xprime.dim1()<<" dim2="<<Xprime.dim2()<<"\n";
 #endif
-  for (size_t i=0;i<Xprime.dim2();i++){
+  for (size_t i=0;i<Xprime.cols();i++){
       modified_partial_derivative(i,tempspectrumptr);
       }
   //after calling this function you can be sure that the model is calculated in the current
@@ -708,8 +709,8 @@ void LevenbergMarquardt::restorecurrentparams(){
 }
 
 void LevenbergMarquardt::calcscaling(){
-    d0.resize(Xprime.dim2()); //make sure it fits
-    for (size_t i=0;i<Xprime.dim2();i++){
+    d0.resize(Xprime.cols()); //make sure it fits
+    for (size_t i=0;i<Xprime.cols();i++){
         d0[i]=0.0;
         for (size_t j=0;j<modelptr->getnpoints();j++){
         d0[i]+=pow(Xprime(j,i),2.0); //sum of squares

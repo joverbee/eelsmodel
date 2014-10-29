@@ -63,7 +63,14 @@ std::string WLSQFitter::goodness_of_fit_string()const{
 }
 void WLSQFitter::calculate_beta_and_alpha(){
   //calculate beta and alpha matrix
-  alphaptr->clearlower();  //clear lower left corner including diagonal
+  //clear lower left corner including diagonal
+  for(int i = 0; i<alpha.rows(); ++i)
+  {
+    for(int j = 0; j<=i; ++j)
+    {
+      alpha(i,j)=0;
+    }
+  }
   //clear beta
   for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
     beta[j]=0.0;
@@ -75,9 +82,9 @@ void WLSQFitter::calculate_beta_and_alpha(){
     if (!(modelptr->isexcluded(i))){ //don't count points that are excluded
       double weight=getweight(i);
       for (size_t j=0;j<modelptr->getnroffreeparameters();j++){
-            beta[j] += weight*(expdata-modeldata)*((*derivptr)(j,i));
+            beta[j] += weight*(expdata-modeldata)*deriv(j,i);
         for (size_t k=0; k<=j; k++){
-         (*alphaptr)(j,k) += weight*((*derivptr)(j,i))*((*derivptr)(k,i));
+         alpha(j,k) += weight*deriv(j,i)*deriv(k,i);
           }
         }
       }
@@ -87,7 +94,7 @@ void WLSQFitter::calculate_beta_and_alpha(){
   //was j=0 but first row needs not to be copied because is already full
       for (size_t k=0; k<j; k++){
         //was k<=j but you don't need to copy the diagonal terms
-        ((*alphaptr)(k,j)) = ((*alphaptr)(j,k));
+        alpha(k,j) = alpha(j,k);
         }
       }
 }

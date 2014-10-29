@@ -32,7 +32,8 @@
 #include <valarray>
 #include <vector>
 
-#include "src/core/curvematrix.h"
+#include <Eigen/Core>
+
 #include "src/core/parameter.h"
 #include "src/core/model.h"
 #include "src/core/chisquare.h"
@@ -48,17 +49,17 @@ bool candolin;
 public:
 Spectrum * tempspectrumptr; //a pointer to a spectrum for temporary storage
 
-CurveMatrix* derivptr;
-CurveMatrix* alphaptr;
-CurveMatrix* modcurveptr; //modified curvature matrix
-CurveMatrix* information_matrix; //the Fischer information matrix
+Model* modelptr;
+Eigen::MatrixXd deriv;
+Eigen::MatrixXd alpha;
+Eigen::MatrixXd modcurve; //modified curvature matrix
+Eigen::MatrixXd information_matrix; //the Fischer information matrix
 std::valarray<double> beta;
 //Spectrum* HLptr; //store it in the model, is no property of the fitter
 Spectrum * residualspec;
 Multispectrum * mresidualspec;
 
-Model* modelptr;
-CurveMatrix* curvaturematrixptr;
+Eigen::MatrixXd curvaturematrix;
 double fraction; //fraction of parametervalue used for numerical derivative
 double eps; //some small number to avoid divide by zero
 double minstep;
