@@ -231,15 +231,15 @@ double LevenbergMarquardt::iteration(){
    #ifdef FITTER_DEBUG
         std::cout << "at start of iteration lambdac="<<lambdac<<" \n";
     #endif
-  modelptr->setlocked(true);
-
-
 
   //if the model has changed (a new or removed component eg.) do an update
 
   if (modelptr->has_changed()){
-    createmodelinfo();
+     createmodelinfo();
   }
+
+  modelptr->setlocked(true);
+
 
   method_enum method=inversion;
 

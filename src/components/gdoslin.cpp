@@ -196,7 +196,7 @@ GDoslin::GDoslin(int n,double estart,double dispersion,std::vector<Parameter*>* 
 
 
   //show an equaliser to help graphically tune the parameters
-  this->showequalizer();
+  //this->showequalizer();
 
 
 
@@ -710,7 +710,7 @@ void GDoslin::makeoptions(){
     //this kills the stored values however
     Model* mymodel=geteelsmodelptr()->getmodel_nonconst();
     mymodel->resetstorage();
-    this->showequalizer(); //redraw the equaliser with new number of sliders
+   // this->showequalizer(); //redraw the equaliser with new number of sliders
 }
 double  GDoslin::Lifetimebroadening(double E){
   //calculate Lifetime broadening in eV according to Egerton 2007

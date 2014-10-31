@@ -58,14 +58,14 @@ std::vector<Parameter*> paramvector;
 std::vector<Spectrum*> plotspecvector; //vector with spectrum for each parameter that is displayed. that contains the plot of the parameter value for each spectrum in the SI
 std::vector<Imagedisplay*> imdisplayvector;
 std::vector<Parameter*> freeparamvector; //vector with pointers to the free parameters of the model
-std::vector<Parameter*> freelinparamvector; //vector with pointers to the free linear parameters of the model
-std::vector<Parameter*> freenonlinparamvector; //vector with pointers to the free linear parameters of the model
+//std::vector<Parameter*> freelinparamvector; //vector with pointers to the free linear parameters of the model
+//std::vector<Parameter*> freenonlinparamvector; //vector with pointers to the free linear parameters of the model
 
 std::vector<Component*> freeparamcomponentvector; //vector with pointers to the components of the free parameters of the model
 std::vector<int> freeparamindex; //vector the index of the parameter in the component
 std::vector<int> freecomponentindex; //vector the index of the component of a certain parameter in the model
-std::vector<int> freenonlinid;
-std::vector<int> freelinid;
+//std::vector<int> freenonlinid;
+//std::vector<int> freelinid;
 std::vector<double> originalvalues;//vector with original values of all parameters
 std::vector<double> originalvalues_sigma;//vector with original values of all parameters
 std::vector<double> uservalues;//vector with user stored values of all parameters
@@ -155,14 +155,14 @@ void retrieveuserparams(); //retrieve that set
 size_t getcurrspecnr(); //returns value of the currently selected spectrum 0=first or only spectrum
 void init(); //initialise vectors with free params and the storage of the params
 bool checkindex(size_t index)const; //check if index is inside valid range of free parameters
-bool checklinindex(size_t index)const; //check if index is inside valid range of free linear parameters
-bool checknonlinindex(size_t index)const; //check if index is inside valid range of free nonlinear parameters
+//bool checklinindex(size_t index)const; //check if index is inside valid range of free linear parameters
+//bool checknonlinindex(size_t index)const; //check if index is inside valid range of free nonlinear parameters
 
 size_t getcomponentfreeparamindex(size_t index);
 size_t getfreeparamindex(size_t index);
 Parameter* getfreeparam(size_t index);
-Parameter* getfreelinparam(size_t index);
-Parameter* getfreenonlinparam(size_t index);
+//Parameter* getfreelinparam(size_t index);
+//Parameter* getfreenonlinparam(size_t index);
 
 Component* getcomponentforfreeparam(size_t index);
 size_t getnroffreeparameters()const;
@@ -187,8 +187,8 @@ void setusersigma(size_t specnr, size_t paramnr,double value);
 void setuservalue(size_t specnr, size_t paramnr,double value);
 int getparamindexbypointer(const Parameter* ptr)const;
 int getfreeparamindexbypointer(const Parameter* ptr)const;
-size_t getfreeindexfromnonlinindex(size_t j)const;
-size_t getfreeindexfromlinindex(size_t j)const;
+//size_t getfreeindexfromnonlinindex(size_t j)const;
+//size_t getfreeindexfromlinindex(size_t j)const;
 void storemonitorstring(size_t specnr,std::string="");
 std::string getmonitorstring(size_t specnr);
 void storeresultstring(std::string result,size_t specnr);

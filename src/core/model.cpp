@@ -700,23 +700,23 @@ Parameter* Model::getfreeparam(size_t index){
     }
 }
 
-Parameter* Model::getfreelinparam(size_t index){
+//Parameter* Model::getfreelinparam(size_t index){
     //return the free parameter with index
-    if (checklinindex(index))
-        return freelinparamvector[index];
-    else {
-        return 0;
-    }
-}
+//    if (checklinindex(index))
+//        return freelinparamvector[index];
+//    else {
+//        return 0;
+//    }
+//}
 
-Parameter* Model::getfreenonlinparam(size_t index){
+//Parameter* Model::getfreenonlinparam(size_t index){
     //return the free parameter with index
-    if (checknonlinindex(index))
-        return freenonlinparamvector[index];
-    else {
-        return 0;
-    }
-}
+//    if (checknonlinindex(index))
+//        return freenonlinparamvector[index];
+//    else {
+//        return 0;
+//    }
+//}
 
 size_t Model::getfreeparamindex(size_t index){
     //return the index of the free parameter with index in the total parameter vector
@@ -752,13 +752,13 @@ int Model::getparamindexbypointer(const Parameter* ptr)const{
 bool Model::checkindex(size_t index)const{
     return (index<freeparameters);
     }
-bool Model::checklinindex(size_t index)const{
-    return (index<freelinparameters);
-    }
+//bool Model::checklinindex(size_t index)const{
+//    return (index<freelinparameters);
+//    }
 
-bool Model::checknonlinindex(size_t index)const{
-    return (index<freenonlinparameters);
-}
+//bool Model::checknonlinindex(size_t index)const{
+//    return (index<freenonlinparameters);
+//}
 
 void Model::init(){
     //update the number of free parameters
@@ -766,13 +766,15 @@ void Model::init(){
     //and their original indices in the model
     //carefull, this also erases all stored parameters
     freeparamvector.clear();
-    freelinparamvector.clear();
-    freenonlinparamvector.clear();
-    freenonlinid.clear();
-    freelinid.clear();
+    //freelinparamvector.clear();
+    //freenonlinparamvector.clear();
+    //freenonlinid.clear();
+    //freelinid.clear();
     freeparamcomponentvector.clear();
     freeparamindex.clear();
     freecomponentindex.clear();
+    freelinparameters=0;
+    freenonlinparameters=0;
     for (unsigned int i=0;i<componentptrvector.size();i++){
     int j=0;
     for (std::vector<Parameter*>::iterator it=(componentptrvector[i])->beginparameter();it<(componentptrvector[i])->endparameter();it++){
@@ -781,23 +783,24 @@ void Model::init(){
       if ((*it)->ischangeable()){
         freeparamvector.push_back(*it);
         if ((*it)->islinear()){
-             freelinparamvector.push_back(*it);
-             freelinid.push_back(j);
+        //     freelinparamvector.push_back(*it);
+        //     freelinid.push_back(j);
+             freelinparameters++;
         }else
         {
-            freenonlinparamvector.push_back(*it);
-            freenonlinid.push_back(j);
+             freenonlinparameters++;
+        //    freenonlinparamvector.push_back(*it);
+        //    freenonlinid.push_back(j);
         }
         freeparamcomponentvector.push_back(componentptrvector[i]);
         freeparamindex.push_back(j);
-        freecomponentindex.push_back(i);
+        freecomponentindex.push_back(i);              
         }
       j++;  //make sure j starts at 0
       }
     }
     freeparameters=freeparamvector.size();
-    freelinparameters=freelinparamvector.size();
-    freenonlinparameters=freenonlinparamvector.size();
+
 
     //update the number of spectra
     nrofspectra=1;
@@ -1114,22 +1117,22 @@ size_t Model::getnroffreenonlinparameters()const{
     return freenonlinparameters;
 }
 
-size_t Model::getfreeindexfromnonlinindex(size_t j)const{
+//size_t Model::getfreeindexfromnonlinindex(size_t j)const{
     //input index in freenonlinparamvector and get the index of that param in freeparamvector
-    if (checknonlinindex(j))        {
-        return freenonlinid[j];
-    }else{
-        return 0;
-    }
-}
-size_t Model::getfreeindexfromlinindex(size_t j)const{
+//    if (checknonlinindex(j))        {
+//        return freenonlinid[j];
+//    }else{
+//        return 0;
+//    }
+//}
+//size_t Model::getfreeindexfromlinindex(size_t j)const{
     //input index in freelinparamvector and get the index of that param in freeparamvector
-    if (checklinindex(j))        {
-        return freelinid[j];
-    }else{
-        return 0;
-    }
-}
+    //if (checklinindex(j))        {
+     //   return freelinid[j];
+    //}else{
+     //   return 0;
+    //}
+//}
 
 void Model::storemonitorstring(size_t specnr,std::string s){
     uservalues_monitorstring[specnr]="";
