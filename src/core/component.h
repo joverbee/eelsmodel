@@ -93,7 +93,7 @@ std::vector<Parameter*>::iterator endparameter(){return parametervector.end();}
 virtual Component* clone()const=0;       //pure virtual cloning functions
 virtual Component* new_component(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr=0)const=0;
 //virtual void getgradient(size_t j,Slice_iter<double> array)=0; //get analytical partial derivative to parameter j and copy it in array via itterators
-virtual Spectrum* getgradient(size_t j)=0; //get pointer to analytical partial derivative to parameter j
+virtual Spectrum* getgradient(size_t) { return 0; } //get pointer to analytical partial derivative to parameter j
 virtual void orderchanged(){};//to do when order of component changes, it is up to the component to reimplement this
 void seteshift(double e); //overloaded from spectrum class
 void setvisible(bool b);

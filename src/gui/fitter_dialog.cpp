@@ -259,7 +259,7 @@ Fitter_dialog::Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitt
      
      connect( stopbutton, SIGNAL( clicked()), this, SLOT( slot_stop() ) );
      connect( orig, SIGNAL( clicked()), this, SLOT( slot_undo() ) );
-     connect (this,SIGNAL(signal_progressbar(int)),pbar,SLOT(setProgress(int)));
+     connect (this,SIGNAL(signal_progressbar(int)),pbar,SLOT(setValue(int)));
      this->show();
      this->setMinimumSize(this->minimumSizeHint()); //needed since QT4 to make sure the widget is not shown minimized
 }

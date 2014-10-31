@@ -19,36 +19,33 @@ LIBS+=-L/usr/local/atlas/lib \
 ICON=eelsmodel.icns
 }
 win32{
-INCLUDEPATH+=c:\\gsl\\include \
-    c:\\qwt-6.1.0\\src \    
-    C:\\atlas\\ATLAS3.8.0\\include \
-    c:\\fftw_3.3.3 \
-    c:\\boost_1_54_0
-LIBS+=-lfftw3-3 \
-    -Lc:\\fftw_3.3.3 \
-    -LC:\\gsl\\lib \
-    -LC:\\gsl\\bin
+#CONFIG+=qwt
+INCLUDEPATH += C:/msys64/mingw64/include/eigen3
+INCLUDEPATH += C:/msys64/mingw64/include/qwt
+CONFIG(debug, debug|release) {
+  # debug
+  LIBS += -lqwtd
+}else {
+  # release
+  LIBS += -lqwt
+}
+#include( C:\\qwt-6.1.0\\qwt.prf )
+#INCLUDEPATH+=c:\\gsl\\include \
+#    c:\\eigen \
+#    c:\\qwt-6.1.0\\src \
+#    c:\\fftw_3.3.3
+#LIBS+=-lfftw3-3 \
+#    -Lc:\\fftw_3.3.3 \
+#    -LC:\\gsl\\lib \
+#    -LC:\\gsl\\bin
 RC_FILE=eelsmodelrc.rc
-QMAKE_CXXFLAGS+=-DGSL_DLL
-    #choose core2duo by adding "CONFIG+=core2duo" or "CONFIG+=i7" in the call to qmake
-    core2duo{
-            LIBS+=-LC:\\atlas\\ATLAS3.8.0\\WIN32\\lib
-            TARGET = eelsmodelcore2duo
-    }
-    i7{
-            LIBS+=-LC:\\atlas\\ATLAS3.8.0\\WIN32i7\\lib
-            TARGET = eelsmodeli7
-    }
-    else{
-            LIBS+=-LC:\\atlas\\ATLAS3.8.0\\WIN32\\lib #worked with older gcc
-            TARGET = eelsmodel
-    }
+QMAKE_CXXFLAGS+=-DGSL_DLL    
 }
 else{
     INCLUDEPATH += /usr/include/eigen3
-    LIBS+=-lfftw3
     CONFIG+=qwt
 }
+LIBS+=-lfftw3
 
 CONFIG(debug, debug|release) {
   # debug

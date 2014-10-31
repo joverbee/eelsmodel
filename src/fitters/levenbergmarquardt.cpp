@@ -205,11 +205,9 @@ void LevenbergMarquardt::prepareforiteration(){
     //prepare fitting parameters for itteration  
     //copy the experiment in Y
     Y.resize(modelptr->getnpoints(),1);
-    Yprime.resize(modelptr->getnpoints(),1);
     for (size_t i=0;i<modelptr->getnpoints();i++){
       const double wn=(modelptr->getHLptr())->getcounts(i); //experiment
       Y(i,0)=wn;
-      Yprime(i,0)=wn*weight(i);
     }
 }
 
@@ -305,9 +303,11 @@ double LevenbergMarquardt::iteration(){
         #ifdef FITTER_DEBUG
         std::cout << "levenbergmarquardt: no valid step found that reduces the chisq. function\n";
         #endif
-        //don't prevent to make a bad step, for debuggin reasons: if it wants to diverge, let it do so
-        restorecurrentparams();
-        modelptr->calculate();
+        //don't prevent to make a bad step, linear fitting has only one outcome and you have to go there
+        if (!(method==linear)){
+            restorecurrentparams();
+            modelptr->calculate();
+        }
     }
  //unlock the model so user can add or remove components
   modelptr->setlocked(false);
@@ -345,15 +345,7 @@ std::cout << "\n";
 
 }
 
-void LevenbergMarquardt::calculate_Y(){
-//create Y=y/sqrt(gn), but store in Y because the nonlinear fitter needs to keep the dtprime
-//    modelptr->calculate();
-//    for (size_t i=0;i<modelptr->getnpoints();i++){
-//        const double gn=fabs(modelptr->getcounts(i)); //model
-//        const double wn=fabs((modelptr->getHLptr())->getcounts(i)); //experiment
-//        Y(i,0)=wn/sqrt(gn+eps);
-//    }
-}
+
 void LevenbergMarquardt::preparestep(method_enum method){
 //prepare all that is needed to do a Levenberg Marquardt step
 //without doing the step
@@ -394,15 +386,6 @@ switch (method){
     //create Xprime
     calculate_ModifiedJacobian();
 
-#ifdef FITTER_DEBUG_DETAIL
-std::cout << "Yprime=";
-Yprime.debugdisplay();
-std::cout <<"\n";
-#endif
-
-
-
-    //calculate_dtprime();
     //transpose Xprime
     XprimeT = Xprime.transpose();
 
@@ -514,7 +497,8 @@ switch (method){
     break;
 
     case linear:
-    //all model related calculations have been done before in the preparation step, just multiply with the (scaled) experiment in Yprime
+    //all model related calculations have been done before in the preparation step, just multiply with the (scaled) experiment in Y
+    prepareforiteration(); //copies Y
     Step = Work * Y;
     //add Step to freeparameters vector
     for (size_t i=0;i<XTX.rows();i++){

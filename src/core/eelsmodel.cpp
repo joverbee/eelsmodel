@@ -363,7 +363,7 @@ void Eelsmodel::fitter_dialog(){
   mydialog=new  Fitter_dialog(getworkspaceptr(),"Fitter dialog",myfitter);
   mydialog->show();
   connect( mydialog, SIGNAL(update() ),this, SLOT( fitter_updatescreen() ) );
-  connect( mydialog, SIGNAL(signal_start_multi_report()),this, SLOT( slot_start_multi_report() ) );
+  connect( mydialog, SIGNAL(signal_start_multi_report()),this, SLOT(( slot_start_multi_report()) ) );
   connect( mydialog, SIGNAL(signal_add_multi_report() ),this, SLOT( slot_add_multi_report() ) );
   connect( mydialog, SIGNAL(signal_fitterdialog_died() ),this, SLOT( slot_fitterdialog_died() ) );
 }

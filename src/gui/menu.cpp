@@ -347,7 +347,7 @@ void MenuEelsmodel::initWorkspace()
   myworkspace->show();
   myworkspace->tile();
   //
-  connect(myworkspace, SIGNAL(windowActivated(QWidget *)),this, SLOT(updateMenus()));
+  connect(myworkspace, SIGNAL(windowActivated(QWidget *)),this, SLOT(update()));
   windowMapper = new QSignalMapper(this);
   connect(windowMapper, SIGNAL(mapped(QWidget *)),myworkspace, SLOT(setActiveWindow(QWidget *)));
 }

@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
     QObject::connect(mymainwindow, SIGNAL(file_project_open()),myeelsmodel, SLOT(slot_open_project()) );
     QObject::connect(mymainwindow, SIGNAL(file_project_save()),myeelsmodel, SLOT(slot_save_project()) );
     QObject::connect(mymainwindow, SIGNAL(file_model_save()),myeelsmodel, SLOT(slot_save_model()) );
-    QObject::connect(mymainwindow, SIGNAL(file_report_save()),myeelsmodel, SLOT(slot_save_report()) );
+    QObject::connect(mymainwindow, SIGNAL(file_report_save()),myeelsmodel, SLOT((slot_save_report())) );
     QObject::connect(mymainwindow, SIGNAL(file_save_as()),myeelsmodel, SLOT(slot_save_as()) );
     QObject::connect(myeelsmodel, SIGNAL(enablemodel(bool)),mymainwindow, SLOT(slot_enable_model(bool)));
 

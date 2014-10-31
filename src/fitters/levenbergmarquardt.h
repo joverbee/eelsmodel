@@ -55,7 +55,6 @@ class LevenbergMarquardt : public Fitter  {
     //Eigen::MatrixXd GaTGa;
     //Eigen::MatrixXd Work2;
     Eigen::MatrixXd Y;
-    Eigen::MatrixXd Yprime;
     Eigen::MatrixXd B;
 bool prepared;
 
@@ -88,7 +87,6 @@ void storecurrentparams();
 void restorecurrentparams();
 void calcscaling();
 void calculate_dtprime();
-void calculate_Y();
 double weight(size_t j);
 };
 
