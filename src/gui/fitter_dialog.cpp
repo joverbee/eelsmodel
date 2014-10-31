@@ -469,6 +469,7 @@ if (mptr->getnroffreeparameters()==0){
 	QMessageBox::warning( this, "EELSMODEL","No free parameters to fit","OK", 0, 0, 1 );	      
 	return;
 }
+    fitterptr->createmodelinfo(); //make sure the fitter has up to date info from the model
     if (fitterptr->getdomulti()){
       int nspec=mptr->getnrofspectra();
       //store the current parameters
