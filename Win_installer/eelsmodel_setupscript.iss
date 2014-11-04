@@ -3,12 +3,12 @@
 
 [Setup]
 AppName=EELSMODEL
-AppVerName=EELSMODEL 3.3.2
+AppVerName=EELSMODEL 4.0.0
 AppPublisher=Jo Verbeeck
 AppPublisherURL=http://www.eelsmodel.ua.ac.be
 AppSupportURL=http://www.eelsmodel.ua.ac.be
 AppUpdatesURL=http://www.eelsmodel.ua.ac.be
-DefaultDirName={pf}\EELSMODEL
+DefaultDirName={pf64}\EELSMODEL
 DefaultGroupName=EELSMODEL
 LicenseFile=C:\eelsmodeloriginal\licence\gpl.txt
 OutputBaseFilename=setup
@@ -26,14 +26,42 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 ;Source: "C:\Program Files\eelsmodel_release_1_1\eelsmodel\eelsmodel.exe"; DestDir: "{app}"; Flags: ignoreversion
 ;exlude all mac related files and the installer itself
 ;also exclude all *.o files if you forgot to do a make clean
-Source: "C:\eelsmodeloriginal\*"; DestDir: "{app}"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+;Source: "C:\build-eelsmodel\GCC_32_bit-Release\*"; DestDir: "{pf}\{app}"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\build-eelsmodel\GCC_64_bit-Release\*"; DestDir: "{app}"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+;and the source code and example files
+Source: "C:\eelsmodel\*"; DestDir: "{app}\eelsmodel"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+;add all required dll
+;Source: "c:\msys64\mingw32\bin\libgcc_s_dw2-1.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\libwinpthread-1.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\libstdc++-6.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\libfftw3-3.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\libgsl-0.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\libgslcblas-0.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\QtCore4.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\zlib1.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\QtGui4.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\libpng16-16.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\qwt.dll"; DestDir: "{app}\release"; 
+;Source: "c:\msys64\mingw32\bin\QtSvg4.dll"; DestDir: "{app}\release";               
+    
+Source: "c:\msys64\mingw64\bin\libgcc_s_seh-1.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\libwinpthread-1.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\libstdc++-6.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\libfftw3-3.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\libgsl-0.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\libgslcblas-0.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\QtCore4.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\zlib1.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\QtGui4.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\libpng16-16.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\qwt.dll"; DestDir: "{app}\release"; 
+Source: "c:\msys64\mingw64\bin\QtSvg4.dll"; DestDir: "{app}\release";   
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\EELSMODEL"; Filename: "{app}\release\eelsmodel.exe"; WorkingDir: "{app}\release"
-Name: "{userdesktop}\EELSMODEL"; Filename: "{app}\release\eelsmodel.exe"; Tasks: desktopicon; WorkingDir: "{app}\release"
-Name: "{userdesktop}\EELSMODEL_CORE2DUO"; Filename: "{app}\release\eelsmodelcore2duo.exe"; Tasks: desktopicon; WorkingDir: "{app}\release"
-Name: "{userdesktop}\EELSMODEL_i7"; Filename: "{app}\release\eelsmodeli7.exe"; Tasks: desktopicon; WorkingDir: "{app}\release"
+;Name: "{userdesktop}\EELSMODEL_32"; Filename: "{pf}\{app}\release\eelsmodel.exe"; Tasks: desktopicon; WorkingDir: "{pf}\{app}\release"
+Name: "{userdesktop}\EELSMODEL_64"; Filename: "{app}\release\eelsmodel.exe"; Tasks: desktopicon; WorkingDir: "{app}\release"
 
 [Run]
 Filename: "{app}\release\eelsmodel.exe"; Description: "{cm:LaunchProgram,EELSMODEL}"; Flags: nowait postinstall skipifsilent
