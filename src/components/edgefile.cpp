@@ -65,6 +65,7 @@ EdgeFile::EdgeFile(int n,double estart,double dispersion,std::vector<Parameter*>
     p1->interactivevalue("enter Ek, the edge position");
     Parameter* p2=new Parameter("Strength",1.0,1);
     p2->interactivevalue("enter Strength");
+    p2->setlinear(true);
     Parameter* p3=new Parameter("Scale",1.0,0);
     p3->interactivevalue("enter Scale factor to stretch/shrink energy scale");
     this->addparameter(p1);
@@ -76,6 +77,7 @@ EdgeFile::EdgeFile(int n,double estart,double dispersion,std::vector<Parameter*>
     //get the parameters
     Parameter* p1=(*parameterlistptr)[0];
     Parameter* p2=(*parameterlistptr)[1];
+    p2->setlinear(true);
     Parameter* p3=(*parameterlistptr)[2];
     Parameter* p4=(*parameterlistptr)[3];
     //get the edge file via the filename

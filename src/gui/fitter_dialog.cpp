@@ -381,9 +381,13 @@ void Fitter_dialog::iterate_this_spectrum(){
     std::string s="Fitter options: "+fitterptr->gettype();
     this->setWindowTitle(s.c_str());
 
-    const int n=fitterptr->getnmax(); //max number of itterations
-    pbar->reset();
-
+    int n=1;
+    if (fitterptr->getdolintrick()){
+        n=fitterptr->getnumberofspectra(); //only one itteration in case of linear fitting
+    }else{
+        pbar->reset();
+        n=fitterptr->getnmax(); //max number of itterations
+    }
     pbar->setMaximum(n);
     QString valstring;
     stop=false;
@@ -408,7 +412,12 @@ void Fitter_dialog::iterate_this_spectrum(){
         fitterptr->iterate(1);
         chisqlabel->setText((fitterptr->goodness_of_fit_string()).c_str());
         chisqlabel->repaint(); //update the chisquare value
-        pbar->setValue(i+1);
+        if (fitterptr->getdolintrick()){
+            pbar->setValue((fitterptr->getmodelptr())->getcurrspecnr()+1);
+        }
+        else{
+            pbar->setValue(i+1);
+        }
         this->setWindowTitle((fitterptr->getstatus()).c_str()); //show in caption what the fitter has to say
         if (update_allways) emit(update());
         qApp->processEvents();

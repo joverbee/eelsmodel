@@ -440,7 +440,7 @@ void Graph::copydata(int layer,Spectrum* spec){
      (qwtdata[layer][i]).setY(ydata);
      if ((spec->isexcluded(i))){
          QPen mypen=d_curves[layer]->pen();
-         mypen.setColor(mypen.color().dark(500));
+         mypen.setColor(excludecolor);
          penvector[layer][i]=mypen; //a darker version of the original color
      }else
      {

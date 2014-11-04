@@ -785,7 +785,7 @@ size_t Spectrum::getenergyindex(double energy)const{
       for (size_t i=0;i<this->getnpoints();i++){
           if (this->getenergy(i)>=energy) return i;
       }
-      return this->getnpoints();
+      return this->getnpoints()-1;
     }
 
 void Spectrum::smoothgaussian(double sigma){
