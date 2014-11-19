@@ -343,15 +343,17 @@ if (ismulti()){
     	   if (Multiptr->is2D()){
     		   //2D, make image
     		   Imagedisplay* imdisplayptr=imdisplayvector[i];
+               size_t imheight=Multiptr->getstride();
+               size_t imwidth=Multiptr->getsize()/Multiptr->getstride();
     		   if (imdisplayptr==0) {
-    			   size_t imheight=Multiptr->getstride();
-    			   size_t imwidth=Multiptr->getsize()/Multiptr->getstride();
-    			   imdisplayptr=new Imagedisplay(getworkspaceptr(),myparameter->getname(),imheight,imwidth);       			   
+
+                   imdisplayptr=new Imagedisplay(getworkspaceptr(),myparameter->getname(),imheight,imwidth);
     			   imdisplayvector[i]=imdisplayptr; //store for later use
     		    }
             Eigen::MatrixXd& matrix=imdisplayptr->getmatrix();
-    		   	const size_t id1=this->getcurrspecnr()%Multiptr->getstride();
-    		    const size_t id2=this->getcurrspecnr()/Multiptr->getstride(); //modulus
+            //there is a bug here with some wrapping of the data in the image, but how?
+                const size_t id1=this->getcurrspecnr()%imwidth;
+                const size_t id2=this->getcurrspecnr()/imwidth; //modulus
             matrix(id1,id2)=val;
     		    imdisplayptr->updatereloadmatrix();
     	   }

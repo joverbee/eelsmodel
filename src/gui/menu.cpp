@@ -48,7 +48,7 @@
 #include "./icons/connect_established.xpm"
 
 MenuEelsmodel::MenuEelsmodel(){
- setWindowTitle(tr("Eelsmodel 3.3") );
+ setWindowTitle(tr("Eelsmodel 4.1") );
   ///////////////////////////////////////////////////////////////////
   // call inits to invoke all other construction parts
   initWorkspace();

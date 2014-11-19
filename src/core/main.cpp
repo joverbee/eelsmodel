@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
     //store the workspace
     global_workspaceptr=mymainwindow->getworkspaceptr();
     //init the eelsmodel class
-    Eelsmodel* myeelsmodel=new Eelsmodel(global_workspaceptr,"version 3.0");
+    Eelsmodel* myeelsmodel=new Eelsmodel(global_workspaceptr,"version 4.1");
     //and store a global pointer
     global_eelsmodelptr=myeelsmodel;
 
