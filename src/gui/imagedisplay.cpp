@@ -79,7 +79,8 @@ this->setMinimumSize(imwidth,imheight);
 Imagedisplay::Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2)
   : QWidget(parent),image()
   {
-    matrixptr = new Eigen::MatrixXd(dim1,dim2);
+    matrixptr = new Eigen::MatrixXd(dim2,dim1);
+    matrixptr->setOnes();
   is2D=false;
   parent->addWindow(this); //add it explicitly to the workspace
   this->setFocusPolicy(Qt::StrongFocus ); //needed for key input
@@ -142,7 +143,10 @@ Imagedisplay::~Imagedisplay(){
 void Imagedisplay::convertmatrixtoimage(const Eigen::MatrixXd& matrix){
      //copy and scale contents from the mspectrum in image
      const double min=matrix.minCoeff();
-     const double max=matrix.maxCoeff();
+     double max=matrix.maxCoeff();
+     if (max==min){
+         max=min+1.0e-30;
+     }
      #ifdef DEBUG_IMDISPLAY
      std::cout<<"min: "<<min<<"  max: "<<max<<"\n";
      #endif
@@ -154,7 +158,7 @@ void Imagedisplay::convertmatrixtoimage(const Eigen::MatrixXd& matrix){
      for (unsigned int x=0;x<imwidth;x++){
          for (unsigned int y=0;y<imheight;y++){
              //adjust the display value to fit into the range 0-255 in BW mode
-             double color=matrix(x,y);
+             double color=matrix(y,x); //careful, row,col maps like y,x
              color=((color-min)/(max-min))*255.0;
              int icolor=int(color);
              QColor rgbcolor=QColor(icolor,icolor,icolor);
@@ -162,7 +166,7 @@ void Imagedisplay::convertmatrixtoimage(const Eigen::MatrixXd& matrix){
          }
      }
      //adapt the size of this widget to fit around the image
-     //this->setFixedSize (image.width(),image.height()); //was setFixedSize
+     this->setFixedSize (image.width(),image.height()); //was setFixedSize
      //convert image to pixmap
      //this->reconvertImage();
      //set the caption
