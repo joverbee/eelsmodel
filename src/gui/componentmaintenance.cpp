@@ -874,7 +874,6 @@ void Componentmaintenance::slot_autowizard(){
         const double Z=mycomponent->getparameter(2)->getvalue();
         const double strength=mycomponent->getparameter(5)->getvalue();
         std::cout << mycomponent->getname()<<" Z="<<Z<<" strength="<<strength<<"\n";
-
     }
 
     //in a second stage you could then go into a library for the atoms you found and guess what compound it is according to the fine struct
