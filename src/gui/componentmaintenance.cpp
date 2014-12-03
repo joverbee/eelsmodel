@@ -61,9 +61,13 @@
 #include "src/core/model.h"
 #include "src/core/monitor.h"
 
+#include "src/fitters/fitter.h"
+#include "src/fitters/levenbergmarquardt.h"
+#include "src/gui/fitter_dialog.h"
+
 #include "src/gui/atomchooser.h"
 #include "src/gui/saysomething.h"
-
+#include "src/gui/energies.h"
 //embedded icons
 #include "./icons/locked.xpm"
 #include "./icons/unlock.xpm"
@@ -166,6 +170,11 @@ Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
   QPushButton *atombutton = new QPushButton(wizicon, "Add Xsections", this  );
   lay->addWidget( atombutton ,8,5);
   connect( atombutton, SIGNAL( clicked() ), this, SLOT( slot_atomwizard() ) );
+
+  //a wizard to auto select which atoms
+    QPushButton *autobutton = new QPushButton(wizicon, "Auto model", this  );
+    lay->addWidget( atombutton ,8,6);
+    connect( autobutton, SIGNAL( clicked() ), this, SLOT( slot_autowizard() ) );
 
 
   // and another label
@@ -722,6 +731,158 @@ void Componentmaintenance::slot_param_rightpress(QTreeWidgetItem* item,int col){
     this->setCursor (arrow);
 }
 
+void Componentmaintenance::slot_autowizard(){
+    //auto identify the atoms in the current spectrum
+    //create a new mode that will be discarded later
+     Model * mymodel=(geteelsmodelptr())->getmodel_nonconst();
+    Model * tempmodel=new Model(mymodel->getHLptr());
+    tempmodel->display(getworkspaceptr()); //show it...supress this later
+    const double Estart=mymodel->getenergy(0);
+    const double Estop=mymodel->getenergy(mymodel->getnpoints()-1);
+
+    //to be defined by the user (in fact should be property of the model)
+    const double E0=300e3;
+    const double beta=10e-3;
+    const double alpha=0.0;
+
+    //make it consist of a fast background and all atoms that fit in this energy range
+    //make the BG
+    tempmodel->addcomponent(mymodel->getcomponentindexbyname("Fast background"),0);
+
+    //make all the available atoms in the energy range
+    //loop over all available K edges
+
+
+
+    for (size_t id=0;id<size_K;id++){
+        //check if this Z has a K edge in the energy range
+        const double EK=energy_K[id];
+        if ((EK!=0.0)&&(EK>Estart)&&(EK<Estop)){
+            //add a K-edge
+            std::vector<Parameter*> parameterlist;
+            Parameter* p1=new Parameter("E0",E0,1);
+            p1->setchangeable(false);  //the fitter should not change this in normal operation
+            parameterlist.push_back(p1);
+
+            Parameter* p2=new Parameter("Ek",EK,1);
+            p2->setchangeable(false);  //keep the edge onsets constant for better accuracy
+            parameterlist.push_back(p2);
+
+            Parameter* p3=new Parameter("Z",id,1);
+            p3->setchangeable(false);  //the fitter should not change this in normal operation
+            parameterlist.push_back(p3);
+
+            //100 should be a good value for most cases
+            Parameter* p4=new Parameter("thetasteps",100.0,1);
+            p4->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p4);
+
+            Parameter* p5=new Parameter("collection angle",beta,1);
+            p5->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p5);
+
+            Parameter* p6=new Parameter("strength",1.0e2,1);
+            parameterlist.push_back(p6);
+            //auto-adjust this parameter after installing the edge
+
+            Parameter* p7=new Parameter("convergence angle",alpha,1);
+            p7->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p7);
+
+            double Ewidth=0.0; //no fine structure here
+            Parameter* p8=new Parameter("edge onset",Ewidth,1);
+            p8->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p8);
+
+            tempmodel->addcomponent(tempmodel->getcomponentindexbyname("Hydrogenic K-edge"),&parameterlist);
+
+
+
+        }
+
+    }
+    //similar code for L23 edges
+    for (size_t id=0;id<size_L23;id++){
+        //check if this Z has a K edge in the energy range
+        const double EK=energy_L23[id];
+        if ((EK!=0.0)&&(EK>Estart)&&(EK<Estop)){
+            //add a K-edge
+            std::vector<Parameter*> parameterlist;
+            Parameter* p1=new Parameter("E0",E0,1);
+            p1->setchangeable(false);  //the fitter should not change this in normal operation
+            parameterlist.push_back(p1);
+
+            Parameter* p2=new Parameter("Ek",EK,1);
+            p2->setchangeable(false);  //keep the edge onsets constant for better accuracy
+            parameterlist.push_back(p2);
+
+            Parameter* p3=new Parameter("Z",id,1);
+            p3->setchangeable(false);  //the fitter should not change this in normal operation
+            parameterlist.push_back(p3);
+
+            //100 should be a good value for most cases
+            Parameter* p4=new Parameter("thetasteps",100.0,1);
+            p4->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p4);
+
+            Parameter* p5=new Parameter("collection angle",beta,1);
+            p5->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p5);
+
+            Parameter* p6=new Parameter("strength",1.0e2,1);
+            parameterlist.push_back(p6);
+            //auto-adjust this parameter after installing the edge
+
+            Parameter* p7=new Parameter("convergence angle",alpha,1);
+            p7->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p7);
+
+            double Ewidth=0.0; //no fine structure here
+            Parameter* p8=new Parameter("edge onset",Ewidth,1);
+            p8->setchangeable(false); //the fitter should not change this in normal operation
+            parameterlist.push_back(p8);
+
+            tempmodel->addcomponent(tempmodel->getcomponentindexbyname("Hydrogenic L-edge"),&parameterlist);
+
+
+
+        }
+
+    }
+
+    //do a linear fit
+    Fitter* tempfitter=new LevenbergMarquardt(tempmodel);//LevenbergMarquardt for Poisson
+    tempfitter->initfitter();
+
+    tempfitter->dolintrick(true); //set to linear
+     tempfitter->setusegradients(false);
+    //and fit
+
+
+    tempfitter->createmodelinfo();
+    tempfitter->iterate(1);
+    tempmodel->updateHL();
+    //Fitter_dialog* mydialog=new  Fitter_dialog(getworkspaceptr(),"Fitter dialog",tempfitter);
+    //mydialog->show();
+
+    //then sort according to strength
+
+    //tell it to the user
+    //loop over all K edge components and say which Z and which strength they have
+    for (size_t id=1;id<tempmodel->getcomponentsnr();id++){//the first component is the background
+        Component* mycomponent=tempmodel->getcomponent(id);
+        const double Z=mycomponent->getparameter(2)->getvalue();
+        const double strength=mycomponent->getparameter(5)->getvalue();
+        std::cout << mycomponent->getname()<<" Z="<<Z<<" strength="<<strength<<"\n";
+
+    }
+
+    //in a second stage you could then go into a library for the atoms you found and guess what compound it is according to the fine struct
+
+    //then delete the model again
+   // delete(tempfitter);
+   // delete(tempmodel);
+}
 void Componentmaintenance::slot_atomwizard(){
     //open the atomwizard and create crosssections for selected atoms
     Model * mymodel=(geteelsmodelptr())->getmodel_nonconst();
@@ -793,6 +954,7 @@ void Componentmaintenance::slot_atomwizard(){
                 parameterlist.push_back(p7);
 
                 double Ewidth=70.0; //make it dependent on the edge onset
+                if (!dofinestructure) Ewidth=0.0;
                 Parameter* p8=new Parameter("edge onset",Ewidth,1);
                 p8->setchangeable(false); //the fitter should not change this in normal operation
                 parameterlist.push_back(p8);
@@ -824,6 +986,7 @@ void Componentmaintenance::slot_atomwizard(){
                     p2->setchangeable(false);
                     parameterlist[1]=p2;
                     Ewidth=50.0; //make it dependent on the edge onset
+                    if (!dofinestructure) Ewidth=0.0;
                     p8->setchangeable(true);
                     p8->setvalue(Ewidth);
                     p8->setchangeable(false); //the fitter should not change this in normal operation

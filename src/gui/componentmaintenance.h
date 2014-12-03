@@ -103,6 +103,7 @@ void slot_rename(QTreeWidgetItem* item,int col);                      //click lo
 void slot_setposition(int x, int y,int w, int h); //changes position of window on screen
 void slot_update_monitors();
 void slot_atomwizard();
+void slot_autowizard();
 signals:
 void remove_components(int);        //ask eelsmodel to remove the ith component in the model
 void add_components(int);           //ask eelsmodel to add a component with index i to the model

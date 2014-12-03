@@ -166,7 +166,8 @@ void Imagedisplay::convertmatrixtoimage(const Eigen::MatrixXd& matrix){
          }
      }
      //adapt the size of this widget to fit around the image
-     this->setFixedSize (image.width(),image.height()); //was setFixedSize
+     //this->setFixedSize (image.width(),image.height()); //was setFixedSize
+
      //convert image to pixmap
      //this->reconvertImage();
      //set the caption

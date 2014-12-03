@@ -48,11 +48,7 @@ Atomchooser::Atomchooser(QWorkspace *parent, const char *name,double Estart,doub
 
 this->setWindowTitle("Atom chooser");
 
-//a list of interpolation types
-
 //draw a table of Mendeleev
-
-
 QGridLayout* lay = new QGridLayout(this);
 
 
