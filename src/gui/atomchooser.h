@@ -63,6 +63,7 @@ public:
 public slots:
 	void slot_OK();
 	void slot_Cancel();
+    void setweight(size_t Z, double weight);
 };
 
 #endif

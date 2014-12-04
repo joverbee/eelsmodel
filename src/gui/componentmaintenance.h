@@ -59,6 +59,10 @@ class Componentmaintenance : public QWidget  {
   QLabel* complabel;
   const std::vector<Component*>* compvector;      //vector with components in the model
   const std::vector<Component*>* allvector;       //vector with all possible components
+
+
+  std::vector<size_t> foundlistZ;                  //a vector with atoms found by the autoid wizard
+  std::vector<double> foundlistweight;              //a vector with weights indicating the importance of the found atom types by the autoid wizard
   std::map<const QTreeWidgetItem*,Parameter*> itemmap;        //map that links item* which represent the parameters to the parameter*
   std::map<const QTreeWidgetItem*,Component*> componentmap;   //map that links item* which represent the components to the Component*
   QPixmap okicon,lockedicon,unlockedicon,coupledicon,addicon,removeicon,infoicon,monitoricon,wizicon; //some icons
@@ -103,7 +107,7 @@ void slot_rename(QTreeWidgetItem* item,int col);                      //click lo
 void slot_setposition(int x, int y,int w, int h); //changes position of window on screen
 void slot_update_monitors();
 void slot_atomwizard();
-void slot_autowizard();
+void autowizard();
 signals:
 void remove_components(int);        //ask eelsmodel to remove the ith component in the model
 void add_components(int);           //ask eelsmodel to add a component with index i to the model

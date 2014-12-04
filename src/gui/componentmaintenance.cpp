@@ -171,10 +171,7 @@ Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
   lay->addWidget( atombutton ,8,5);
   connect( atombutton, SIGNAL( clicked() ), this, SLOT( slot_atomwizard() ) );
 
-  //a wizard to auto select which atoms
-    QPushButton *autobutton = new QPushButton(wizicon, "Auto model", this  );
-    lay->addWidget( atombutton ,8,6);
-    connect( autobutton, SIGNAL( clicked() ), this, SLOT( slot_autowizard() ) );
+
 
 
   // and another label
@@ -731,7 +728,7 @@ void Componentmaintenance::slot_param_rightpress(QTreeWidgetItem* item,int col){
     this->setCursor (arrow);
 }
 
-void Componentmaintenance::slot_autowizard(){
+void Componentmaintenance::autowizard(){
     //auto identify the atoms in the current spectrum
     //create a new mode that will be discarded later
      Model * mymodel=(geteelsmodelptr())->getmodel_nonconst();
@@ -869,11 +866,27 @@ void Componentmaintenance::slot_autowizard(){
 
     //tell it to the user
     //loop over all K edge components and say which Z and which strength they have
+    foundlistZ.clear();
+    foundlistweight.clear();
+    double max=0.0;
     for (size_t id=1;id<tempmodel->getcomponentsnr();id++){//the first component is the background
         Component* mycomponent=tempmodel->getcomponent(id);
         const double Z=mycomponent->getparameter(2)->getvalue();
         const double strength=mycomponent->getparameter(5)->getvalue();
         std::cout << mycomponent->getname()<<" Z="<<Z<<" strength="<<strength<<"\n";
+        foundlistZ.push_back(int(Z));
+        foundlistweight.push_back(strength);
+        if (strength>max){
+            max=strength;
+        }
+    }
+    //rework the weights to relative
+    for (size_t id=0;id<foundlistZ.size();id++){
+        if (foundlistweight[id]<0.0){
+            foundlistweight[id];
+        }else{
+            foundlistweight[id]=foundlistweight[id]/max;
+        }
     }
 
     //in a second stage you could then go into a library for the atoms you found and guess what compound it is according to the fine struct
@@ -898,6 +911,14 @@ void Componentmaintenance::slot_atomwizard(){
     const double Estop=mymodel->getenergy(mymodel->getnpoints()-1);
 
     Atomchooser* myatom=new Atomchooser(getworkspaceptr(), "",Estart,Estop,E0, beta, alpha, resolution,dofinestructure );
+
+    //do an auto identification of which peaks might be in the spectrum
+    autowizard();
+    //and tell to the atomchooser to update the colors of the mendeleev table accordingly to express whether certain atoms appear
+    for (size_t id=0;id<foundlistZ.size();id++){
+        myatom->setweight(foundlistZ[id],foundlistweight[id]);
+    }
+
     const int res=myatom->exec();
     if (res==1){
             //Add cross sections presses

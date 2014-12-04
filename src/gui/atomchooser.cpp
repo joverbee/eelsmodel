@@ -201,6 +201,24 @@ double Atomchooser::getnumber(const QString& valstring)const{
   else return 0.0;
 }
 
+void Atomchooser::setweight(size_t Z, double weight){
+    //set the weight of an element in the Mendeleev table
+    //the user provides the weight calculate from a peak finding which indicates which atoms are likely to be present in the spectrum
+    //the weight needs to be between 0.0 and 1.0 and determines the color of the button in the Mendeleev table
+
+    //set color of button for atom Z
+    if (Z<buttonlist.size()){
+        const int g=127+int(weight*128.0);
+        const int r=127;
+        const int b=127;
+        QColor col = QColor(r,g,b);
+        if(col.isValid()) {
+            QString qss = QString("background-color: %1").arg(col.name());
+            buttonlist[Z]->setStyleSheet(qss);
+        }
+    }
+}
+
 void Atomchooser::getZ(std::vector<size_t>* Zlist){
     //return vector with atom numbers
     Zlist->clear();
