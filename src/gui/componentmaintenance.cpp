@@ -991,16 +991,33 @@ void Componentmaintenance::slot_atomwizard(){
 
 
                         //check for overlaps and emit a warning if needed
+                        //reduce fine structure to half the distance
                         for (size_t j=0;j<Zlist.size();j++){
-                            if ((((Eonset+Ewidth)>ElistK[j]-chemicalshift)&&(Eonset<ElistK[j]-chemicalshift))||(((Eonset+Ewidth)>ElistL23[j]-chemicalshift)&&(Eonset<ElistL23[j]-chemicalshift))){
+                            const double distanceK=ElistK[j]-ElistK[i];
+                            const double distanceL23=ElistL23[j]-ElistK[i];
+                            double distance=distanceK;
+                            if (distance>distanceL23){
+                                distance=distanceL23;
+                            }
+                            if ((distance<2.0*Ewidth)&&(distance>0.0)){
                                 //overlap detected
-                                Saysomething mysay(0,"Info","Overlapping edges, adjust Estop manually!");
+                                //Saysomething mysay(0,"Info","Overlapping edges, I am reducing the fine structure range!");
                                 //reduce ewidth
-                                Ewidth=20.0;
-                                p8->setvalue(Ewidth);
+
+                               Ewidth=distance/2.0;
+
                             }
                         }
-                        add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
+                        if (Ewidth>5.0){
+                            //if less then 5eV for fine struct, it makes no sense to add it
+                            mycomponent->getparameter(7)->setvalue(Ewidth);
+                            add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
+                        }
+                        else{
+                            (mycomponent->getparameter(7))->setchangeable(true);
+                            (mycomponent->getparameter(7))->setvalue(0.0);
+                            (mycomponent->getparameter(7))->setchangeable(false);
+                        }
                     }
                 }
                 if ((ElistL23[i]!=0.0)&&(ElistL23[i]>Estart)&&(ElistL23[i]<Estop)){
@@ -1023,17 +1040,33 @@ void Componentmaintenance::slot_atomwizard(){
                     if (dofinestructure){
                         //add a fine structure component
                         const double Eonset=ElistL23[i]-chemicalshift;
-                        //check for overlaps and emit a warning if neede
+                        //check for overlaps and emit a warning if needed
+                        //reduce fine structure to half the distance
                         for (size_t j=0;j<Zlist.size();j++){
-                            if ((((Eonset+Ewidth)>ElistK[j]-chemicalshift)&&(Eonset<ElistK[j]-chemicalshift))||(((Eonset+Ewidth)>ElistL23[j]-chemicalshift)&&(Eonset<ElistL23[j]-chemicalshift))){
+                            const double distanceK=ElistK[j]-ElistL23[i];
+                            const double distanceL23=ElistL23[j]-ElistL23[i];
+                            double distance=distanceK;
+                            if (distance>distanceL23){
+                                distance=distanceL23;
+                            }
+                            if ((distance<2.0*Ewidth)&&(distance>0.0)){
                                 //overlap detected
-                                Saysomething mysay(0,"Info","Overlapping edges, adjust Estop manually!");
+                                //Saysomething mysay(0,"Info","Overlapping edges, I am reducing the fine structure range!");
                                 //reduce ewidth
-                                Ewidth=20.0;
-                                p8->setvalue(Ewidth);
+                                //reduce ewidth
+                                Ewidth=distance/2.0;
                             }
                         }
-                        add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
+                        if (Ewidth>5.0){
+                            //if less then 5eV for fine struct, it makes no sense to add it
+
+                            add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
+                        }
+                        else{
+                            (mycomponent->getparameter(7))->setchangeable(true);
+                            (mycomponent->getparameter(7))->setvalue(0.0);
+                            (mycomponent->getparameter(7))->setchangeable(false);
+                        }
                     }
                 }
                
@@ -1112,6 +1145,12 @@ void Componentmaintenance::add_finestruct(Component* mycomponent,Model* mymodel,
     //(void*) mptr; //supress unused variable warning
     //couple the edge onsets
     (mycomponentfine->getparameter(0))->couple(mycomponent->getparameter(1),1.0);
-    //and the onset energy width
+
+
+    //update the width and couple
+    (mycomponent->getparameter(7))->setchangeable(true);
+    (mycomponent->getparameter(7))->setvalue(Ewidth);
+    (mycomponent->getparameter(7))->setchangeable(false);
+
     (mycomponentfine->getparameter(1))->couple(mycomponent->getparameter(7),1.0);
 }
