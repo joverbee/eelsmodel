@@ -989,14 +989,18 @@ void Componentmaintenance::slot_atomwizard(){
                         //add a fine structure component
                         const double Eonset=ElistK[i]-chemicalshift;
 
-                        add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
+
                         //check for overlaps and emit a warning if needed
                         for (size_t j=0;j<Zlist.size();j++){
                             if ((((Eonset+Ewidth)>ElistK[j]-chemicalshift)&&(Eonset<ElistK[j]-chemicalshift))||(((Eonset+Ewidth)>ElistL23[j]-chemicalshift)&&(Eonset<ElistL23[j]-chemicalshift))){
                                 //overlap detected
                                 Saysomething mysay(0,"Info","Overlapping edges, adjust Estop manually!");
+                                //reduce ewidth
+                                Ewidth=20.0;
+                                p8->setvalue(Ewidth);
                             }
                         }
+                        add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
                     }
                 }
                 if ((ElistL23[i]!=0.0)&&(ElistL23[i]>Estart)&&(ElistL23[i]<Estop)){
@@ -1019,14 +1023,17 @@ void Componentmaintenance::slot_atomwizard(){
                     if (dofinestructure){
                         //add a fine structure component
                         const double Eonset=ElistL23[i]-chemicalshift;
-                        add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
                         //check for overlaps and emit a warning if neede
                         for (size_t j=0;j<Zlist.size();j++){
                             if ((((Eonset+Ewidth)>ElistK[j]-chemicalshift)&&(Eonset<ElistK[j]-chemicalshift))||(((Eonset+Ewidth)>ElistL23[j]-chemicalshift)&&(Eonset<ElistL23[j]-chemicalshift))){
                                 //overlap detected
                                 Saysomething mysay(0,"Info","Overlapping edges, adjust Estop manually!");
+                                //reduce ewidth
+                                Ewidth=20.0;
+                                p8->setvalue(Ewidth);
                             }
                         }
+                        add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
                     }
                 }
                
