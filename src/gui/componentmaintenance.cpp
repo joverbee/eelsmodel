@@ -739,8 +739,8 @@ void Componentmaintenance::autowizard(){
 
     //to be defined by the user (in fact should be property of the model)
     const double E0=300e3;
-    const double beta=10e-3;
-    const double alpha=0.0;
+    const double beta=4e-3;
+    const double alpha=0.2e-3;
 
     //make it consist of a fast background and all atoms that fit in this energy range
     //make the BG
@@ -765,7 +765,7 @@ void Componentmaintenance::autowizard(){
             p2->setchangeable(false);  //keep the edge onsets constant for better accuracy
             parameterlist.push_back(p2);
 
-            Parameter* p3=new Parameter("Z",id,1);
+            Parameter* p3=new Parameter("Z",id+1,1);
             p3->setchangeable(false);  //the fitter should not change this in normal operation
             parameterlist.push_back(p3);
 
@@ -813,7 +813,7 @@ void Componentmaintenance::autowizard(){
             p2->setchangeable(false);  //keep the edge onsets constant for better accuracy
             parameterlist.push_back(p2);
 
-            Parameter* p3=new Parameter("Z",id,1);
+            Parameter* p3=new Parameter("Z",id+1,1);
             p3->setchangeable(false);  //the fitter should not change this in normal operation
             parameterlist.push_back(p3);
 
@@ -859,13 +859,14 @@ void Componentmaintenance::autowizard(){
     tempfitter->createmodelinfo();
     tempfitter->iterate(1);
     tempmodel->updateHL();
+    const double result1=tempfitter->goodness_of_fit()/tempmodel->getnpoints();
     //Fitter_dialog* mydialog=new  Fitter_dialog(getworkspaceptr(),"Fitter dialog",tempfitter);
     //mydialog->show();
 
     //then sort according to strength
 
-    //tell it to the user
-    //loop over all K edge components and say which Z and which strength they have
+
+    //loop over all xsection components and say which Z and which strength they have
     foundlistZ.clear();
     foundlistweight.clear();
     double max=0.0;
@@ -880,7 +881,7 @@ void Componentmaintenance::autowizard(){
             max=strength;
         }
     }
-    //rework the weights to relative
+    //rework the weights to relative (this will affect the color of the Mendeleev table in atomchooser later
     for (size_t id=0;id<foundlistZ.size();id++){
         if (foundlistweight[id]<0.0){
             foundlistweight[id];
@@ -891,8 +892,84 @@ void Componentmaintenance::autowizard(){
 
     //in a second stage you could then go into a library for the atoms you found and guess what compound it is according to the fine struct
 
-    //then delete the model again
-   // delete(tempfitter);
+    //loop over all cross sections and add a fine structure
+    const size_t nrofxsections=tempmodel->getcomponentsnr()-1; //store this because we will add components now
+
+    for (size_t id=0;id<nrofxsections;id++){//the first component is the background
+        Component* mycomponent=tempmodel->getcomponent(id+1);
+        const double Eonset=mycomponent->getparameter(1)->getvalue();
+        double Ewidth=50;
+        const double resolution=1.0;
+        //add fine struct but check for overlap with other cross sections
+        //check for overlaps and emit a warning if needed
+        //reduce fine structure to half the distance
+        for (size_t j=0;j<nrofxsections;j++){
+            const double Eonsetother=tempmodel->getcomponent(j+1)->getparameter(1)->getvalue();
+            const double distance1=std::max(Eonsetother-Eonset,0.0);
+            const double distanceend=std::max(Estop-Eonset,0.0);
+            double distance=Estop-Estart;
+            if ((distance1<distance)&&(distance1!=0.0)){
+                distance=distance1;
+            }
+            if ((distanceend<distance)&&(distanceend!=0.0)){
+                distance=distanceend;
+            }
+            if (distance<2.0*Ewidth){
+                //overlap detected
+                //Saysomething mysay(0,"Info","Overlapping edges, I am reducing the fine structure range!");
+                //reduce ewidth
+               Ewidth=distance/2.0;
+            }
+        }
+        if (Ewidth>5.0){
+            //if less then 5eV for fine struct, it makes no sense to add it
+            (mycomponent->getparameter(7))->setchangeable(true);
+            mycomponent->getparameter(7)->setvalue(Ewidth);
+            (mycomponent->getparameter(7))->setchangeable(false);
+            add_finestruct(mycomponent,tempmodel,Eonset,Ewidth, resolution);
+        }
+        else{
+            (mycomponent->getparameter(7))->setchangeable(true);
+            (mycomponent->getparameter(7))->setvalue(0.0);
+            (mycomponent->getparameter(7))->setchangeable(false);
+        }
+
+
+
+    }
+    //fit again
+    tempfitter->createmodelinfo();
+    tempfitter->iterate(1);
+    tempmodel->updateHL();
+    const double result2=tempfitter->goodness_of_fit()/tempmodel->getnpoints();
+
+    if (result2<result1){
+        //regenerate the foundlist
+        foundlistZ.clear();
+        foundlistweight.clear();
+        double max=0.0;
+        for (size_t id=0;id<nrofxsections;id++){//the first component is the background
+            Component* mycomponent=tempmodel->getcomponent(id+1);
+            const double Z=mycomponent->getparameter(2)->getvalue();
+            const double strength=mycomponent->getparameter(5)->getvalue();
+            std::cout << mycomponent->getname()<<" Z="<<Z<<" strength="<<strength<<"\n";
+            foundlistZ.push_back(int(Z));
+            foundlistweight.push_back(strength);
+            if (strength>max){
+                max=strength;
+            }
+        }
+        //rework the weights to relative (this will affect the color of the Mendeleev table in atomchooser later
+        for (size_t id=0;id<foundlistZ.size();id++){
+            if (foundlistweight[id]<0.0){
+                foundlistweight[id];
+            }else{
+                foundlistweight[id]=foundlistweight[id]/max;
+            }
+        }
+    }
+
+    delete(tempfitter);
    // delete(tempmodel);
 }
 void Componentmaintenance::slot_atomwizard(){
@@ -993,17 +1070,26 @@ void Componentmaintenance::slot_atomwizard(){
                         //check for overlaps and emit a warning if needed
                         //reduce fine structure to half the distance
                         for (size_t j=0;j<Zlist.size();j++){
-                            const double distanceK=ElistK[j]-ElistK[i];
-                            const double distanceL23=ElistL23[j]-ElistK[i];
-                            double distance=distanceK;
-                            if (distance>distanceL23){
+                            const double distanceK=std::max(ElistK[j]-ElistK[i],0.0);
+                            const double distanceL23=std::max(ElistL23[j]-ElistK[i],0.0);
+                            const double distanceend=std::max(Estop-ElistK[i],0.0);                      
+                            double distance=Estop-Estart;
+                            if ((distanceK<distance)&&(distanceK!=0.0)){
+                                distance=distanceK;
+                            }
+
+                            if ((distanceL23<distance)&&(distanceL23!=0.0)){
                                 distance=distanceL23;
                             }
-                            if ((distance<2.0*Ewidth)&&(distance>0.0)){
+                            if ((distanceend<distance)&&(distanceend!=0.0)){
+                                distance=distanceend;
+                            }
+
+
+                            if (distance<2.0*Ewidth){
                                 //overlap detected
                                 //Saysomething mysay(0,"Info","Overlapping edges, I am reducing the fine structure range!");
                                 //reduce ewidth
-
                                Ewidth=distance/2.0;
 
                             }
@@ -1043,26 +1129,39 @@ void Componentmaintenance::slot_atomwizard(){
                         //check for overlaps and emit a warning if needed
                         //reduce fine structure to half the distance
                         for (size_t j=0;j<Zlist.size();j++){
-                            const double distanceK=ElistK[j]-ElistL23[i];
-                            const double distanceL23=ElistL23[j]-ElistL23[i];
-                            double distance=distanceK;
-                            if (distance>distanceL23){
+
+                            const double distanceK=std::max(ElistK[j]-ElistL23[i],0.0);
+                            const double distanceL23=std::max(ElistL23[j]-ElistL23[i],0.0);
+                            const double distanceend=std::max(Estop-ElistL23[i],0.0);
+
+
+                            double distance=Estop-Estart;
+                            if ((distanceK<distance)&&(distanceK!=0.0)){
+                                distance=distanceK;
+                            }
+
+                            if ((distanceL23<distance)&&(distanceL23!=0.0)){
                                 distance=distanceL23;
                             }
-                            if ((distance<2.0*Ewidth)&&(distance>0.0)){
+                            if ((distanceend<distance)&&(distanceend!=0.0)){
+                                distance=distanceend;
+                            }
+
+
+
+
+                            if (distance<2.0*Ewidth){
                                 //overlap detected
                                 //Saysomething mysay(0,"Info","Overlapping edges, I am reducing the fine structure range!");
-                                //reduce ewidth
                                 //reduce ewidth
                                 Ewidth=distance/2.0;
                             }
                         }
-                        if (Ewidth>5.0){
-                            //if less then 5eV for fine struct, it makes no sense to add it
-
+                        if (Ewidth>5.0){    
                             add_finestruct(mycomponent,mymodel,Eonset,Ewidth, resolution);
                         }
                         else{
+                            //if less then 5eV for fine struct, it makes no sense to add it
                             (mycomponent->getparameter(7))->setchangeable(true);
                             (mycomponent->getparameter(7))->setvalue(0.0);
                             (mycomponent->getparameter(7))->setchangeable(false);
