@@ -186,7 +186,7 @@ GDoslin::GDoslin(int n,double estart,double dispersion,std::vector<Parameter*>* 
     fft_plan=new rcfft1d(2*this->getnpoints(),real,fourier);
     ifft_plan=new crfft1d(2*this->getnpoints(),fourier,real);
 
-    setvisible(true);//do this before initDOS
+    //setvisible(true);//do this before initDOS
     initDOS();
 
     //show the current DOS
@@ -552,20 +552,22 @@ void GDoslin::initDOS(){
 
     InitEnergy(); //prepare the energy points that are linked to the parameters
     //create a special plot
-    if (Plotspec!=0){
-        //remove it from the plot first
-        this->getgraphptr()->removelastgraph();
-        Plotspec->resize(Evector.size());        
-    }
-    else{
-    	Plotspec=new Spectrum(Evector.size());
+    if (this->isvisible()){
+        if (Plotspec!=0){
+            //remove it from the plot first
+            this->getgraphptr()->removelastgraph();
+            Plotspec->resize(Evector.size());
+        }
+        else{
+            Plotspec=new Spectrum(Evector.size());
+        }
     }
    
     initplotspec();
-
-    (this->getgraphptr())->addgraph(Plotspec);
-    (this->getgraphptr())->setstyle(1,2); //set style of this plot to dots instead of lines
-
+    if (this->isvisible()){
+        (this->getgraphptr())->addgraph(Plotspec);
+        (this->getgraphptr())->setstyle(1,2); //set style of this plot to dots instead of lines
+    }
     switch(interpolationtype){
         case 1:
             break;
@@ -900,7 +902,9 @@ void GDoslin::initplotspec(){
             Plotspec->setdatapoint(i,Evector[i],Yvector[i],0.0);
         }
 
-        (this->getgraphptr())->updategraph(1,Plotspec);
+        if (this->isvisible()) {
+            this->getgraphptr()->updategraph(1,Plotspec);
+        }
 
     }
 }

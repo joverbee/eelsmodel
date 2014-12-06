@@ -63,6 +63,7 @@ class Componentmaintenance : public QWidget  {
 
   std::vector<size_t> foundlistZ;                  //a vector with atoms found by the autoid wizard
   std::vector<double> foundlistweight;              //a vector with weights indicating the importance of the found atom types by the autoid wizard
+  std::vector<bool> overlaplist;                     //a vector that keeps a warning for overlap issues
   std::map<const QTreeWidgetItem*,Parameter*> itemmap;        //map that links item* which represent the parameters to the parameter*
   std::map<const QTreeWidgetItem*,Component*> componentmap;   //map that links item* which represent the components to the Component*
   QPixmap okicon,lockedicon,unlockedicon,coupledicon,addicon,removeicon,infoicon,monitoricon,wizicon; //some icons

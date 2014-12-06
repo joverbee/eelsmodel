@@ -838,10 +838,7 @@ void Componentmaintenance::autowizard(){
             Parameter* p8=new Parameter("edge onset",Ewidth,1);
             p8->setchangeable(false); //the fitter should not change this in normal operation
             parameterlist.push_back(p8);
-
             tempmodel->addcomponent(tempmodel->getcomponentindexbyname("Hydrogenic L-edge"),&parameterlist);
-
-
 
         }
 
@@ -875,25 +872,32 @@ void Componentmaintenance::autowizard(){
         const double Z=mycomponent->getparameter(2)->getvalue();
         const double strength=mycomponent->getparameter(5)->getvalue();
         std::cout << mycomponent->getname()<<" Z="<<Z<<" strength="<<strength<<"\n";
-        foundlistZ.push_back(int(Z));
-        foundlistweight.push_back(strength);
+        if (strength>0.0){
+            //only store the ones with positive strengths
+            foundlistZ.push_back(int(Z));
+            foundlistweight.push_back(strength);
+        }
+        else{
+            //remove those cross sections with negative strength
+            tempmodel->removecomponent(id);
+        }
         if (strength>max){
             max=strength;
         }
     }
     //rework the weights to relative (this will affect the color of the Mendeleev table in atomchooser later
     for (size_t id=0;id<foundlistZ.size();id++){
-        if (foundlistweight[id]<0.0){
-            foundlistweight[id];
-        }else{
-            foundlistweight[id]=foundlistweight[id]/max;
-        }
+        foundlistweight[id]=foundlistweight[id]/max;
     }
+
 
     //in a second stage you could then go into a library for the atoms you found and guess what compound it is according to the fine struct
 
     //loop over all cross sections and add a fine structure
+
     const size_t nrofxsections=tempmodel->getcomponentsnr()-1; //store this because we will add components now
+
+    overlaplist.resize(nrofxsections,false);
 
     for (size_t id=0;id<nrofxsections;id++){//the first component is the background
         Component* mycomponent=tempmodel->getcomponent(id+1);
@@ -916,8 +920,14 @@ void Componentmaintenance::autowizard(){
             }
             if (distance<2.0*Ewidth){
                 //overlap detected
+
                 //Saysomething mysay(0,"Info","Overlapping edges, I am reducing the fine structure range!");
                 //reduce ewidth
+
+                //remember that we detected overlap, so user can be extra cautious to add the atom that caused this overlap
+                if (distance<50.0){
+                    overlaplist[j]=true;
+                }
                Ewidth=distance/2.0;
             }
         }
@@ -962,7 +972,7 @@ void Componentmaintenance::autowizard(){
         //rework the weights to relative (this will affect the color of the Mendeleev table in atomchooser later
         for (size_t id=0;id<foundlistZ.size();id++){
             if (foundlistweight[id]<0.0){
-                foundlistweight[id];
+                foundlistweight[id]=0.0;
             }else{
                 foundlistweight[id]=foundlistweight[id]/max;
             }
@@ -993,7 +1003,7 @@ void Componentmaintenance::slot_atomwizard(){
     autowizard();
     //and tell to the atomchooser to update the colors of the mendeleev table accordingly to express whether certain atoms appear
     for (size_t id=0;id<foundlistZ.size();id++){
-        myatom->setweight(foundlistZ[id],foundlistweight[id]);
+        myatom->setweight(foundlistZ[id],foundlistweight[id],overlaplist[id]);
     }
 
     const int res=myatom->exec();

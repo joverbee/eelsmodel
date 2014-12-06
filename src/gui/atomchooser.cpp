@@ -38,7 +38,7 @@
 #include <QString>
 #include <QStringList>
 #include <QWorkspace>
-
+#include <math.h>
 #include "src/gui/mendeleev.h" //defines table of mendeleev
 #include "src/gui/energies.h"
 
@@ -201,20 +201,24 @@ double Atomchooser::getnumber(const QString& valstring)const{
   else return 0.0;
 }
 
-void Atomchooser::setweight(size_t Z, double weight){
+void Atomchooser::setweight(size_t Z, double weight,bool overlap){
     //set the weight of an element in the Mendeleev table
     //the user provides the weight calculate from a peak finding which indicates which atoms are likely to be present in the spectrum
     //the weight needs to be between 0.0 and 1.0 and determines the color of the button in the Mendeleev table
 
+    //overlap indicates there is a high risk of overlap errors
+    //this is indicated by adding red color
     //set color of button for atom Z
-    if (Z<buttonlist.size()){
-        const int g=127+int(weight*128.0);
-        const int r=127;
-        const int b=127;
+
+    if ((Z-1<buttonlist.size())&&(Z!=0)){
+        const int g=200+int(pow(weight,0.5)*55.0);//make it nonlinear
+        int r=200;
+        const int b=200;
+        if (overlap) r=255;
         QColor col = QColor(r,g,b);
         if(col.isValid()) {
             QString qss = QString("background-color: %1").arg(col.name());
-            buttonlist[Z]->setStyleSheet(qss);
+            buttonlist[Z-1]->setStyleSheet(qss);
         }
     }
 }
