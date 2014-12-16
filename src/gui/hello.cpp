@@ -39,7 +39,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "./welcomescreen/eelsmodel_3_3.xpm"
+#include "./welcomescreen/eelsmodel_4_1.xpm"
 
 #include "src/gui/licence.txt"
 
@@ -67,7 +67,7 @@ this->setWindowModality(Qt::ApplicationModal);
      dummylabel=new   QLabel("");
      lay->addWidget(dummylabel,0,0,1,2); //a spacer
 
-     const QPixmap helloimg=QPixmap(eelsmodelpix_xpm);
+     const QPixmap helloimg=QPixmap(eelsmodel_4_1_xpm);
      dummylabel->setPixmap(helloimg);
      //some text
      authorlabel=new   QLabel("Copyright 2003 by Jo Verbeeck");

@@ -156,7 +156,7 @@ HEADERS += src/components/dieleclinear.h \
            ./icons/ok.xpm \
            ./icons/monitor.xpm \
            ./icons/atomwiz.xpm \
-           ./welcomescreen/eelsmodel_3_3.xpm \
+           ./welcomescreen/eelsmodel_4_1.xpm \
            src/gui/licence.txt \
            ./icons/filesave.xpm \
            ./icons/fileopen.xpm \
