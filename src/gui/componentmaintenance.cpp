@@ -342,8 +342,7 @@ void  Componentmaintenance::slot_info(){
   const std::string name=((*allvector)[index])->getname();
   const std::string description=((*allvector)[index])->getdescription();
   const std::string mesg= "name: "+name+"\n"+"description: "+description+"\n";
-  QMessageBox* infobox;
-  infobox->information (this,"Component info",mesg.c_str());
+  QMessageBox::information (this,"Component info",mesg.c_str());
 }
 
 void  Componentmaintenance::slot_couple(){
