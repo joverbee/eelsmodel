@@ -310,6 +310,11 @@ void Fitter::updateresidual(){
      if (residualspec==0){
         if (modelptr->ismulti()){
            mresidualspec=new Multispectrum();
+           if(modelptr->getmultispectrumptr()->is2D())
+           {
+             mresidualspec->set2D(true);
+             mresidualspec->setstride(modelptr->getmultispectrumptr()->getstride());
+           }
            //add same amount of spectra to it as the HLptr
            for (unsigned int i=0;i<(modelptr->getmultispectrumptr())->getsize();i++){
                Spectrum * dummy=new Spectrum((modelptr->getHLptr())->getnpoints(),(modelptr->getHLptr())->getenergy(0),(modelptr->getHLptr())->getdispersion());
