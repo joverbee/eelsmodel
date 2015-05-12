@@ -48,6 +48,7 @@ class Hello : public QDialog  {
     QLabel* dummylabel;
     QLabel* authorlabel;
     QLabel* emaillabel;
+    QLabel* githublabel;
     QTextEdit* gnu;
     QPushButton *OK;
     QPushButton *licenceb;

@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=EELSMODEL
-AppVerName=EELSMODEL 4.0.0
+AppVerName=EELSMODEL 4.1.0
 AppPublisher=Jo Verbeeck
 AppPublisherURL=http://www.eelsmodel.ua.ac.be
 AppSupportURL=http://www.eelsmodel.ua.ac.be
@@ -27,42 +27,46 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 ;exlude all mac related files and the installer itself
 ;also exclude all *.o files if you forgot to do a make clean
 ;Source: "C:\build-eelsmodel\GCC_32_bit-Release\*"; DestDir: "{pf}\{app}"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\build-eelsmodel\GCC_64_bit-Release\*"; DestDir: "{app}"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\build-eelsmodel\GCC_64_bit-Release\release\eelsmodel.exe*"; DestDir: "{app}";
 ;and the source code and example files
-Source: "C:\eelsmodel\*"; DestDir: "{app}\eelsmodel"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\eelsmodel\detectors.txt"; DestDir: "{app}";
+Source: "C:\eelsmodel\Examples\*"; DestDir: "{app}\Examples"; Flags: recursesubdirs
+Source: "C:\eelsmodel\Documentation\*"; DestDir: "{app}\Documentation"; Flags: recursesubdirs
+Source: "C:\eelsmodel\Noise_measure_script\*"; DestDir: "{app}\Noise_measure_script"; Flags: recursesubdirs
+;Source: "C:\eelsmodel\*"; DestDir: "{app}\eelsmodel"; Excludes: "*.o,setup*.exe,EELSMODEL.app,Mac_package\*,Debug\*,CVSroot\*"; Flags: ignoreversion recursesubdirs createallsubdirs
 ;add all required dll
-;Source: "c:\msys64\mingw32\bin\libgcc_s_dw2-1.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\libwinpthread-1.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\libstdc++-6.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\libfftw3-3.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\libgsl-0.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\libgslcblas-0.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\QtCore4.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\zlib1.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\QtGui4.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\libpng16-16.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\qwt.dll"; DestDir: "{app}\release"; 
-;Source: "c:\msys64\mingw32\bin\QtSvg4.dll"; DestDir: "{app}\release";               
+;Source: "c:\msys64\mingw32\bin\libgcc_s_dw2-1.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\libwinpthread-1.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\libstdc++-6.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\libfftw3-3.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\libgsl-0.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\libgslcblas-0.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\QtCore4.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\zlib1.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\QtGui4.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\libpng16-16.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\qwt.dll"; DestDir: "{app}"; 
+;Source: "c:\msys64\mingw32\bin\QtSvg4.dll"; DestDir: "{app}";               
     
-Source: "c:\msys64\mingw64\bin\libgcc_s_seh-1.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\libwinpthread-1.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\libstdc++-6.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\libfftw3-3.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\libgsl-0.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\libgslcblas-0.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\QtCore4.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\zlib1.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\QtGui4.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\libpng16-16.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\qwt.dll"; DestDir: "{app}\release"; 
-Source: "c:\msys64\mingw64\bin\QtSvg4.dll"; DestDir: "{app}\release";   
+Source: "c:\msys64\mingw64\bin\libgcc_s_seh-1.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\libwinpthread-1.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\libstdc++-6.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\libfftw3-3.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\libgsl-0.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\libgslcblas-0.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\QtCore4.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\zlib1.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\QtGui4.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\libpng16-16.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\qwt.dll"; DestDir: "{app}"; 
+Source: "c:\msys64\mingw64\bin\QtSvg4.dll"; DestDir: "{app}";   
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-;Name: "{userdesktop}\EELSMODEL_32"; Filename: "{pf}\{app}\release\eelsmodel.exe"; Tasks: desktopicon; WorkingDir: "{pf}\{app}\release"
-Name: "{userdesktop}\EELSMODEL_64"; Filename: "{app}\release\eelsmodel.exe"; Tasks: desktopicon; WorkingDir: "{app}\release"
+;Name: "{userdesktop}\EELSMODEL_32"; Filename: "{pf}\{app}\eelsmodel.exe"; Tasks: desktopicon; WorkingDir: "{pf}\{app}"
+Name: "{userdesktop}\EELSMODEL_64"; Filename: "{app}\eelsmodel.exe"; Tasks: desktopicon; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\release\eelsmodel.exe"; Description: "{cm:LaunchProgram,EELSMODEL}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\eelsmodel.exe"; Description: "{cm:LaunchProgram,EELSMODEL}"; Flags: nowait postinstall skipifsilent
 

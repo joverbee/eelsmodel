@@ -76,6 +76,9 @@ this->setWindowModality(Qt::ApplicationModal);
      emaillabel=new   QLabel("email: eelsmodel@ua.ac.be");
      lay->addWidget(emaillabel,2,0,1,2);
 
+     githublabel = new QLabel("github: https://github.com/joverbee/eelsmodel");
+     lay->addWidget(githublabel,3,0,1,2);
+
 
      std::string gnustring="This program is free\n"
      "software;you can redistribute it and/or modify it under the terms of the\n"
@@ -83,14 +86,14 @@ this->setWindowModality(Qt::ApplicationModal);
      "either version 2 of the License, or (at your option) any later\n"
      "version. \n\n When publishing results obtained with this software, please cite as: \n J. Verbeeck, S. Van Aert, Ultramicroscopy, Volume 101, 2-4, (2004) 207-224\n";
      gnu=new  QTextEdit(gnustring.c_str());
-        lay->addWidget(gnu,3,0,1,2);
+        lay->addWidget(gnu,4,0,1,2);
      gnu->setReadOnly(true);
      //OK button
      OK = new QPushButton( "OK");
-      lay->addWidget(OK,4,0);
+      lay->addWidget(OK,5,0);
 
      licenceb = new QPushButton( "Licence info");
-       lay->addWidget(licenceb,4,1);
+       lay->addWidget(licenceb,5,1);
 
 
 
