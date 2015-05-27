@@ -501,6 +501,15 @@ Spectrum* Model::getgradientptr(size_t compindex, size_t parameterindex){
   Component* mycomponent=componentptrvector[compindex];
   //ask for an analytical gradient if available
   if (mycomponent->get_has_gradient(parameterindex)){
+      //analytical gradients don't work if the model contains convolutors, shifters or multipliers
+      //we could apply these to the individual analytical gradients but this takes almost the same time
+      //as a numerical derivative
+      for (size_t i=0;i<componentptrvector.size();i++){
+          Component* mycomponent=componentptrvector[i];
+          if (mycomponent->get_ismultiplier()){return 0;}
+          if (mycomponent->getconvolutor()){return 0;}
+          if (mycomponent->getshifter()){return 0;}
+      }
       return mycomponent->getgradient(parameterindex);
   }
   else{

@@ -137,8 +137,9 @@ if ((usegradients)&&((modelptr->getcomponentforfreeparam(j))->get_has_gradient(m
     Spectrum* gradient=modelptr->getgradientptr(modelptr->getcomponentfreeparamindex(j),modelptr->getfreeparamindex(j));
     if (gradient==0){
         usegradients=false;
-        return;
+        //continue making a numerical derivative instead
     }
+    else{
     //copy it in the Xprime matrix
     for (unsigned int i=0;i<modelptr->getnpoints();i++){
     	if (modelptr->isexcluded(i)){
@@ -149,6 +150,7 @@ if ((usegradients)&&((modelptr->getcomponentforfreeparam(j))->get_has_gradient(m
     	}
         }
     return;
+    }
   }
   //numerical partial derivative to a parameter p store in row j of derivative matrix
   // deriv=(f[i](p+delta)-currentspectrum[i])/delta
