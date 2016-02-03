@@ -138,12 +138,49 @@ nrofextraparams=7; //extra params outside of the points for modelling the loss f
   setshifter(false); //seems to be really important here
 
   //create eps1 and eps2 spectrum
-  eps1spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
-  eps2spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
+  //TODO make it possible that this is a multispectrum if parent is multispectrum
+  Model* mymodel=geteelsmodelptr()->getmodel_nonconst();
+
+  if (mymodel->ismulti()){
+      meps1spectrum=new Multispectrum();
+      meps2spectrum=new Multispectrum();
+      if(mymodel->getmultispectrumptr()->is2D()){
+              meps1spectrum->set2D(true);
+              meps2spectrum->set2D(true);
+              meps1spectrum->setstride(mymodel->getmultispectrumptr()->getstride());
+              meps2spectrum->setstride(mymodel->getmultispectrumptr()->getstride());
+      }
+      //add same amount of spectra to it as the HLptr
+      for (unsigned int i=0;i<(mymodel->getmultispectrumptr())->getsize();i++){
+           Spectrum * dummy1=new Spectrum((mymodel->getHLptr())->getnpoints(),(mymodel->getHLptr())->getenergy(0),(mymodel->getHLptr())->getdispersion());
+           dummy1->setname("Eps1");
+           dummy1->clear(); //fill with zero's
+           meps1spectrum->addspectrum(dummy1);
+           Spectrum * dummy2=new Spectrum((mymodel->getHLptr())->getnpoints(),(mymodel->getHLptr())->getenergy(0),(mymodel->getHLptr())->getdispersion());
+           dummy2->setname("Eps2");
+           dummy2->clear(); //fill with zero's
+           meps2spectrum->addspectrum(dummy2);
+      }
+      meps1spectrum->setcurrentslice((mymodel->getconstmultispectrumptr())->getcurrentslice());
+      meps2spectrum->setcurrentslice((mymodel->getconstmultispectrumptr())->getcurrentslice());
+
+      eps1spectrum=meps1spectrum->getcurrentspectrum();
+      meps1spectrum->setname("Epsilon1");
+      meps1spectrum->display(getworkspaceptr());
+      eps2spectrum=meps2spectrum->getcurrentspectrum();
+      meps2spectrum->setname("Epsilon2");
+      meps2spectrum->display(getworkspaceptr());
+
+   }
+  else{
+    eps1spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
+    eps2spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
+    eps1spectrum->display(getworkspaceptr());
+    eps2spectrum->display(getworkspaceptr());
+  }
   eps1spectrum->setname("Epsilon1");
   eps2spectrum->setname("Epsilon2");
-  eps1spectrum->display(getworkspaceptr());
-  eps2spectrum->display(getworkspaceptr());
+
 
   //the last param is the option pointer
   optionparamptr=this->getparameter(6);
@@ -159,12 +196,24 @@ nrofextraparams=7; //extra params outside of the points for modelling the loss f
 
 
 DielecLinear::~DielecLinear(){
-    //delete the spectra
-    if (eps1spectrum!=0){
-        delete(eps1spectrum);
+    //delete the spectra       
+    if (meps1spectrum!=0){
+ //        delete(meps1spectrum);
     }
-     if (eps2spectrum!=0){
-        delete(eps2spectrum);
+    else{
+        //only delete eps1spectrum if it didn't belong to a multispectrum, in case of multispectrum the multispectrum cleans it up.
+        if (eps1spectrum!=0){
+   //         delete(eps1spectrum);
+        }
+    }
+    if (meps2spectrum!=0){
+     //    delete(meps2spectrum);
+    }
+    else{
+         //only delete eps1spectrum if it didn't belong to a multispectrum, in case of multispectrum the multispectrum cleans it up.
+        if (eps2spectrum!=0){
+       //    delete(eps2spectrum);
+       }
     }
 }
 
@@ -172,6 +221,15 @@ DielecLinear::~DielecLinear(){
 
 void DielecLinear::calculate()
 {
+    //make sure eps1spectrum is pointing to right slice
+    const Model* mymodel=geteelsmodelptr()->getmodel();
+    if (mymodel->ismulti()){
+        meps1spectrum->setcurrentslice((mymodel->getconstmultispectrumptr())->getcurrentslice());
+        meps2spectrum->setcurrentslice((mymodel->getconstmultispectrumptr())->getcurrentslice());
+        eps1spectrum=meps1spectrum->getcurrentspectrum();
+        eps2spectrum=meps2spectrum->getcurrentspectrum();
+    }
+
     const Parameter* strengthptr= this->getparameter(1);
     const double strength=strengthptr->getvalue();
 
@@ -398,9 +456,17 @@ this->setunchanged();
 
 //inherit show but also redefine what should happen with the dos window
 void DielecLinear::show(){
-        //show the eps1 and eps2 spectra
-    if (eps1spectrum!=0) eps1spectrum->display(getworkspaceptr());
-    if (eps2spectrum!=0) eps2spectrum->display(getworkspaceptr());
+
+    //show the eps1 and eps2 spectra
+     const Model* mymodel=geteelsmodelptr()->getmodel();
+    if (mymodel->ismulti()){
+        if (meps1spectrum!=0) meps1spectrum->updatereload();
+        if (meps2spectrum!=0) meps2spectrum->updatereload();
+    }
+    else{
+        if (eps1spectrum!=0) eps1spectrum->display(getworkspaceptr());
+        if (eps2spectrum!=0) eps2spectrum->display(getworkspaceptr());
+    }
 }
 
 DielecLinear* DielecLinear::clone()const{

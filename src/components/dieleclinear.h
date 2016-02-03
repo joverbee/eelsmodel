@@ -36,12 +36,16 @@
 
 
 class Imagedisplay;
+class Multispectrum;
 
 class DielecLinear : public Component  {
     size_t nrofextraparams;
     size_t degree; //number of lorentz oscillators
     Spectrum* eps1spectrum; //storage for eps1 and ep2 spectrum
     Spectrum* eps2spectrum;
+    Multispectrum* meps1spectrum; //storage for eps1 and ep2 spectrum
+    Multispectrum* meps2spectrum;
+
     size_t thetapoints;
     Eigen::MatrixXd kroegermatrix;
     Imagedisplay* kroegerim;
