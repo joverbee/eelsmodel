@@ -84,7 +84,7 @@ nrofextraparams=7; //extra params outside of the points for modelling the loss f
 
     Parameter* p2=new Parameter("strength",1.0,1);
     p2->setboundaries(0,1e30);
-    p2->interactivevalue("enter strength, propto beam current");
+    p2->interactivevalue("enter strength, propto beam current");    
     this->addparameter(p2);
 
     //params needed for Kroeger formula
@@ -126,6 +126,8 @@ nrofextraparams=7; //extra params outside of the points for modelling the loss f
         Parameter* p=(*parameterlistptr)[i];
         this->addparameter(p);
         p->setchanged(); //make sure everything is calculated correctly
+        //p->setlinear(true);
+        p->setboundaries(-1.0,10.0);
     }
     degree=(parameterlistptr->size()-nrofextraparams); //get nr of oscillators from the size of the list
   }
@@ -155,7 +157,7 @@ nrofextraparams=7; //extra params outside of the points for modelling the loss f
            Spectrum * dummy1=new Spectrum((mymodel->getHLptr())->getnpoints(),(mymodel->getHLptr())->getenergy(0),(mymodel->getHLptr())->getdispersion());
            dummy1->setname("Eps1");
            dummy1->clear(); //fill with zero's
-           meps1spectrum->addspectrum(dummy1);
+           meps1spectrum->addspectrum(dummy1);          
            Spectrum * dummy2=new Spectrum((mymodel->getHLptr())->getnpoints(),(mymodel->getHLptr())->getenergy(0),(mymodel->getHLptr())->getdispersion());
            dummy2->setname("Eps2");
            dummy2->clear(); //fill with zero's
@@ -166,21 +168,19 @@ nrofextraparams=7; //extra params outside of the points for modelling the loss f
 
       eps1spectrum=meps1spectrum->getcurrentspectrum();
       meps1spectrum->setname("Epsilon1");
-      meps1spectrum->display(getworkspaceptr());
+     // meps1spectrum->display(getworkspaceptr());
       eps2spectrum=meps2spectrum->getcurrentspectrum();
       meps2spectrum->setname("Epsilon2");
-      meps2spectrum->display(getworkspaceptr());
-
+     // meps2spectrum->display(getworkspaceptr());
    }
   else{
     eps1spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
     eps2spectrum=new Spectrum(this->getnpoints(),this->getenergy(0),this->getdispersion());
     eps1spectrum->display(getworkspaceptr());
     eps2spectrum->display(getworkspaceptr());
+    eps1spectrum->setname("Epsilon1");
+    eps2spectrum->setname("Epsilon2");
   }
-  eps1spectrum->setname("Epsilon1");
-  eps2spectrum->setname("Epsilon2");
-
 
   //the last param is the option pointer
   optionparamptr=this->getparameter(6);
@@ -221,14 +221,7 @@ DielecLinear::~DielecLinear(){
 
 void DielecLinear::calculate()
 {
-    //make sure eps1spectrum is pointing to right slice
-    const Model* mymodel=geteelsmodelptr()->getmodel();
-    if (mymodel->ismulti()){
-        meps1spectrum->setcurrentslice((mymodel->getconstmultispectrumptr())->getcurrentslice());
-        meps2spectrum->setcurrentslice((mymodel->getconstmultispectrumptr())->getcurrentslice());
-        eps1spectrum=meps1spectrum->getcurrentspectrum();
-        eps2spectrum=meps2spectrum->getcurrentspectrum();
-    }
+
 
     const Parameter* strengthptr= this->getparameter(1);
     const double strength=strengthptr->getvalue();
@@ -289,32 +282,32 @@ void DielecLinear::calculate()
 
         double alpha=1.0; //correction factor to get eps0 right           
 
-        //normalise the ai parameters so that they stay within a reasonable range
-        //avg=1
+//        //normalise the ai parameters so that they stay within a reasonable range
+//        //avg=1
         //find average
-        double avg=0.0;
+          double avg=0.0;
         for (size_t  j=0;j<degree;j++){
             const double ai=(this->getparameter(j+nrofextraparams))->getvalue();
             avg+=ai;
         }
         avg=avg/degree;
         if (avg<0){avg=1.0;}
-        //rescale
+//        //rescale
         for (size_t  j=0;j<degree;j++){
             const double ai=(this->getparameter(j+nrofextraparams))->getvalue();
             (this->getparameter(j+nrofextraparams))->setvalue(ai/avg);
         }
 #ifdef COMPONENT_DEBUG
-    	std::cout <<"renormalised params avg was="<<avg<<"\n";
-    	avg=0.0;
-    	for (size_t  j=0;j<degree;j++){
-    	            const double ai=(this->getparameter(j+nrofextraparams))->getvalue();
-    	            std::cout <<ai<<"  ";
-    	            avg+=ai;
-    	}
-    	std::cout <<"\n";
-    	avg=avg/degree;
-    	std::cout <<"new avg="<<avg<<" should be 1.0 \n";
+        std::cout <<"renormalised params avg was="<<avg<<"\n";
+        avg=0.0;
+        for (size_t  j=0;j<degree;j++){
+                    const double ai=(this->getparameter(j+nrofextraparams))->getvalue();
+                    std::cout <<ai<<"  ";
+                    avg+=ai;
+        }
+        std::cout <<"\n";
+        avg=avg/degree;
+        std::cout <<"new avg="<<avg<<" should be 1.0 \n";
 #endif
         
         //prepare some stuff that is needed for every energy to speed up
@@ -386,11 +379,19 @@ void DielecLinear::calculate()
                 const double maxalpha=100000.0;
                 if ((std::isnan(alpha))||(alpha<minalpha)||(alpha>maxalpha)){
                     alpha=1.0;
-                }                   
+                }
+                //make sure eps1spectrum is pointing to right slice
+                const Model* mymodel=geteelsmodelptr()->getmodel();
+                //prepare the eps1 and eps2 spectra for storing the auxilary data obtained as eps1 and eps2 or derived
+                if (mymodel->ismulti()){
+                    meps1spectrum->setcurrentslicenoupdate((mymodel->getconstmultispectrumptr())->getcurrentslice());
+                    meps2spectrum->setcurrentslicenoupdate((mymodel->getconstmultispectrumptr())->getcurrentslice());
+                    eps1spectrum=meps1spectrum->getcurrentspectrum();
+                    eps2spectrum=meps2spectrum->getcurrentspectrum();
+                }
             }
             if (i>-1){ //for all other energies do the calculation
-                //store the eps1,eps2 and calc the loss function
-
+                //store the eps1,eps2 and calc the loss function                               
                 switch(outputformat){
                     case 1:
                         eps1spectrum->setcounts(i,-Refactor);
@@ -439,7 +440,7 @@ void DielecLinear::calculate()
     }
 else if (strengthptr->changed()){
     //if only the strengthptr changed, this is faster
-    this->normalize(strength);
+   this->normalize(strength);
 #ifdef COMPONENT_DEBUG
     	std::cout <<"only strengthptr has changed calculating again\n";    	
 #endif
@@ -460,13 +461,17 @@ void DielecLinear::show(){
     //show the eps1 and eps2 spectra
      const Model* mymodel=geteelsmodelptr()->getmodel();
     if (mymodel->ismulti()){
+        if (meps1spectrum!=0) meps1spectrum->display(getworkspaceptr());
+        if (meps2spectrum!=0) meps2spectrum->display(getworkspaceptr());
         if (meps1spectrum!=0) meps1spectrum->updatereload();
         if (meps2spectrum!=0) meps2spectrum->updatereload();
     }
+    //and update the line plots
     else{
         if (eps1spectrum!=0) eps1spectrum->display(getworkspaceptr());
         if (eps2spectrum!=0) eps2spectrum->display(getworkspaceptr());
     }
+
 }
 
 DielecLinear* DielecLinear::clone()const{
@@ -520,7 +525,8 @@ void DielecLinear::addlinparams(size_t i){
         name=s.str();
     }
     Parameter* Lp1=new Parameter(name,0.1,1);
-    Lp1->setboundaries(-0.01,20.0); //allow slightly negative to make going to 0 possible
+    Lp1->setboundaries(-1.0,10.0); //allow slightly negative to make going to 0 possible
+    //Lp1->setlinear(true);
     this->addparameter(Lp1);
 }
 
@@ -841,28 +847,28 @@ void DielecLinear::estimateparams(){
 	    const double Estep=Estop/double(degree+1);	  
 	    const Model* mymodel=geteelsmodelptr()->getmodel();	    	   	  
 	    
-	    //first find out total integral minus all other components
-	    double areaspec=0.0;
-	    for (unsigned int i=0;i<(this->getnpoints());i++){	        	          	                      
-	            const double energy=this->getenergy(i);	            
-	            if ((energy>=0)&&(energy<Estop)){
-	            	areaspec+=mymodel->getHLptr()->getcounts(i);	
-	            	//subtract all other components except ourselves
-	            	//TODO do something sensible if a fourier log component is included
-	            	for (size_t j=0;j<mymodel->getcomponentsnr();j++){
-	            		const Component* mycomponent=mymodel->getcomponent(j);
-	            		if ((mycomponent!=this)&&(!(mycomponent->getconvolutor())) ){
-	                        areaspec-=mycomponent->getcounts(i);	                       
-	            		}	            
-	            	}	            		            	            	            	            					            	            			            		            	            		            		            	            
-	            }	          
-	    }	    
-	    //recalibrate strength accordingly	 
-	    strengthptr->setvalue(areaspec);
+        //first find out total integral minus all other components
+        double areaspec=0.0;
+        for (unsigned int i=0;i<(this->getnpoints());i++){
+                const double energy=this->getenergy(i);
+                if ((energy>=0)&&(energy<Estop)){
+                    areaspec+=mymodel->getHLptr()->getcounts(i);
+                    //subtract all other components except ourselves
+                    //TODO do something sensible if a fourier log component is included
+                    for (size_t j=0;j<mymodel->getcomponentsnr();j++){
+                        const Component* mycomponent=mymodel->getcomponent(j);
+                        if ((mycomponent!=this)&&(!(mycomponent->getconvolutor())) ){
+                            areaspec-=mycomponent->getcounts(i);
+                        }
+                    }
+                }
+        }
+        //recalibrate strength accordingly
+        strengthptr->setvalue(areaspec);
 	    
 	    
 	    //then find out strength in intervals to adjust the a parameters
-	    double areainterval=0.0; //the are in an interval of the experiment
+        double areainterval=0.0; //they are in an interval of the experiment
 	  	size_t jindex=0;
 	    for (unsigned int i=0;i<(this->getnpoints());i++){	        	   	           	   	            
 	   	            const double energy=this->getenergy(i);	   	            
@@ -880,7 +886,8 @@ void DielecLinear::estimateparams(){
 	   	            	if (energy>((double(jindex)+1.5)*Estep)){
 	   	            			//adjust parameter accordingly
 	   	            			Parameter* aptr= getparameter(nrofextraparams+jindex);
-	   	            			const double newval=areainterval/areaspec;
+                                const double newval=areainterval/areaspec;
+                            //    const double newval=areainterval;
 	   	            			aptr->setvalue(newval);
 	   	            			//std::cout <<"newval="<<newval<<" jindex="<<jindex<<"areainterval="<<areainterval<<" getvalue="<<aptr->getvalue()<<"\n";
 	   	            			jindex++;	            				            			
