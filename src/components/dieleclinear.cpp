@@ -45,9 +45,9 @@
 #include "src/gui/imagedisplay.h"
 #include "src/gui/integerinput.h"
 
-class QWorkspace;
+class QMdiArea;
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 Eelsmodel* geteelsmodelptr();
 
 DielecLinear::DielecLinear()
@@ -543,6 +543,7 @@ void DielecLinear::displayKroeger(){
 
 
 double DielecLinear::getlossKroeger(double eps1,double eps2,double t,double E0,double thetamax,size_t i,bool onlyvolume){
+    (void) onlyvolume;
     const double EN=this->getenergy(i);
     if (EN<=this->getdispersion()){
         return 0.0;
@@ -602,7 +603,7 @@ return sumtheta; //return the calculated loss
 
 
 double DielecLinear::LossRel(std::complex<double> eps,double E,double qmax,const std::complex<double> betasq,double qE){
-
+    (void) E; //avoid compiler warning
     //the q dependent part can be solved analytically IF we assume eps is not depending on q!
     //much faster, no numerical q intergration needed    
     const double Pi=acos(-1.0);
@@ -697,7 +698,7 @@ double DielecLinear::Pefl(double theta,double thetaE,double v,double beta,std::c
     std::complex<double> cyefl=term1+prefact2*(A+B+C);
 
     if (std::isnan(cyefl.imag())){
-        cyefl.imag()=0.0;
+        cyefl.imag(0.0);
     }
 
     //return fabs(pow(e/(Pi*h*v),2.0)*(e/(4.0*Pi*e0))*cyefl.imag()); //make sure to return no neg values with abs

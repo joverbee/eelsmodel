@@ -44,7 +44,7 @@
 #include <QToolTip>
 #include <QValidator>
 #include <QVBoxLayout>
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include "src/core/eelsmodel.h"
 #include "src/core/multispectrum.h"
@@ -55,11 +55,11 @@
 
 Eelsmodel* geteelsmodelptr();
 
-Fitter_dialog::Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitter)
+Fitter_dialog::Fitter_dialog(QMdiArea *parent, const char *name,Fitter* myfitter)
 : QWidget(parent)
 {
     this->setWindowTitle(name);
-    parent->addWindow(this); //add it explicitly to the workspace
+    parent->addSubWindow(this); //add it explicitly to the workspace
     previous=false;
     startfromcurrent=false;
     redrawfit=true;

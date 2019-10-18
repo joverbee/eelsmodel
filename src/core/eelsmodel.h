@@ -45,7 +45,7 @@ class Multispectrum;
 class Spectrum;
 class Imagedisplay;
 
-class QWorkspace;
+class QMdiArea;
 
 /* Eelsmodel is the base class of the project */
 class Eelsmodel : public QWidget

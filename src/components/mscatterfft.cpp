@@ -29,7 +29,7 @@
 #include <iostream>
 #include <vector>
 
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include "src/core/eelsmodel.h"
 #include "src/core/fftw++.h"
@@ -43,7 +43,7 @@
 using namespace fftwpp;
 
 Eelsmodel* geteelsmodelptr();
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Mscatterfft::Mscatterfft()
 :Component(),LLspectrum()
@@ -78,7 +78,7 @@ Parameter* p;
  //in case no parameter list is given (=a new component)
  if (parameterlistptr==0){
   //get a pointer to a LL spectrum
-  QWorkspace* myworkspace=getworkspaceptr();
+  QMdiArea* myworkspace=getworkspaceptr();
   Getgraphptr* LLgetptr=new Getgraphptr(myworkspace,"","Make sure the LL spectrum is frontmost");
 	if (LLgetptr==0){
 	//stop creating this component

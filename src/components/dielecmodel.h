@@ -54,7 +54,7 @@ DielecModel ();
 DielecModel (int,double,double,std::vector<Parameter*>* parameterlistptr=0);
 ~DielecModel ();
 void calculate();
-Spectrum* getgradient(size_t j){return 0;};
+Spectrum* getgradient(size_t){return 0;};
 DielecModel * clone()const;
 DielecModel * new_component(int n,double estart,double dispersion,std::vector<Parameter*>* parameterlistptr=0)const;
 double getloss(double eps1,double eps2)const;

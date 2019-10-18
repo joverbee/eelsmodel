@@ -51,7 +51,7 @@ public:
   ~Multispectrum();
   void addspectrum(Spectrum* spec);
 
-  void display(QWorkspace *parent);
+  void display(QMdiArea *parent);
   void update();
   void updatereload();
   std::string getname()const;

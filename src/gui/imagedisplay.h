@@ -38,7 +38,7 @@
 
 #include "src/core/multispectrum.h"
 
-class QWorkspace;
+class QMdiArea;
 
 /* A class to draw images or multispectra in image format
    Is 2D equiv of Graph */
@@ -54,11 +54,11 @@ Eigen::MatrixXd* matrixptr;
 std::string imdisplayname;
 bool dragging;
 bool is2D;
-QWorkspace *parentptr;
+QMdiArea *parentptr;
 public:
-Imagedisplay(QWorkspace *parent=0, const char *name=0,Multispectrum* mspec=0);
-Imagedisplay(QWorkspace *parent=0, const char *name=0, Eigen::MatrixXd* matrix = 0);
-Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2);
+Imagedisplay(QMdiArea *parent=0, const char *name=0,Multispectrum* mspec=0);
+Imagedisplay(QMdiArea *parent=0, const char *name=0, Eigen::MatrixXd* matrix = 0);
+Imagedisplay(QMdiArea *parent, std::string name,size_t dim1,size_t dim2);
 ~Imagedisplay();
 std::string getname()const;
 void update();

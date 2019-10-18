@@ -38,7 +38,7 @@
 #include "src/gui/getfilename.h"
 
 Eelsmodel* geteelsmodelptr();
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Fileopener::Fileopener(QWidget *parent, const char *name ,std::string fname) : QWidget(parent)
 {

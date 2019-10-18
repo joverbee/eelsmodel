@@ -34,7 +34,7 @@
 #include <QStringList>
 #include <QValidator>
 
-class QWorkspace;
+class QMdiArea;
 
 /* A Qwidget to choose the options for Drude Lorentz. */
 
@@ -51,7 +51,7 @@ class Drudeoptions : public QDialog  {
     QStringList* mylist;
 QString valstring;
 public:
-	Drudeoptions(QWorkspace *parent, const char *name,size_t nosc,size_t thetapoints,bool integrate,bool show ,bool dokroeger,bool dorel=false,int outputformat=0);
+    Drudeoptions(QMdiArea *parent, const char *name,size_t nosc,size_t thetapoints,bool integrate,bool show ,bool dokroeger,bool dorel=false,int outputformat=0);
 	~Drudeoptions();
 	size_t getthetapoints();
 	size_t getnosc();

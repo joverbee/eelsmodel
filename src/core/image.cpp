@@ -103,14 +103,14 @@ QPainter painter(this);
 }
 bool Image::reconvertImage()
 {
-    bool success = FALSE;
-    if ( myimageptr->isNull() ) return FALSE;
+    bool success = false;
+    if ( myimageptr->isNull() ) return false;
     pm.fromImage(*myimageptr);
 
         pmScaled = QPixmap();
         scale();
         /*resize( width(), height() );*/
-        success = TRUE;                         // load successful
+        success = true;                         // load successful
 
     return success;                             // TRUE if loaded OK
 }

@@ -36,7 +36,7 @@
 #include <QString>
 #include <QValidator>
 
-class QWorkspace;
+class QMdiArea;
 
 class Atomchooser : public QDialog  {
    Q_OBJECT
@@ -49,7 +49,7 @@ class Atomchooser : public QDialog  {
     QString valstring;
     std::vector<QPushButton*> buttonlist; //a list with button in the mendeleev table
 public:
-	Atomchooser(QWorkspace* parent, const char* name, double Estart,double Estop,double E0, double beta, double alpha, double resolution,bool dofinestructure );
+    Atomchooser(QMdiArea* parent, const char* name, double Estart,double Estop,double E0, double beta, double alpha, double resolution,bool dofinestructure );
 	~Atomchooser();
     double getalpha();
     double getbeta();

@@ -38,7 +38,7 @@
 #include <qwt_plot_curve.h>
 
 class QPolygon;
-class QWorkspace;
+class QMdiArea;
 
 class QwtPlotPanner;
 class QwtPlotMarker;
@@ -54,8 +54,8 @@ class Graph : public QwtPlot
 {
   Q_OBJECT
   public:
-    Graph( QWorkspace *parent=0, const char *name=0,Spectrum *spec=0); //a graph of a normal spectrum
-    Graph( QWorkspace *parent=0, const char *name=0,Multispectrum *mspec=0); //a graph of a multispectrum
+    Graph( QMdiArea *parent=0, const char *name=0,Spectrum *spec=0); //a graph of a normal spectrum
+    Graph( QMdiArea *parent=0, const char *name=0,Multispectrum *mspec=0); //a graph of a multispectrum
     ~Graph();
     void reinit();
     void Init();

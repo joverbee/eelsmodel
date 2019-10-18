@@ -37,7 +37,7 @@
 #include "src/gui/saysomething.h"
 
 Eelsmodel* geteelsmodelptr();
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Powerlaw::Powerlaw() //create a dummy version
 :Component()

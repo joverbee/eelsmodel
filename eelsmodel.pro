@@ -18,8 +18,11 @@ ICON=eelsmodel.icns
 }
 win32{
 #CONFIG+=qwt
-INCLUDEPATH += C:/msys64/mingw64/include/eigen3
-INCLUDEPATH += C:/msys64/mingw64/include/qwt
+QT += widgets
+INCLUDEPATH += C:/include/eigen3
+INCLUDEPATH += C:/qwt-6.1.4/include
+INCLUDEPATH += C:/include/fftw-3.3.8
+INCLUDEPATH += C:/include/gsl/include
 CONFIG(debug, debug|release) {
   # debug
   LIBS += -lqwtd

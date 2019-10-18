@@ -31,7 +31,7 @@
 #include <QSlider>
 #include <QWidget>
 
-class QWorkspace;
+class QMdiArea;
 
 class Component;
 class Parameter;
@@ -47,7 +47,7 @@ void slot_sliderrelease() ;
 void slot_sliderchange();
 
 public:
-	Equalizer(QWorkspace *parent, const char *name,Component* cp);
+    Equalizer(QMdiArea *parent, const char *name,Component* cp);
 	~Equalizer();
 	void paintEvent( QPaintEvent * );
     void slidersetup();

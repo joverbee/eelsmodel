@@ -27,7 +27,7 @@
 #include <iostream>
 
 #include <QApplication>
-#include <QWorkspace>
+#include <QMdiArea>
 #include <QWidget>
 #include <QFont>
 #include <QString>
@@ -47,7 +47,7 @@
 
 //global vars keeping a pointer to eelsmodel and to the qt workspace
 Eelsmodel* global_eelsmodelptr=0;
-QWorkspace* global_workspaceptr=0;
+QMdiArea* global_workspaceptr=0;
 MenuEelsmodel* global_menueelsmodel=0;
 //QString globaldirname=""; //global variable holding the current directory
 
@@ -55,7 +55,7 @@ Eelsmodel* geteelsmodelptr(){
 return global_eelsmodelptr;
 }
 
-QWorkspace* getworkspaceptr(){
+QMdiArea* getworkspaceptr(){
 return global_workspaceptr;
 }
 

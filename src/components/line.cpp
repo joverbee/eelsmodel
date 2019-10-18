@@ -38,7 +38,7 @@
 #include "src/gui/saysomething.h"
 
 Eelsmodel* geteelsmodelptr();
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 
 

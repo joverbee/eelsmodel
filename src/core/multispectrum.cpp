@@ -77,7 +77,7 @@ void Multispectrum::addspectrum(Spectrum* spec){
   currspectrum=dataset.size()-1;
 }
 
-void Multispectrum::display(QWorkspace *parent){
+void Multispectrum::display(QMdiArea *parent){
   //show current spectrum
   Spectrum* specptr=this->getcurrentspectrum();
   if (specptr==0) return; //no valid spectrum yet

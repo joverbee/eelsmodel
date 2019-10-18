@@ -53,9 +53,9 @@
 #include "src/gui/saysomething.h"
 #include "src/gui/componentselector.h"
 
-class QWorkspace;
+class QMdiArea;
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 extern Eelsmodel* geteelsmodelptr();
 
 DosLifetimeSpline::DosLifetimeSpline() //create a dummy version
@@ -379,7 +379,7 @@ void DosLifetimeSpline::calculate()
 
 
 
-Spectrum* DosLifetimeSpline::getgradient(size_t j){
+Spectrum* DosLifetimeSpline::getgradient(size_t){
     throw Componenterr::bad_index();
     return 0;
 }

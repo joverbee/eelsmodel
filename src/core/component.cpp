@@ -34,10 +34,10 @@
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
 
-class QWorkspace;
+class QMdiArea;
 
 Eelsmodel* geteelsmodelptr();
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Component::Component()
   :Spectrum(1,0,1.0),parametervector(),hasgradient(),gradient(1,0,1.0)

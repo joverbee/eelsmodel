@@ -27,14 +27,13 @@
 
 #include <cmath>
 #include <iostream>
-
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include "src/core/parameter.h"
 
 #include "src/gui/getgraphptr.h"
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 EdgeFile::EdgeFile()
 :Component(),tempspectrum()
@@ -50,7 +49,7 @@ EdgeFile::EdgeFile(int n,double estart,double dispersion,std::vector<Parameter*>
   Spectrum* edgeptr=0;
   if (parameterlistptr==0){
     //get a pointer to an edge file
-    QWorkspace* myworkspace=getworkspaceptr();
+    QMdiArea* myworkspace=getworkspaceptr();
     Getgraphptr* getptr=new Getgraphptr(myworkspace,"","Make sure an edge spectrum is frontmost\nMake sure the edge file is calibrated to 0eV at the edge onset");
     getptr->show();
     if ( getptr->exec() == QDialog::Accepted ) {

@@ -41,7 +41,7 @@ Eelsmodel* geteelsmodelptr();
 Componentselector::Componentselector(QWidget *parent, const char *name,const char* message,int& value)
 : QWidget(parent) {
     Model* mymodel=geteelsmodelptr()->getmodel_nonconst();
-    bool ok = FALSE;
+    bool ok = false;
     //create a selector list with available components in the model
     QStringList items;
     //go through the components of the model and add them to the list

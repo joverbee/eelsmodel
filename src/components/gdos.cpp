@@ -54,9 +54,9 @@
 
 using namespace fftwpp;
 
-class QWorkspace;
+class QMdiArea;
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 Eelsmodel* geteelsmodelptr();
 
 GDos::GDos() //create a dummy version

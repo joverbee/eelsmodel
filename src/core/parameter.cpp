@@ -32,14 +32,14 @@
 #include <sstream>
 #include <limits>
 
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include "src/core/monitor.h"
 
 #include "src/gui/saysomething.h"
 #include "src/gui/interactive_parameter.h"
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Parameter::Parameter(){
   setdefaults();
@@ -208,7 +208,7 @@ void Parameter::setsigma(double x){
 
 void Parameter::interactivevalue(std::string description){
   //do an interactive setup of the parameter
-  QWorkspace* myworkspace=getworkspaceptr();
+  QMdiArea* myworkspace=getworkspaceptr();
   Interactive_Parameter* myinteractive=new Interactive_Parameter(myworkspace,"Parameter_init",this,description);
   myinteractive->show();
   if ( myinteractive->exec() == QDialog::Accepted ) {

@@ -42,7 +42,7 @@
 #include "src/gui/getfilename.h"
 #include "src/gui/saysomething.h"
 
-class QWorkspace;
+class QMdiArea;
 
 Spectrum::~Spectrum(){
   //Problem: if we could to resource aqcuisisition is initialisation
@@ -636,7 +636,7 @@ void Spectrum::badindex(int index)const
 {
 if ((index<0) || (index>=int(npoints))) throw Spectrumerr::bad_index();
 }
-void Spectrum::display(QWorkspace* parent)
+void Spectrum::display(QMdiArea* parent)
 {
   //if we already have a graph, just update it
   if (graphptr==0){

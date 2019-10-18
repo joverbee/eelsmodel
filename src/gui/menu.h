@@ -32,7 +32,7 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPixmap>
-#include <QPrinter>
+//#include <QPrinter>
 #include <QResizeEvent>
 #include <QStatusBar>
 #include <QString>
@@ -40,7 +40,7 @@
 #include <QWhatsThis>
 #include <QWidget>
 
-class QWorkspace;
+class QMdiArea;
 class QSignalMapper;
 class QMenuBar;
 class QToolBar;
@@ -71,7 +71,7 @@ public:
     /** overloaded for Message box on last window exit */
     bool queryExit();
     /** get the workspace pointer*/
-    QWorkspace* getworkspaceptr(){return myworkspace;};
+    QMdiArea* getworkspaceptr(){return myworkspace;};
     bool zoomMode(){return toolbarZoom->isChecked();};
     bool selectMode(){return toolbarSelection->isChecked();}
 
@@ -228,7 +228,7 @@ private:
     QMenu* helpMenu;
     QMenu* modelMenu;
     //the workspace pointer
-    QWorkspace * myworkspace;
+    QMdiArea * myworkspace;
     QSignalMapper *windowMapper;
 
 

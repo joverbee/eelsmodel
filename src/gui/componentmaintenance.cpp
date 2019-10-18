@@ -54,7 +54,7 @@
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include "src/core/component.h"
 #include "src/core/eelsmodel.h"
@@ -79,17 +79,17 @@
 #include "./icons/monitor.xpm"
 #include "./icons/atomwiz.xpm"
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 Eelsmodel* geteelsmodelptr();
 
-Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
+Componentmaintenance::Componentmaintenance(QMdiArea *parent, const char *name
                                            ,const std::vector<Component*>& componentvector
                                            ,const std::vector<Component*>& allcomponentsvector)
 : QWidget(parent),allList(),modelList(),itemmap(){
     this->setWindowTitle(name);
    shiftButtonPressed = false;
    rightbutton=false;
-  parent->addWindow(this); //add it explicitly to the workspace
+  parent->addSubWindow(this); //add it explicitly to the workspace
   couplesequence=false;
   monitorsequence=false;
   monitor1item=0;
@@ -131,7 +131,7 @@ Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
 
   lay->addWidget( lv1 ,0,0,8,2);
   lv1->setSortingEnabled(false); //disable sorting, important for getting the indices right
-  lv1->setRootIsDecorated( TRUE );
+  lv1->setRootIsDecorated( true );
 
 
   // create a pushbutton for adding components
@@ -183,7 +183,7 @@ Componentmaintenance::Componentmaintenance(QWorkspace *parent, const char *name
   lay->addWidget( lv2 ,0,2,8,4);
   lv2->setColumnCount(3);
   lv2->setSortingEnabled(false); //disable sorting, important for getting the indices right
-  lv2->setRootIsDecorated( TRUE );
+  lv2->setRootIsDecorated( true );
 
 
 

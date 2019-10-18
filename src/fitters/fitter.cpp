@@ -38,7 +38,7 @@
 #include "src/core/parameter.h"
 #include "src/core/multispectrum.h"
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Fitter::Fitter(Model* m)
 : status("Fitter options"),

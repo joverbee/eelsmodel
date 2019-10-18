@@ -28,7 +28,7 @@
 #include <QSlider>
 #include <QHBoxLayout>
 #include <QPaintEvent>
-#include <QWorkspace>
+#include <QMdiArea>
 #include <QApplication>
 
 #include "src/core/component.h"
@@ -37,9 +37,9 @@
 
 Eelsmodel* geteelsmodelptr();
 
-Equalizer::Equalizer(QWorkspace *parent, const char *name,Component* cp)
+Equalizer::Equalizer(QMdiArea *parent, const char *name,Component* cp)
 : QWidget(parent),sliderlist() {
-     parent->addWindow(this);
+     parent->addSubWindow(this);
       this-> setWindowTitle(name);
    //draw a set of sliders
    comp=cp;

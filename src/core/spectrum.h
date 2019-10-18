@@ -37,7 +37,7 @@
 class Component;
 class Graph;
 
-class QWorkspace;
+class QMdiArea;
 
 class loadmsa{};
 
@@ -141,7 +141,7 @@ void resetexcluderegion(int startindex,int endindex);
 void resetexcluderegion();
 void normalize(double s=1.0);
 void initpoissonerror();
-virtual void display(QWorkspace* parent=0);
+virtual void display(QMdiArea* parent=0);
 void savedat(std::string filename);
 Graph* getgraphptr(){return graphptr;}
 const Graph* getgraphptr()const{return graphptr;}

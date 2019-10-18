@@ -42,7 +42,7 @@
 using namespace fftwpp;
 
 Eelsmodel* geteelsmodelptr();
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 MscatterExpfft::MscatterExpfft()
 :Component()

@@ -36,10 +36,10 @@
 #include <QStringList>
 #include <QValidator>
 #include <QVBoxLayout>
-#include <QWorkspace>
+#include <QMdiArea>
 
-Drudeoptions::Drudeoptions(QWorkspace *parent, const char *name,size_t nosc,size_t thetapoints,bool integrate,bool show,bool dokroeger,bool dorel,int outputformat) : QDialog(parent) {
- parent->addWindow(this); //add it explicitly to the workspace
+Drudeoptions::Drudeoptions(QMdiArea *parent, const char *name,size_t nosc,size_t thetapoints,bool integrate,bool show,bool dokroeger,bool dorel,int outputformat) : QDialog(parent) {
+ parent->addSubWindow(this); //add it explicitly to the workspace
 
 
 QVBoxLayout* bgrp = new QVBoxLayout(this);

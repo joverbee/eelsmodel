@@ -39,7 +39,7 @@
 #include <QPaintEvent>
 #include <QRubberBand>
 #include <QWidget>
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -61,7 +61,7 @@
 
 //#define GRAPH_DEBUG
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 MenuEelsmodel* getmenuptr();
 //
 // Graph - a widget that draws a Graph.
@@ -191,7 +191,7 @@ public:
 // Constructs a Graph widget.
 //
 
-Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
+Graph::Graph( QMdiArea *parent, const char *name,Spectrum *spec)
     :QwtPlot(parent),qwtdata(1, QVector<QPointF>(spec->getnpoints()))
 {
     multispectrum=false;
@@ -214,7 +214,7 @@ Graph::Graph( QWorkspace *parent, const char *name,Spectrum *spec)
 
 
 
-Graph::Graph( QWorkspace *parent, const char *name,Multispectrum *mspec)
+Graph::Graph( QMdiArea *parent, const char *name,Multispectrum *mspec)
    : QwtPlot(parent),qwtdata(mspec->getsize(), QVector<QPointF>(mspec->getnpoints()))
 {
 

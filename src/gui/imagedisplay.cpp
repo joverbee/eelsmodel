@@ -35,7 +35,7 @@
 #include <QPoint>
 #include <QMouseEvent>
 #include <QPaintEvent>
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include <Eigen/Core>
 
@@ -43,7 +43,7 @@
 //    #include "debug_new.h" //memory leak checker
 //#endif
 
-Imagedisplay::Imagedisplay(QWorkspace *parent, const char *name, Multispectrum* mspec)
+Imagedisplay::Imagedisplay(QMdiArea *parent, const char *name, Multispectrum* mspec)
 : QWidget(parent),image()
 {
 
@@ -76,7 +76,7 @@ setname(name);
 this->setMinimumSize(imwidth,imheight);
 
 }
-Imagedisplay::Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size_t dim2)
+Imagedisplay::Imagedisplay(QMdiArea *parent, std::string name,size_t dim1,size_t dim2)
   : QWidget(parent),image()
   {
     matrixptr = new Eigen::MatrixXd(dim2,dim1);
@@ -102,7 +102,7 @@ Imagedisplay::Imagedisplay(QWorkspace *parent, std::string name,size_t dim1,size
   this->setMinimumSize(imwidth,imheight);
 }
 
-Imagedisplay::Imagedisplay(QWorkspace *parent, const char *name, Eigen::MatrixXd* matrix)
+Imagedisplay::Imagedisplay(QMdiArea *parent, const char *name, Eigen::MatrixXd* matrix)
 : QWidget(parent),image()
 {
 

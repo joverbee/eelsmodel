@@ -34,7 +34,7 @@
 #include <QResizeEvent>
 #include <QSignalMapper>
 #include <QToolBar>
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include "src/gui/hello.h"
 
@@ -341,7 +341,7 @@ void MenuEelsmodel::initWorkspace()
 {
   ////////////////////////////////////////////////////////////////////
   // init the workspace
-  myworkspace=new QWorkspace (this);
+  myworkspace=new QMdiArea (this);
   myworkspace->setWindowTitle("EELSMODEL");
   setCentralWidget(myworkspace);
   myworkspace->show();

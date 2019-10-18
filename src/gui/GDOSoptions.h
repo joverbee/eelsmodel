@@ -33,7 +33,7 @@
 #include <QString>
 #include <QValidator>
 
-class QWorkspace;
+class QMdiArea;
 
 /* A Qwidget to choose the type of fitter to use. */
 
@@ -49,7 +49,7 @@ class GDosoptions : public QDialog  {
     QLineEdit* thresholdedit;
 QString valstring;
 public:
-	GDosoptions(QWorkspace *parent, const char *name,size_t degree,size_t interpolationtype,bool dosumrule,size_t broadeningtype,double integrationwidth,double threshold);
+    GDosoptions(QMdiArea *parent, const char *name,size_t degree,size_t interpolationtype,bool dosumrule,size_t broadeningtype,double integrationwidth,double threshold);
 	~GDosoptions();
 	size_t getdegree();
     bool getsumrule();

@@ -32,7 +32,7 @@
 #include <sstream>
 
 #include <QMessageBox>
-#include <QWorkspace>
+#include <QMdiArea>
 #include <QApplication>
 #include <QDateTime>
 
@@ -63,7 +63,7 @@
 #include "src/gui/realinput.h"
 #include "src/gui/saysomething.h"
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Eelsmodel::Eelsmodel(QWidget* parent, const char *name) : QWidget(0)
 {
@@ -479,14 +479,16 @@ Model* Eelsmodel::gettopmodel(){
 
 Graph* Eelsmodel::gettopgraph(){
    //get a pointer to the active window
-   QWidget* topw=getworkspaceptr()->activeWindow();
+   //QWidget* topw=getworkspaceptr()->activeWindow();
+   QWidget* topw=QApplication::activeWindow();
    Graph*  topgraph=dynamic_cast<Graph*>(topw); //make sure to enable rtti in BCC32 , otherwise an error about polymorphism is generated
    return topgraph;
 }
 
 Imagedisplay* Eelsmodel::gettopimdisplay(){
    //get a pointer to the active window
-   QWidget* topw=getworkspaceptr()->activeWindow();
+   //QWidget* topw=getworkspaceptr()->activeWindow();
+   QWidget* topw=QApplication::activeWindow();
    Imagedisplay*  topdisplay=dynamic_cast<Imagedisplay*>(topw); //make sure to enable rtti in BCC32 , otherwise an error about polymorphism is generated
    return topdisplay;
 }

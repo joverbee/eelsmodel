@@ -52,8 +52,8 @@
 
 
 class Parameter;
-class QWorkspace;
-extern QWorkspace* getworkspaceptr();
+class QMdiArea;
+extern QMdiArea* getworkspaceptr();
 extern Eelsmodel* geteelsmodelptr();//main.cpp contains this global function with a pointer to eelsmodel
 
 Model::Model(Spectrum* HL)
@@ -287,7 +287,7 @@ void Model::calculate(){
      }
    }
 
-void Model::display(QWorkspace* parent){
+void Model::display(QMdiArea* parent){
     if (graphptr==0) {
       graphptr =new Graph(parent,"model",this); //draw the model
       graphptr->setcaption("model");

@@ -42,7 +42,7 @@
 #include "src/core/parameter.h"
 #include "src/gui/monitorchooser.h"
 
-class QWorkspace;
+class QMdiArea;
 
 class Component;
 class Model;
@@ -77,7 +77,7 @@ class Componentmaintenance : public QWidget  {
   bool rightbutton;
 public:
 //constructor and destructor
-Componentmaintenance(QWorkspace *parent, const char *name
+Componentmaintenance(QMdiArea *parent, const char *name
                        ,const std::vector<Component*>& componentvector
                        ,const std::vector<Component*>& allcomponentsvector);
 ~Componentmaintenance();

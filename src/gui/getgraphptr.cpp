@@ -36,14 +36,14 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QWidget>
-#include <QWorkspace>
-
+//#include <QMdiArea>
+#include <QMdiArea>
 #include "src/core/eelsmodel.h"
 
 #include "src/gui/graph.h"
 #include "src/gui/saysomething.h"
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 
 Getgraphptr::Getgraphptr(QWidget *parent, const char *name,const char* message )
 : QDialog(parent,Qt::WindowStaysOnTopHint)
@@ -82,8 +82,8 @@ void Getgraphptr::slot_ok(){
 	mspecptr=0;
 	//get a list of windows in the stacking order
 	//last one is topmost
-	const QWorkspace* myworkspace=getworkspaceptr();
-	QWidgetList wlist=myworkspace->windowList(QWorkspace::StackingOrder);	
+        const QMdiArea* myworkspace=getworkspaceptr();
+        QList<QMdiSubWindow *> wlist=myworkspace->subWindowList(QMdiArea::StackingOrder);
 	//start from the last one until a graph is encountered	
 	for (size_t i=0; i<wlist.size(); i++){		
 		//check if the item is a graph

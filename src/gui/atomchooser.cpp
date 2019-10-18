@@ -37,14 +37,14 @@
 #include <QRadioButton>
 #include <QString>
 #include <QStringList>
-#include <QWorkspace>
+#include <QMdiArea>
 #include <math.h>
 #include "src/gui/mendeleev.h" //defines table of mendeleev
 #include "src/gui/energies.h"
 
-Atomchooser::Atomchooser(QWorkspace *parent, const char *name,double Estart,double Estop, double E0, double beta, double alpha, double resolution,bool dofinestructure ) : QDialog(parent) {
+Atomchooser::Atomchooser(QMdiArea *parent, const char *name,double Estart,double Estop, double E0, double beta, double alpha, double resolution,bool dofinestructure ) : QDialog(parent) {
 
- parent->addWindow(this); //add it explicitly to the workspace
+ parent->addSubWindow(this); //add it explicitly to the workspace
 
 this->setWindowTitle("Atom chooser");
 

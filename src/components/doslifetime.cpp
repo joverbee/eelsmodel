@@ -47,9 +47,9 @@
 #include "src/gui/integerinput.h"
 #include "src/gui/saysomething.h"
 
-class QWorkspace;
+class QMdiArea;
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 Eelsmodel* geteelsmodelptr();
 
 DosLifetime::DosLifetime() //create a dummy version

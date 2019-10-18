@@ -50,9 +50,9 @@
 
 using namespace fftwpp;
 
-class QWorkspace;
+class QMdiArea;
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 Eelsmodel* geteelsmodelptr();
 
 Dos::Dos() //create a dummy version

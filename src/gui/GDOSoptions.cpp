@@ -36,14 +36,14 @@
 #include <QStringList>
 #include <QValidator>
 #include <QVBoxLayout>
-#include <QWorkspace>
+#include <QMdiArea>
 
 #include "src/fitters/fitter.h"
 
-GDosoptions::GDosoptions(QWorkspace *parent, const char *name,size_t degree,size_t interpolationtype,bool dosumrule,size_t broadeningtype,double integrationwidth ,double threshold) : QDialog(parent) {
+GDosoptions::GDosoptions(QMdiArea *parent, const char *name,size_t degree,size_t interpolationtype,bool dosumrule,size_t broadeningtype,double integrationwidth ,double threshold) : QDialog(parent) {
 
 
- parent->addWindow(this); //add it explicitly to the workspace
+ parent->addSubWindow(this); //add it explicitly to the workspace
 //a list of interpolation types
 QStringList list;
 QString s1="Linear";

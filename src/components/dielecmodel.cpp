@@ -40,9 +40,9 @@
 #include "src/gui/imagedisplay.h"
 #include "src/gui/Drudeoptions.h"
 
-class QWorkspace;
+class QMdiArea;
 
-QWorkspace* getworkspaceptr();
+QMdiArea* getworkspaceptr();
 Eelsmodel* geteelsmodelptr();
 
 DielecModel::DielecModel()
@@ -512,7 +512,7 @@ double DielecModel::Pefl(double theta,double thetaE,double v,double beta,std::co
     std::complex<double> cyefl=term1+prefact2*(A+B+C);
 
     if (std::isnan(cyefl.imag())){
-        cyefl.imag()=0.0;
+        cyefl.imag(0.0);
     }
 
     //return fabs(pow(e/(Pi*h*v),2.0)*(e/(4.0*Pi*e0))*cyefl.imag()); //make sure to return no neg values with abs

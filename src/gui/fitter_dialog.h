@@ -42,7 +42,7 @@
 
 #include "src/fitters/fitter.h"
 
-class QWorkspace;
+class QMdiArea;
 
 class Fitter_dialog : public QWidget  {
    Q_OBJECT
@@ -64,7 +64,7 @@ class Fitter_dialog : public QWidget  {
     bool stop,update_allways,usegradients,previous,residual,redrawfit,startfromcurrent;
 
 public:
-	Fitter_dialog(QWorkspace *parent, const char *name,Fitter* myfitter);
+    Fitter_dialog(QMdiArea *parent, const char *name,Fitter* myfitter);
 	~Fitter_dialog();
 double getnumber(const QString&)const;
 bool getstop(){return stop;};
